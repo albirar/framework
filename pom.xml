@@ -14,6 +14,10 @@
 		<junit.version>4.11</junit.version>
 		<spring.version>4.0.9.RELEASE</spring.version>
 	</properties>
+	<modules>
+		<module>core</module>
+		<module>utils-test</module>
+	</modules>
 
 	<dependencies>
 		<dependency>
