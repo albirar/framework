@@ -66,5 +66,16 @@ public abstract class AbstractDbTest {
 		mongodProcess.stop();
 		mongodExecutable.stop();
 	}
-	
+	/**
+	 * Retorna el nom de la col·lecció associada amb l'entitat indicada.
+	 * @param entitat La classe de l'entitat
+	 * @return El nom, o null si s'ha indicat una classe nul·la.
+	 */
+	public static final String getNomColleccio(Class<?> entitat) {
+		if(entitat != null) {
+			return (entitat.getSimpleName().substring(0,1).toLowerCase()
+					+ entitat.getSimpleName().substring(1));
+		}
+		return null;
+	}
 }
