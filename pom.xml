@@ -13,9 +13,11 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<junit.version>4.11</junit.version>
 		<spring.version>4.0.9.RELEASE</spring.version>
+		<spring.data.version>1.9.2.RELEASE</spring.data.version>
 	</properties>
 	<modules>
 		<module>core</module>
+		<module>imodel</module>
 		<module>utils-test</module>
 	</modules>
 
