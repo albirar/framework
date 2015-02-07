@@ -1,12 +1,12 @@
 /*
- * This file is part of "imodel".
+ * This file is part of "albirar framework".
  * 
- * "imodel" is free software: you can redistribute it and/or modify
+ * "albirar framework" is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * "imodel" is distributed in the hope that it will be useful,
+ * "albirar framework" is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -16,7 +16,7 @@
  *
  * Copyright (C) 2013 Octavi Fornés
  */
-package cat.albirar.framework.imodel.models;
+package cat.albirar.framework.dynabean.impl.models;
 
 /**
  * A gender enum.

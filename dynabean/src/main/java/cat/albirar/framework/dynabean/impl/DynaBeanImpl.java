@@ -1,12 +1,12 @@
 /*
- * This file is part of "imodel" project.
+ * This file is part of "albirar framework" project.
  * 
- * "imodel" is free software: you can redistribute it and/or modify
+ * "albirar framework" is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * "imodel" is distributed in the hope that it will be useful,
+ * "albirar framework" is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -16,27 +16,22 @@
  *
  * Copyright (C) 2013 Octavi Fornés octavi@fornes.cat
  */
-package cat.albirar.framework.imodel;
+package cat.albirar.framework.dynabean.impl;
 
-import static cat.albirar.framework.imodel.ProxyBeanUtils.isCorrectProperty;
-import static cat.albirar.framework.imodel.ProxyBeanUtils.isGetter;
-import static cat.albirar.framework.imodel.ProxyBeanUtils.isProperty;
-import static cat.albirar.framework.imodel.ProxyBeanUtils.propertyName;
+import static cat.albirar.framework.dynabean.impl.DynaBeanUtils.isGetter;
+import static cat.albirar.framework.dynabean.impl.DynaBeanUtils.isPropertyMethod;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import cat.albirar.framework.imodel.utils.ObjectUtils;
+import org.springframework.util.ObjectUtils;
+
+import cat.albirar.framework.dynabean.DynaBean;
+import cat.albirar.framework.dynabean.IDynaBeanFactory;
 
 /**
  * A proxy for create dynamic beans from interfaces.
@@ -46,7 +41,7 @@ import cat.albirar.framework.imodel.utils.ObjectUtils;
  * <pre>
  * InterfaceJavaBean a;
  * 
- * a = {@link ProxyBeanFactory}.newProxy(InterfaceJavaBean.class);
+ * a = {@link DynaBean#instanceFactory()}.{@link IDynaBeanFactory#newDynaBean(Class) newDynaBean(InterfaceJavaBean.class)};
  * ...
  * a.setXXX("xxx");
  * </pre>
@@ -56,124 +51,59 @@ import cat.albirar.framework.imodel.utils.ObjectUtils;
  * @author octavi@fornes.cat
  * @since 1.0.0
  */
-public class ProxyBeanImpl<T> implements InvocationHandler, Serializable
+class DynaBeanImpl<T> implements InvocationHandler, Serializable
 {
     private static final long serialVersionUID = 0L;
+    
+    DynaBeanDescriptor<T> descriptor;
+    Map<String, Object> values;
+    IDynaBeanFactory factory;
 
-    /** Implemented type */
-    private Class<T> implementedType;
-
-    /** Property list */
-    private Map<String, PropertyBean> properties;
-
-    /** Property names in appearance order */
-    private List<String> names;
-
-    /** Values for calculate hash code */
-    private Object[] hashCodeValues;
-
-    /**
-     * Creates a proxy for the type.
-     * @param typeToImplement The interface type to implement
-     * @return The proxy, as typeToImplement type.
-     * @throws IllegalArgumentException If the type is not an interface
-     */
-    @SuppressWarnings("unchecked")
-    public static final <T> T newProxy(Class<T> typeToImplement)
+    private DynaBeanImpl(IDynaBeanFactory factory)
     {
-        return (T) Proxy.newProxyInstance(typeToImplement.getClassLoader(), new Class[]
-        {
-            typeToImplement
-        }, new ProxyBeanImpl<T>(typeToImplement));
+    	values = Collections.synchronizedMap(new TreeMap<String, Object>());
+    	this.factory = factory;
     }
-
+    /**
+     * Constructor with a prepared descriptor.
+     * Used to reduce memory consumption and CPU cycles.
+     * @param descriptor The descriptor
+     */
+    DynaBeanImpl(IDynaBeanFactory factory, DynaBeanDescriptor<T> descriptor) {
+    	this(factory);
+    	this.descriptor = descriptor;
+    }
+    /**
+     * Clone constructor.
+     * @param origin The origin for data
+     */
+    DynaBeanImpl(DynaBeanImpl<T> origin) {
+    	this(origin.factory, origin.descriptor);
+    }
     /**
      * Constructor with type to implement.
      * @param typeToImplement The interface type to implement
      * @throws IllegalArgumentException If the type is not an interface
      */
-    protected ProxyBeanImpl(Class<T> typeToImplement)
+    DynaBeanImpl(IDynaBeanFactory factory, Class<T> typeToImplement)
     {
-        PropertyBean pb;
-
-        if(typeToImplement.isInterface() == false)
-        {
-            // Only interfaces
-            throw new IllegalArgumentException("ProxyBeanImpl can only implement interfaces. '" + typeToImplement.getName() + "' is not an interface");
-        }
-
-        this.implementedType = typeToImplement;
-        properties = Collections.synchronizedMap(new TreeMap<String, PropertyBean>());
-        names = Collections.synchronizedList(new ArrayList<String>());
-        // Prepare the properties list
-        for(Method method : typeToImplement.getMethods())
-        {
-            if(Modifier.isPublic(method.getModifiers()) && isProperty(method.getName())
-            		&& isCorrectProperty(method))
-            {
-                if((pb = properties.get(propertyName(method.getName()))) == null)
-                {
-                    // Put them!
-                    pb = new PropertyBean();
-                    pb.name = propertyName(method.getName());
-                    if(isGetter(method.getName())) {
-                    	pb.primitive = method.getReturnType().isPrimitive();
-                    } else {
-                    	pb.primitive = method.getParameterTypes()[0].isPrimitive();
-                    }
-                    properties.put(pb.name, pb);
-                    names.add(pb.name);
-                }
-            }
-        }
-        resolveGettersSettersMethods();
+    	this(factory);
+    	
+    	descriptor = new DynaBeanDescriptor<T>(typeToImplement);
         // Assign default values
-        for(PropertyBean pbv : properties.values())
+        for(PropertyDescriptor prop : descriptor.getProperties())
         {
-            pbv.value = nullSafeValue(null, pbv);
+            values.put(prop.propertyName,nullSafeValue(prop.defaultValue, prop));
         }
     }
 
     /**
-     * On deserialize, reconstruct the implemented type information.
-     */
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
-    {
-        in.defaultReadObject();
-        resolveGettersSettersMethods();
-    }
-
-    /**
-     * Resolve the 'getter method' for all properties.
-     */
-    private void resolveGettersSettersMethods()
-    {
-        PropertyBean pb;
-        // Prepare the properties list
-        for(Method method : implementedType.getMethods())
-        {
-            if(Modifier.isPublic(method.getModifiers()) && isProperty(method.getName()))
-            {
-                pb = properties.get(propertyName(method.getName()));
-                if(isGetter(method.getName()))
-                {
-                    pb.getterMethod = method;
-                }
-                else
-                {
-                    pb.setterMethod = method;
-                }
-            }
-        }
-    }
-
-    /**
-     * The implemented interface for this proxy.
+     * The implemented interface for this dynaBean.
      * @return implementedType The implemented type
      */
     public Class<T> getImplementedType()
     {
-        return implementedType;
+        return descriptor.getImplementedType();
     }
 
     /* (non-Javadoc)
@@ -191,23 +121,23 @@ public class ProxyBeanImpl<T> implements InvocationHandler, Serializable
      * @param args The arguments, if any
      * @return The result. Can be the value for a property or the result of {@link #equals(Object)}, {@link #hashCode()} or {@link #toString()}
      */
-    protected Object doInvoke(Method method, Object... args)
+    protected Object doInvoke(Method method, Object... args) throws Throwable
     {
-        PropertyBean pb;
+        PropertyDescriptor propDesc;
         String name;
 
         name = method.getName();
         // Check if is a get/set method
-        if(isProperty(name))
+        if(isPropertyMethod(name))
         {
-            if((pb = properties.get(propertyName(name))) != null)
+            if((propDesc = descriptor.getPropertyByMethodName(name)) != null)
             {
                 if(isGetter(name))
                 {
-                    return doGetter(pb);
+                    return doGetter(propDesc);
                 }
                 // is a setter
-                doSetter(pb, args);
+                doSetter(propDesc, args);
                 return null;
             }
         }
@@ -231,25 +161,31 @@ public class ProxyBeanImpl<T> implements InvocationHandler, Serializable
         // Not support any other method call
         throw new UnsupportedOperationException("Call to '" + method.getName() + "'");
     }
-
     /**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	public T clone() throws CloneNotSupportedException {
+		return (T) this.factory.cloneDynaBean(this);
+	}
+	/**
      * Do the getter call.
-     * @param pb The propertybean descriptor
+     * @param propDesc The {@link PropertyDescriptor} descriptor
      * @return the property value
      */
-    protected Object doGetter(PropertyBean pb)
+    protected Object doGetter(PropertyDescriptor propDesc)
     {
-        return pb.value;
+        return values.get(propDesc.propertyName);
     }
 
     /**
      * Do the setter call.
-     * @param pb The propertybean descriptor
+     * @param propDesc The property descriptor
      * @param arguments The arguments
      */
-    protected void doSetter(PropertyBean pb, Object... arguments)
+    protected void doSetter(PropertyDescriptor propDesc, Object... arguments)
     {
-        pb.value = nullSafeValue(arguments[0], pb);
+    	values.put(propDesc.propertyName, nullSafeValue(arguments[0], propDesc));
     }
 
     /**
@@ -264,17 +200,7 @@ public class ProxyBeanImpl<T> implements InvocationHandler, Serializable
     @Override
     public String toString()
     {
-        StringBuilder stb;
-
-        stb = new StringBuilder(implementedType.getSimpleName());
-        stb.append(" [");
-        for(PropertyBean pb : properties.values())
-        {
-            stb.append(pb.name).append("=").append("" + pb.value).append(", ");
-        }
-        // Change the last element (",") by "]"
-        stb.replace(stb.length() - 2, stb.length(), "]");
-        return stb.toString();
+    	return String.format(descriptor.getPatternForToString(), values.entrySet().toArray());
     }
 
     /**
@@ -291,7 +217,7 @@ public class ProxyBeanImpl<T> implements InvocationHandler, Serializable
     public boolean equals(Object o)
     {
         T theOther;
-        ProxyBeanImpl pbo = null;
+        DynaBeanImpl theOtherDynaBean = null;
 
         // Check if 'other' is a null
         if(o == null)
@@ -304,15 +230,15 @@ public class ProxyBeanImpl<T> implements InvocationHandler, Serializable
             return true;
         }
         // Check if 'the other' is a 'implementedType' type...
-        if(implementedType.isAssignableFrom(o.getClass()) == false)
+        if(descriptor.getImplementedType().isAssignableFrom(o.getClass()) == false)
         {
-            // ...if not, can be a ProxyBeanImpl?...
-            if(ProxyBeanImpl.class.isAssignableFrom(o.getClass()))
+            // ...if not, can be a dynaBean?...
+            if(DynaBeanImpl.class.isAssignableFrom(o.getClass()))
             {
-                pbo = (ProxyBeanImpl) o;
+                theOtherDynaBean = (DynaBeanImpl) o;
 
                 // Yes, check if the implementedType is the same or derived
-                if(implementedType.isAssignableFrom(pbo.implementedType) == false)
+                if(getImplementedType().isAssignableFrom(theOtherDynaBean.getImplementedType()) == false)
                 {
                     return false;
                 }
@@ -324,23 +250,21 @@ public class ProxyBeanImpl<T> implements InvocationHandler, Serializable
             }
         }
         theOther = (T) o;
-        for(PropertyBean pb : properties.values())
+        for(PropertyDescriptor property : descriptor.getProperties())
         {
             try
             {
                 Object value;
-                if(pbo != null)
+                if(theOtherDynaBean != null)
                 {
-                    PropertyBean pbv;
-
-                    pbv = (PropertyBean) pbo.properties.get(pb.name);
-                    value = pbv.value;
+                	value = theOtherDynaBean.values.get(property.propertyName);
                 }
                 else
                 {
-                    value = pb.getterMethod.invoke(theOther);
+                    value = property.getterMethod.invoke(theOther);
                 }
-                if(ObjectUtils.nullSafeEquals(pb.value, value) == false)
+                
+                if(ObjectUtils.nullSafeEquals(values.get(property.propertyName), value) == false)
                 {
                     return false;
                 }
@@ -361,7 +285,7 @@ public class ProxyBeanImpl<T> implements InvocationHandler, Serializable
      * @param pb The property bean descriptor
      * @return The value or the default value representation for the primitive type (0)
      */
-    private Object nullSafeValue(Object value, PropertyBean pb)
+    private Object nullSafeValue(Object value, PropertyDescriptor pb)
     {
         if(!pb.primitive)
         {
@@ -420,62 +344,6 @@ public class ProxyBeanImpl<T> implements InvocationHandler, Serializable
     @Override
     public int hashCode()
     {
-        int n;
-        PropertyBean pb;
-
-        if(hashCodeValues == null)
-        {
-            hashCodeValues = new Object[properties.size()];
-        }
-        n = 0;
-        for(String name : names)
-        {
-            pb = properties.get(name);
-            hashCodeValues[n] = pb.value;
-            n++;
-        }
-        return ObjectUtils.nullSafeHashCode(hashCodeValues);
+    	return ObjectUtils.nullSafeHashCode(values.entrySet().toArray());
     }
-
-    /**
-     * Clone the implemented bean with the same values
-     */
-    public T clone()
-    {
-        T other;
-
-        other = newProxy(implementedType);
-
-        for(PropertyBean pb : properties.values())
-        {
-            try
-            {
-                pb.setterMethod.invoke(other, pb.value);
-            }
-            catch(Exception e)
-            {
-                throw new RuntimeException("On clone (" + pb.setterMethod.getName() + "!", e);
-            }
-        }
-        return other;
-    }
-
-    /**
-     * A structure for hold the properties information of bean.
-     */
-    protected class PropertyBean implements Serializable
-    {
-        private static final long serialVersionUID = 0L;
-
-        public String name;
-
-        public transient Method getterMethod;
-
-        public transient Method setterMethod;
-
-        public Object value;
-
-        public boolean primitive;
-    }
-
 }

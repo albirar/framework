@@ -1,12 +1,12 @@
 /*
- * This file is part of "imodel".
+ * This file is part of "albirar framework".
  * 
- * "imodel" is free software: you can redistribute it and/or modify
+ * "albirar framework" is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * "imodel" is distributed in the hope that it will be useful,
+ * "albirar framework" is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -16,7 +16,7 @@
  *
  * Copyright (C) 2013 Octavi Fornés
  */
-package cat.albirar.framework.imodel;
+package cat.albirar.framework.dynabean.impl;
 
 
 import java.io.ByteArrayInputStream;
@@ -29,19 +29,20 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cat.albirar.framework.imodel.ProxyBeanFactory;
-import cat.albirar.framework.imodel.ProxyBeanImpl;
-import cat.albirar.framework.imodel.models.EGender;
-import cat.albirar.framework.imodel.models.IModel;
-import cat.albirar.framework.imodel.models.ModelImpl;
+import cat.albirar.framework.dynabean.DynaBean;
+import cat.albirar.framework.dynabean.impl.DynaBeanImpl;
+import cat.albirar.framework.dynabean.impl.models.EGender;
+import cat.albirar.framework.dynabean.impl.models.IModel;
+import cat.albirar.framework.dynabean.impl.models.ISimpleModel;
+import cat.albirar.framework.dynabean.impl.models.ModelImpl;
 
 /**
- * Test of {@link ProxyBeanImpl}.
+ * Test of {@link DynaBeanImpl}.
  * 
  * @author octavi@fornes.cat
  * @since 1.0.0
  */
-public class ProxyBeanImplTest
+public class DynaBeanImplTest
 {
     /** Test value for id prop. */
     private static final long ID_VALUE = 346112L;
@@ -80,7 +81,7 @@ public class ProxyBeanImplTest
 	{
 		IModel m;
 		
-		m = ProxyBeanFactory.newProxy(IModel.class);
+		m = DynaBean.instanceFactory().newDynaBean(IModel.class);
 		Assert.assertEquals(0L, m.getId());
 		Assert.assertNull(m.getName());
 		Assert.assertNull(m.getLasName());
@@ -159,7 +160,7 @@ public class ProxyBeanImplTest
 	{
 		IModel m1, m2;
 		
-		m1 = ProxyBeanFactory.newProxy(IModel.class);
+		m1 = DynaBean.instanceFactory().newDynaBean(IModel.class);
 		assignValues(m1);
 		
 		m2 = m1.clone();
@@ -174,7 +175,7 @@ public class ProxyBeanImplTest
 		IModel m1, m2;
 		int n;
 		
-		m1 = ProxyBeanFactory.newProxy(IModel.class);
+		m1 = DynaBean.instanceFactory().newDynaBean(IModel.class);
 		assignValues(m1);
 		
 		m2 = m1.clone();
@@ -183,6 +184,19 @@ public class ProxyBeanImplTest
 		{
 		    Assert.assertTrue(m1.hashCode() == m2.hashCode());
 		}
+	}
+	/**
+	 * Test toString
+	 * @throws Exception
+	 */
+	@Test public void testToString() throws Exception {
+		ISimpleModel smodel;
+		String s;
+		
+		smodel = DynaBean.instanceFactory().newDynaBean(ISimpleModel.class);
+		// 1.- name=null, date=null, tested=false, number=null
+		s = smodel.toString();
+		Assert.assertEquals("ISimpleModel [name=null, date=null, tested=false, number=null]", s);
 	}
 	/**
 	 * Test the serialization feature.
@@ -196,7 +210,7 @@ public class ProxyBeanImplTest
 		ObjectInputStream in;
 		
 		// Prepare bean
-		model = ProxyBeanFactory.newProxy(IModel.class);
+		model = DynaBean.instanceFactory().newDynaBean(IModel.class);
 		assignValues(model);
 
 		// Prepare stream
@@ -222,7 +236,7 @@ public class ProxyBeanImplTest
 	{
 		IModel m1, m2;
 		
-		m1 = ProxyBeanFactory.newProxy(IModel.class);
+		m1 = DynaBean.instanceFactory().newDynaBean(IModel.class);
 		assignValues(m1);
 		
 		m2 = new ModelImpl(m1);
