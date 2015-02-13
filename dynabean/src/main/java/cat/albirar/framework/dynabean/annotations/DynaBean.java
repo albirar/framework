@@ -17,23 +17,26 @@
  * Copyright (C) 2015 Octavi Fornés <ofornes@albirar.cat>
  */
 
-package cat.albirar.framework.dynabean.impl.models;
+package cat.albirar.framework.dynabean.annotations;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * A model to test.
+ * Marks an interface as a DynaBean class.
+ * Enable to build properties as dynabean with introspection.
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 2.0
  */
-public interface ISimpleModel extends Serializable {
-	public String getName();
-	public void setName(String name);
-	public Date getDate();
-	public void setDate(Date date);
-	public boolean isTested();
-	public void setTested(boolean tested);
-	public Long getNumber();
-	public void setNumber(Long number);
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE,ElementType.METHOD})
+public @interface DynaBean {
+	/**
+	 * Applied to property {@link ElementType#METHOD method}, indicates if should to be instantiate by default (true) or not (false).
+	 * Doesn't apply when this annotation is at {@link ElementType#TYPE type} level
+	 * @return true if should to be instantiated and false if not.
+	 */
+	public boolean defaultInstantiate() default false;
 }

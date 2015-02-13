@@ -22,19 +22,23 @@ package cat.albirar.framework.dynabean.impl.models;
 import java.util.Date;
 
 /**
- * TODO PENDENT DE DOCUMENTAR
- * @author Octavi Fornés <ofornes@albirar.cat>
- * @since TODO MAVEN VERSION
+ * Implementació del model.
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
+ * @since 2.0
  */
 public class SimpleModelImpl implements ISimpleModel {
-
+	private static final long serialVersionUID = -3277182898944421449L;
+	
+	private String name;
+	private Date date;
+	private boolean tested;
+	private Long number;
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 
 	/**
@@ -42,8 +46,7 @@ public class SimpleModelImpl implements ISimpleModel {
 	 */
 	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
-
+		this.name = name;
 	}
 
 	/**
@@ -51,8 +54,7 @@ public class SimpleModelImpl implements ISimpleModel {
 	 */
 	@Override
 	public Date getDate() {
-		// TODO Auto-generated method stub
-		return null;
+		return date;
 	}
 
 	/**
@@ -60,8 +62,7 @@ public class SimpleModelImpl implements ISimpleModel {
 	 */
 	@Override
 	public void setDate(Date date) {
-		// TODO Auto-generated method stub
-
+		this.date = date;
 	}
 
 	/**
@@ -69,8 +70,7 @@ public class SimpleModelImpl implements ISimpleModel {
 	 */
 	@Override
 	public boolean isTested() {
-		// TODO Auto-generated method stub
-		return false;
+		return tested;
 	}
 
 	/**
@@ -78,8 +78,7 @@ public class SimpleModelImpl implements ISimpleModel {
 	 */
 	@Override
 	public void setTested(boolean tested) {
-		// TODO Auto-generated method stub
-
+		this.tested = tested;
 	}
 
 	/**
@@ -87,8 +86,7 @@ public class SimpleModelImpl implements ISimpleModel {
 	 */
 	@Override
 	public Long getNumber() {
-		// TODO Auto-generated method stub
-		return null;
+		return number;
 	}
 
 	/**
@@ -96,8 +94,7 @@ public class SimpleModelImpl implements ISimpleModel {
 	 */
 	@Override
 	public void setNumber(Long number) {
-		// TODO Auto-generated method stub
-
+		this.number = number;
 	}
 
 	/**
@@ -106,8 +103,7 @@ public class SimpleModelImpl implements ISimpleModel {
 	@Override
 	public String toString() {
 		return String
-				.format("SimpleModelImpl [getName()=%s, getDate()=%s, isTested()=%s, getNumber()=%s]",
-						getName(), getDate(), isTested(), getNumber());
+				.format("SimpleModelImpl [name=%s, date=%s, tested=%s, number=%s]",
+						name, date, tested, number);
 	}
-
 }

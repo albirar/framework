@@ -24,7 +24,7 @@ import java.util.Date;
 /**
  * A model for test purposes.
  * 
- * @author octavi@fornes.cat
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0.0
  */
 public interface IModel extends Serializable, Cloneable

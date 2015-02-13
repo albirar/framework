@@ -21,7 +21,7 @@ import org.springframework.util.ObjectUtils;
 /**
  * A implementation of {@link IModel} for test mixed operations (proxy and class).
  * 
- * @author octavi@fornes.cat
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0.0
  */
 public class ModelImpl implements IModel

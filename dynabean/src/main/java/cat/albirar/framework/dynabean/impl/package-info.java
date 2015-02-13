@@ -20,7 +20,7 @@
  * Utilities for beans dynamic implementations.
  * 
  * Enables data definition as JavaBean applying the "facade pattern".
- * Next, you can create a implementation with the Proxy utility.<br/>
+ * Next, you can create a implementation with the Proxy utility.<br>
  * Features:
  * <ul>
  * <li>Implement getters and setters as declared on interface</li>

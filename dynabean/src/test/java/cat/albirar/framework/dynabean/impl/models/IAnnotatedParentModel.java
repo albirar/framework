@@ -19,21 +19,20 @@
 
 package cat.albirar.framework.dynabean.impl.models;
 
-import java.io.Serializable;
-import java.util.Date;
+import cat.albirar.framework.dynabean.annotations.DynaBean;
+import cat.albirar.framework.dynabean.annotations.PropertyDefaultValue;
 
 /**
- * A model to test.
+ * A parent model with annotated {@link DynaBean} properties for test auto-creation.
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 2.0
  */
-public interface ISimpleModel extends Serializable {
-	public String getName();
-	public void setName(String name);
-	public Date getDate();
-	public void setDate(Date date);
-	public boolean isTested();
-	public void setTested(boolean tested);
-	public Long getNumber();
-	public void setNumber(Long number);
+public interface IAnnotatedParentModel {
+	public String getId();
+	public void setId();
+	@PropertyDefaultValue
+	public IAnnotatedModel getSubmodel();
+	public void setSubmodel(IAnnotatedModel submodel);
+	public ISimpleModel getDynabeanNotAnnotatedModel();
+	public void setDynabeanNotAnnotatedModel(ISimpleModel model);
 }

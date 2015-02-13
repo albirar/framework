@@ -22,17 +22,37 @@ import java.lang.reflect.Method;
 
 import org.springframework.util.Assert;
 
-import cat.albirar.framework.dynabean.DynaBean;
+import cat.albirar.framework.dynabean.DynaBeanUtils;
 
 
 /**
- * Some utilities for {@link DynaBean} and {@link DynaBeanImpl} operations.
- * 
- * @author octavi@fornes.cat
+ * Some utilities for {@link DynaBeanUtils} and {@link DynaBeanImpl} operations.
+ * Also get a static (thread safe) {@link IDynaBeanImplementationFactory dynabean implementation factory}.
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0.0
  */
-public abstract class DynaBeanUtils
+public abstract class DynaBeanImplementationUtils
 {
+	/**
+	 * Thread safe singleton.
+	 */
+	private static final ThreadLocal<IDynaBeanImplementationFactory> singleton = new ThreadLocal<IDynaBeanImplementationFactory>() {
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		protected IDynaBeanImplementationFactory initialValue() {
+			return new DefaultDynaBeanFactory();
+		}
+		
+	};
+	/**
+	 * Gets a factory instance.
+	 * @return The factory
+	 */
+	public static final IDynaBeanImplementationFactory instanceFactory() {
+		return singleton.get();
+	}
 	/**
 	 * Check if the method name is a get/set/is property bean access method.
 	 * @param methodName The method name
@@ -105,6 +125,7 @@ public abstract class DynaBeanUtils
 	/**
 	 * Create the method name for 'get' (or 'is') the indicated property.
 	 * @param propertyName The property name, cannot be null and should to be at least 1 non-whitespace character.
+	 * @param type The property type
 	 * @return the 'get' method name for the indicated property
 	 * @throws IllegalArgumentException If propertyName is null or have not enough chars (at least 1) 
 	 */

@@ -23,28 +23,39 @@ import cat.albirar.framework.dynabean.impl.DefaultDynaBeanFactory;
 /**
  * The dynaBean creator.
  * 
- * For use with interfaces that represents a Java Bean. <br/>
+ * For use with interfaces that represents a Java Bean. <br>
  * <b>Use</b>
  * <pre>
  * InterfaceJavaBean a;
  * 
- * a = DynaBean.instanceFactory.newDynaBean(InterfaceJavaBean.class);
+ * a = DynaBeanUtils.instanceFactory.newDynaBean(InterfaceJavaBean.class);
  * ...
  * a.setXXX("xxx");
  * </pre>
  * 
- * 
- * @author octavi@fornes.cat
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0.0
  */
-public abstract class DynaBean
+public abstract class DynaBeanUtils
 {
-	private static final IDynaBeanFactory singleton = new DefaultDynaBeanFactory();
+	/**
+	 * Thread safe singleton.
+	 */
+	private static final ThreadLocal<IDynaBeanFactory> singleton = new ThreadLocal<IDynaBeanFactory>() {
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		protected IDynaBeanFactory initialValue() {
+			return new DefaultDynaBeanFactory();
+		}
+		
+	};
 	/**
 	 * Gets a factory instance.
 	 * @return The factory
 	 */
 	public static final IDynaBeanFactory instanceFactory() {
-		return singleton;
+		return singleton.get();
 	}
 }

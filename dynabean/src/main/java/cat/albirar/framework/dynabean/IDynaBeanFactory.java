@@ -19,24 +19,35 @@
 
 package cat.albirar.framework.dynabean;
 
-import java.io.Serializable;
+import java.beans.PropertyEditor;
+
+import org.springframework.beans.PropertyEditorRegistry;
 
 /**
  * The contract for DynaBean factories.
- * @author Octavi Fornés <ofornes@albirar.cat>
+ * 
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 2.0
  */
-public interface IDynaBeanFactory extends Serializable {
+public interface IDynaBeanFactory {
 	/**
 	 * DynaBean instantiator.
-	 * @param typeToImplement The type to implement.
+	 * @param typeToImplement The Class of the type to implement.
+	 * @param <T> The type to implement
 	 * @return The instance dynaBean
 	 */
 	public <T> T newDynaBean(Class<T> typeToImplement);
 	/**
 	 * Clone a dynaBean
+	 * @param <T> The type to implement
 	 * @param dynaBean The dynaBean to clone
 	 * @return The new cloned dynaBean
 	 */
 	public <T> T cloneDynaBean(T dynaBean);
+	
+	/**
+	 * Gets the {@link PropertyEditor} registry associated with this factory.
+	 * @return The registry
+	 */
+	public PropertyEditorRegistry getPropertyEditorRegistry();
 }

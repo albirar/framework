@@ -20,7 +20,7 @@
  * Utilities for dynamic bean implementations.
  * 
  * Enables data definition as JavaBean applying the "facade pattern".
- * Next, you can create a implementation with the {@link cat.albirar.framework.dynabean.DynaBean} utility.<br/>
+ * Next, you can create a implementation with the {@link cat.albirar.framework.dynabean.DynaBeanUtils} utility.<br>
  * Features:
  * <ul>
  * <li>Implement getters and setters as declared on interface</li>

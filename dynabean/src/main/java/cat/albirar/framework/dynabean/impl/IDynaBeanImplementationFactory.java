@@ -19,31 +19,20 @@
 
 package cat.albirar.framework.dynabean.impl;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
+import cat.albirar.framework.dynabean.IDynaBeanFactory;
 
 /**
- * A simple data structure to hold aspects of a property.
- * @author Octavi Fornés <ofornes@albirar.cat>
+ * Factory with method for implementation classes, not users.
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 2.0
  */
-class PropertyDescriptor implements Serializable {
-	private static final long serialVersionUID = 6311968165570922423L;
-	/** The property name. */
-	String propertyName;
-	/** If property is primitive (true) or not (false). */
-	boolean primitive;
-	/** Default value for new instances. */
-	Object defaultValue;
-	/** The getter method. */
-	transient Method getterMethod;
-	/** The setter method. */
-	transient Method setterMethod;
+public interface IDynaBeanImplementationFactory extends IDynaBeanFactory {
+	
 	/**
-	 * Utility to know if is a read-only property (true) or not (false).
-	 * @return true if is a read-only property and false if is a read-write property
+	 * Search for a descriptor for the indicated dynaBean.
+	 * @param typeToImplement The type to implement
+	 * @return The descriptor.
 	 */
-	boolean isRO() {
-		return (setterMethod == null);
-	}
+	public <T> DynaBeanDescriptor<T> getDescriptorFor(Class<T> typeToImplement);
+
 }

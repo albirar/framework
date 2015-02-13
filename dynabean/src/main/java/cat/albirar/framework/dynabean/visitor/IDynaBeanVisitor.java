@@ -17,23 +17,28 @@
  * Copyright (C) 2015 Octavi Fornés <ofornes@albirar.cat>
  */
 
-package cat.albirar.framework.dynabean.impl.models;
-
-import java.io.Serializable;
-import java.util.Date;
+package cat.albirar.framework.dynabean.visitor;
 
 /**
- * A model to test.
+ * A contract for visitor implementations in get/set operations.
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 2.0
  */
-public interface ISimpleModel extends Serializable {
-	public String getName();
-	public void setName(String name);
-	public Date getDate();
-	public void setDate(Date date);
-	public boolean isTested();
-	public void setTested(boolean tested);
-	public Long getNumber();
-	public void setNumber(Long number);
+public interface IDynaBeanVisitor {
+	/**
+	 * Event fired on call a get method.
+	 * The {@code value} object is the current property value.
+	 * @param name The property name
+	 * @param value The current value of the property.
+	 * @return The value to return to. Generally, the same {@code value} as indicated
+	 */
+	public Object eventGet(String name, Object value);
+	/**
+	 * Event fired on call a set method.
+	 * The {@code value} object is the new property value.
+	 * @param name The property name
+	 * @param value The new value for the property.
+	 * @return The value to set to. Generally, the same {@code value} as indicated
+	 */
+	public Object eventSet(String name, Object value);
 }

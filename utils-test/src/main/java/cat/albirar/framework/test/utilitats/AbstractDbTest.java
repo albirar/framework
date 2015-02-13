@@ -31,7 +31,7 @@ import de.flapdoodle.embed.mongo.distribution.Version.Main;
 
 /**
  * Classe abstracta per a configurar una base de dades.
- * @author Octavi Fornés <ofornes@albirar.cat>
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  */
 public abstract class AbstractDbTest {
 

@@ -20,20 +20,30 @@
 package cat.albirar.framework.dynabean.impl.models;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
+import java.util.Vector;
+
+import cat.albirar.framework.dynabean.annotations.DynaBean;
+import cat.albirar.framework.dynabean.annotations.PropertyDefaultValue;
 
 /**
- * A model to test.
+ * An annotated model to test functionality.
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 2.0
  */
-public interface ISimpleModel extends Serializable {
-	public String getName();
-	public void setName(String name);
-	public Date getDate();
-	public void setDate(Date date);
-	public boolean isTested();
-	public void setTested(boolean tested);
-	public Long getNumber();
-	public void setNumber(Long number);
+@DynaBean
+public interface IAnnotatedModel extends Serializable, Cloneable {
+	public static final double DEFAULT_AMOUNT = 25.2D;
+	
+	public String getId();
+	public void setId(String id);
+	@PropertyDefaultValue(implementation=Vector.class)
+	public List<String> getNamesList();
+	public void setNamesList(List<String> names);
+	public boolean isPending();
+	@PropertyDefaultValue("true")
+	public void setPending(boolean pending);
+	@PropertyDefaultValue("" + DEFAULT_AMOUNT)
+	public double getAmount();
+	public void setAmount(double a);
 }

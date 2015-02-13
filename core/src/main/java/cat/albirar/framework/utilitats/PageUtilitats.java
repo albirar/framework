@@ -24,7 +24,7 @@ import org.springframework.data.domain.Pageable;
 
 /**
  * Utilitats per a gestionar paginació.
- * @author Octavi Fornés <ofornes@albirar.cat>
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0
  */
 public abstract class PageUtilitats {

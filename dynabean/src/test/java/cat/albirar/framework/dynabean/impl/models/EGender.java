@@ -20,7 +20,7 @@ package cat.albirar.framework.dynabean.impl.models;
 
 /**
  * A gender enum.
- * @author octavi@fornes.cat
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0.0
  */
 public enum EGender

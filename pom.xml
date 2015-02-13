@@ -2,26 +2,42 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>cat.albirar.framework</groupId>
+
+	<parent>
+		<groupId>cat.albirar.framework</groupId>
+		<artifactId>entorn</artifactId>
+		<version>2.0-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>pare</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
-		<junit.version>4.11</junit.version>
-		<spring.version>4.0.9.RELEASE</spring.version>
-		<spring.data.version>1.9.2.RELEASE</spring.data.version>
-	</properties>
 	<modules>
 		<module>core</module>
 		<module>dynabean</module>
 		<module>utils-test</module>
 	</modules>
+	
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<configuration>
+						<aggregate>true</aggregate>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -37,12 +53,12 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.10</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.1</version>
+			<version>${commons.lang.version}</version>
 		</dependency>
 	</dependencies>
 </project>

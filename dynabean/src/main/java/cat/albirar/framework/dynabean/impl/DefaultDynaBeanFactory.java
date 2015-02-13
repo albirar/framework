@@ -20,16 +20,31 @@
 package cat.albirar.framework.dynabean.impl;
 
 import java.lang.reflect.Proxy;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 
-import cat.albirar.framework.dynabean.IDynaBeanFactory;
+import org.springframework.beans.PropertyEditorRegistry;
+import org.springframework.beans.SimpleTypeConverter;
+import org.springframework.util.Assert;
 
 /**
- * A default and convenient factory.
- * @author Octavi Fornés <ofornes@albirar.cat>
+ * A convenient default factory.
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 2.0
  */
-public class DefaultDynaBeanFactory implements IDynaBeanFactory {
-	private static final long serialVersionUID = 1L;
+public class DefaultDynaBeanFactory implements IDynaBeanImplementationFactory {
+	private PropertyEditorRegistry propRegistry;
+	
+	private Map<String, DynaBeanDescriptor<?>> descriptors;
+
+	/**
+	 * Default constructor.
+	 */
+	public DefaultDynaBeanFactory() {
+		propRegistry = new SimpleTypeConverter();
+		descriptors = Collections.synchronizedMap(new TreeMap<String, DynaBeanDescriptor<?>>());
+	}
 	/**
 	 * {@inheritDoc}
 	 */
@@ -51,7 +66,11 @@ public class DefaultDynaBeanFactory implements IDynaBeanFactory {
 		if(dynaBean == null) {
 			throw new IllegalArgumentException("The dynaBean to clone is required");
 		}
-		return createDynaBean((DynaBeanImpl<T>)dynaBean);
+		if(DynaBeanImpl.class.isAssignableFrom(dynaBean.getClass())) {
+			return createDynaBean(new DynaBeanImpl<T>((DynaBeanImpl<T>)dynaBean));
+		}
+		
+		throw new IllegalArgumentException("To clone a dynaBean, another dynaBean is required!");
 	}
 	/**
 	 * Proxyfy the dynaBean instace.
@@ -65,4 +84,33 @@ public class DefaultDynaBeanFactory implements IDynaBeanFactory {
 				, new Class[] {dynaBean.getImplementedType()}
 				, dynaBean);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public PropertyEditorRegistry getPropertyEditorRegistry() {
+		return propRegistry;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> DynaBeanDescriptor<T> getDescriptorFor(Class<T> typeToImplement) {
+		DynaBeanDescriptor<?> d;
+		
+		Assert.notNull(typeToImplement, "The typeToImplement is required");
+		
+		d = descriptors.get(typeToImplement.getName());
+		if(d == null) {
+			DynaBeanDescriptor<T> desc;
+			
+			desc = new DynaBeanDescriptor<T>(this, typeToImplement);
+			descriptors.put(typeToImplement.getName(), desc);
+			d = desc;
+		}
+		return (DynaBeanDescriptor<T>) d;
+	}
+	
 }

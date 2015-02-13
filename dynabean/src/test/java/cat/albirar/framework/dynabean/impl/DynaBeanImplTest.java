@@ -29,8 +29,7 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cat.albirar.framework.dynabean.DynaBean;
-import cat.albirar.framework.dynabean.impl.DynaBeanImpl;
+import cat.albirar.framework.dynabean.DynaBeanUtils;
 import cat.albirar.framework.dynabean.impl.models.EGender;
 import cat.albirar.framework.dynabean.impl.models.IModel;
 import cat.albirar.framework.dynabean.impl.models.ISimpleModel;
@@ -39,7 +38,7 @@ import cat.albirar.framework.dynabean.impl.models.ModelImpl;
 /**
  * Test of {@link DynaBeanImpl}.
  * 
- * @author octavi@fornes.cat
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0.0
  */
 public class DynaBeanImplTest
@@ -81,7 +80,7 @@ public class DynaBeanImplTest
 	{
 		IModel m;
 		
-		m = DynaBean.instanceFactory().newDynaBean(IModel.class);
+		m = DynaBeanUtils.instanceFactory().newDynaBean(IModel.class);
 		Assert.assertEquals(0L, m.getId());
 		Assert.assertNull(m.getName());
 		Assert.assertNull(m.getLasName());
@@ -160,12 +159,14 @@ public class DynaBeanImplTest
 	{
 		IModel m1, m2;
 		
-		m1 = DynaBean.instanceFactory().newDynaBean(IModel.class);
+		m1 = DynaBeanUtils.instanceFactory().newDynaBean(IModel.class);
 		assignValues(m1);
 		
 		m2 = m1.clone();
 		
 		Assert.assertEquals(m1, m2);
+		// Test clone of date
+		Assert.assertNotSame(m1.getBirthDate(), m2.getBirthDate());
 	}
 	/**
 	 * Test the 'hashCode' feature
@@ -175,7 +176,7 @@ public class DynaBeanImplTest
 		IModel m1, m2;
 		int n;
 		
-		m1 = DynaBean.instanceFactory().newDynaBean(IModel.class);
+		m1 = DynaBeanUtils.instanceFactory().newDynaBean(IModel.class);
 		assignValues(m1);
 		
 		m2 = m1.clone();
@@ -193,10 +194,25 @@ public class DynaBeanImplTest
 		ISimpleModel smodel;
 		String s;
 		
-		smodel = DynaBean.instanceFactory().newDynaBean(ISimpleModel.class);
+		smodel = DynaBeanUtils.instanceFactory().newDynaBean(ISimpleModel.class);
 		// 1.- name=null, date=null, tested=false, number=null
 		s = smodel.toString();
-		Assert.assertEquals("ISimpleModel [name=null, date=null, tested=false, number=null]", s);
+		Assert.assertTrue(s.startsWith(ISimpleModel.class.getSimpleName()));
+		Assert.assertTrue(s.contains("name=null"));
+		Assert.assertTrue(s.contains("date=null"));
+		Assert.assertTrue(s.contains("tested=false"));
+		Assert.assertTrue(s.contains("number=null"));
+		
+		// 1.- name=NAME, date=null, tested=true, number=55
+		smodel.setName("NAME");
+		smodel.setTested(true);
+		smodel.setNumber(55L);
+		s = smodel.toString();
+		Assert.assertTrue(s.contains("name=NAME"));
+		Assert.assertTrue(s.contains("date=null"));
+		Assert.assertTrue(s.contains("tested=true"));
+		Assert.assertTrue(s.contains("number=55"));
+		
 	}
 	/**
 	 * Test the serialization feature.
@@ -210,7 +226,7 @@ public class DynaBeanImplTest
 		ObjectInputStream in;
 		
 		// Prepare bean
-		model = DynaBean.instanceFactory().newDynaBean(IModel.class);
+		model = DynaBeanUtils.instanceFactory().newDynaBean(IModel.class);
 		assignValues(model);
 
 		// Prepare stream
@@ -236,11 +252,14 @@ public class DynaBeanImplTest
 	{
 		IModel m1, m2;
 		
-		m1 = DynaBean.instanceFactory().newDynaBean(IModel.class);
+		m1 = DynaBeanUtils.instanceFactory().newDynaBean(IModel.class);
 		assignValues(m1);
 		
 		m2 = new ModelImpl(m1);
 		
+		Assert.assertEquals(m1, m2);
+		m2 = m1.clone();
+		Assert.assertNotSame(m1, m2);
 		Assert.assertEquals(m1, m2);
 	}
 	

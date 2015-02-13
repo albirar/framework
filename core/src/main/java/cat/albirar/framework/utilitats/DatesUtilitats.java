@@ -26,7 +26,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 /**
  * Utilitat de dates.
- * @author Octavi Fornés <ofornes@albirar.cat>
+ * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0
  */
 public abstract class DatesUtilitats {
