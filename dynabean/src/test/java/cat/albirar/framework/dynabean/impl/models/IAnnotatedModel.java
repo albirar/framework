@@ -37,12 +37,15 @@ public interface IAnnotatedModel extends Serializable, Cloneable {
 	
 	public String getId();
 	public void setId(String id);
+	
 	@PropertyDefaultValue(implementation=Vector.class)
 	public List<String> getNamesList();
 	public void setNamesList(List<String> names);
+	
 	public boolean isPending();
 	@PropertyDefaultValue("true")
 	public void setPending(boolean pending);
+	
 	@PropertyDefaultValue("" + DEFAULT_AMOUNT)
 	public double getAmount();
 	public void setAmount(double a);

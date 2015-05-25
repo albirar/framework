@@ -18,5 +18,4 @@
 			<version>${spring.data.version}</version>
 		</dependency>
 	</dependencies>
-	
 </project>
