@@ -21,6 +21,7 @@ package cat.albirar.framework.dynabean.visitor;
 
 /**
  * A contract for visitor implementations in get/set operations.
+ * @pattern Visitor
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 2.0
  */
