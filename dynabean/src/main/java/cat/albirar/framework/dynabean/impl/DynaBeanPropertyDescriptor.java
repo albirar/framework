@@ -38,7 +38,7 @@ class DynaBeanPropertyDescriptor implements Serializable {
 	/** If this property, that should to be a interface, is marked as {@link DynaBean} managed property. */
 	boolean dynaBean;
 	/** Default value for new instances. */
-	String defaultValue;
+	String [] defaultValue;
 	/** The default concrete implementation for this property. */
 	Class<?> defaultImplementation;
 	/** The getter method. */

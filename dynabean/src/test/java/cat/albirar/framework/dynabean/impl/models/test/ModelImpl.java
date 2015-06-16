@@ -12,8 +12,9 @@
  * 
  * Copyright (C) 2013 Octavi Fornés
  */
-package cat.albirar.framework.dynabean.impl.models;
+package cat.albirar.framework.dynabean.impl.models.test;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.util.ObjectUtils;
@@ -42,6 +43,7 @@ public class ModelImpl implements IModel
 
     private EGender gender;
 
+    private String [] names;
     /**
      * Default constructor, the properties are left with default values.
      */
@@ -59,16 +61,74 @@ public class ModelImpl implements IModel
         if(origin != null)
         {
             name = origin.getName();
-            lastName = origin.getLasName();
+            lastName = origin.getLastName();
             birthDate = origin.getBirthDate() == null ? null : new Date(origin.getBirthDate().getTime());
             gender = origin.getGender();
             id = origin.getId();
             numberOfChildren = origin.getNumberOfChildren();
             incomingYear = origin.getIncomingYear();
+            if(origin.getNames() != null)
+            {
+                names = Arrays.copyOf(origin.getNames(), origin.getNames().length);
+            }
         }
     }
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#getName()
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long getId()
+    {
+        return id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setId(long id)
+    {
+        this.id = id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getNumberOfChildren()
+    {
+        return numberOfChildren;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setNumberOfChildren(int numberOfChildren)
+    {
+        this.numberOfChildren = numberOfChildren;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getIncomingYear()
+    {
+        return incomingYear;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setIncomingYear(double incomingYear)
+    {
+        this.incomingYear = incomingYear;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     @Override
     public String getName()
@@ -76,8 +136,8 @@ public class ModelImpl implements IModel
         return name;
     }
 
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#setName(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public void setName(String name)
@@ -85,26 +145,26 @@ public class ModelImpl implements IModel
         this.name = name;
     }
 
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#getLasName()
+    /**
+     * {@inheritDoc}
      */
     @Override
-    public String getLasName()
+    public String getLastName()
     {
         return lastName;
     }
 
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#setLasName(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     @Override
-    public void setLasName(String lastName)
+    public void setLastName(String lastName)
     {
         this.lastName = lastName;
     }
 
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#getBirthDate()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public Date getBirthDate()
@@ -112,8 +172,8 @@ public class ModelImpl implements IModel
         return birthDate;
     }
 
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#setBirthDate(java.util.Date)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public void setBirthDate(Date birthDate)
@@ -121,8 +181,8 @@ public class ModelImpl implements IModel
         this.birthDate = birthDate == null ? null : new Date(birthDate.getTime());
     }
 
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#getGender()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public EGender getGender()
@@ -130,8 +190,8 @@ public class ModelImpl implements IModel
         return gender;
     }
 
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#setGender(cat.albirar.framework.imodel.beans.models.EGender)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public void setGender(EGender gender)
@@ -139,29 +199,36 @@ public class ModelImpl implements IModel
         this.gender = gender;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String[] getNames()
+    {
+        return names;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setNames(String[] names)
+    {
+        this.names = names;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        long temp;
-
-        result = prime * result + (int) (id ^ (id >>> 32));
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-        result = prime * result + ((gender == null) ? 0 : gender.hashCode());
-        result = prime * result + ((birthDate == null) ? 0 : birthDate.hashCode());
-        result = prime * result + numberOfChildren;
-        temp = Double.doubleToLongBits(incomingYear);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return ObjectUtils.nullSafeHashCode(new Object[] {id, name, lastName, gender, birthDate, numberOfChildren
+                , incomingYear, names});
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean equals(Object obj)
@@ -178,85 +245,32 @@ public class ModelImpl implements IModel
 
         return (id == other.getId()
                 && ObjectUtils.nullSafeEquals(name, other.getName()) 
-                && ObjectUtils.nullSafeEquals(lastName, other.getLasName())
+                && ObjectUtils.nullSafeEquals(lastName, other.getLastName())
                 && ObjectUtils.nullSafeEquals(birthDate, other.getBirthDate())
                 && ObjectUtils.nullSafeEquals(gender, other.getGender())
                 && numberOfChildren == other.getNumberOfChildren()
                 && incomingYear == other.getIncomingYear()
+                && ObjectUtils.nullSafeEquals(names, other.getNames())
                 );
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public String toString()
     {
-        return String.format("ModelImpl [id=%d, name=%s, lastName=%s, gender=%s, birthDate=%s, numberOfChildren=%d, incomingYear=%d]"
-                , id, name, lastName, gender, birthDate, numberOfChildren, incomingYear);
+        return String.format("ModelImpl [id=%d, name=%s, lastName=%s, gender=%s, birthDate=%s, numberOfChildren=%d, incomingYear=%d, names=%s]"
+                , id, name, lastName, gender, birthDate, numberOfChildren, incomingYear, names);
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#clone()
+    /**
+     * {@inheritDoc}
      */
     @Override
     public IModel clone()
     {
         return new ModelImpl(this);
-    }
-
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#getId()
-     */
-    @Override
-    public long getId()
-    {
-        return id;
-    }
-
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#setId(long)
-     */
-    @Override
-    public void setId(long id)
-    {
-        this.id = id;
-    }
-
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#getNumberOfChildren()
-     */
-    @Override
-    public int getNumberOfChildren()
-    {
-        return numberOfChildren;
-    }
-
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#setNumberOfChildren(int)
-     */
-    @Override
-    public void setNumberOfChildren(int numberOfChildren)
-    {
-        this.numberOfChildren = numberOfChildren;
-    }
-
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#getIncomingYear()
-     */
-    @Override
-    public double getIncomingYear()
-    {
-        return incomingYear;
-    }
-
-    /* (non-Javadoc)
-     * @see cat.albirar.framework.imodel.beans.models.IModel#setIncomingYear(double)
-     */
-    @Override
-    public void setIncomingYear(double incomingYear)
-    {
-        this.incomingYear = incomingYear;
     }
 
 }

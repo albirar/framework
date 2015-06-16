@@ -37,10 +37,10 @@ public class DynaBeanVisitorListDefault<C extends IDynaBeanVisitor> implements I
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object eventGet(String name, Object value) {
+	public Object eventGet(String name, Object value, Class<?> propertyType) {
 		if(visitors != null) {
 			for(C visitor: visitors) {
-				value = visitor.eventGet(name, value);
+				value = visitor.eventGet(name, value, propertyType);
 			}
 		}
 		return value;
@@ -50,10 +50,10 @@ public class DynaBeanVisitorListDefault<C extends IDynaBeanVisitor> implements I
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object eventSet(String name, Object value) {
+	public Object eventSet(String name, Object value, Class<?> propertyType) {
 		if(visitors != null) {
 			for(C visitor: visitors) {
-				value = visitor.eventSet(name, value);
+				value = visitor.eventSet(name, value, propertyType);
 			}
 		}
 		return value;

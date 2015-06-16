@@ -16,7 +16,7 @@
  *
  * Copyright (C) 2013 Octavi Fornés
  */
-package cat.albirar.framework.dynabean.impl.models;
+package cat.albirar.framework.dynabean.impl.models.test;
 
 /**
  * A gender enum.

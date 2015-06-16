@@ -17,7 +17,7 @@
  * Copyright (C) 2015 Octavi Fornés <ofornes@albirar.cat>
  */
 
-package cat.albirar.framework.dynabean.impl.models;
+package cat.albirar.framework.dynabean.impl.models.test;
 
 import java.util.Date;
 

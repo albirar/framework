@@ -154,7 +154,7 @@ public class DynaBeanDescriptor<T> implements Serializable {
 		// Is a dynaBean property?
 		if( (db = getAnnotationForProperty(propDesc, DynaBean.class)) != null) {
 			propDesc.dynaBean = true;
-			propDesc.defaultValue = Boolean.toString(db.defaultInstantiate());
+			propDesc.defaultValue = new String [] {Boolean.toString(db.defaultInstantiate())};
 		} else {
 			if( (pdv = getAnnotationForProperty(propDesc, PropertyDefaultValue.class)) != null) {
 				if(pdv.implementation() != null 
@@ -164,7 +164,7 @@ public class DynaBeanDescriptor<T> implements Serializable {
 						if(pdv.implementation().isAnnotationPresent(DynaBean.class)) {
 							// Instantiate by factory
 							propDesc.dynaBean = true;
-							propDesc.defaultValue = Boolean.TRUE.toString();
+							propDesc.defaultValue = new String [] {Boolean.TRUE.toString()};
 						} else {
 							logger.error("The implementation type (" + pdv.implementation().getName() 
 									+ ") for the property '" + propDesc.getPropertyName() + "' isn't a concrete class!");
@@ -174,14 +174,14 @@ public class DynaBeanDescriptor<T> implements Serializable {
 						propDesc.defaultImplementation = pdv.implementation();
 					}
 				} else {
-					if(!StringUtils.hasText(pdv.value())) {
+					if(!hasText(pdv.value())) {
 						// No implementation && no value
 						if(propDesc.getPropertyType().isInterface()) {
 							// Check for DynaBean
 							if(propDesc.getPropertyType().isAnnotationPresent(DynaBean.class)) {
 								// Instantiate by factory
 								propDesc.dynaBean = true;
-								propDesc.defaultValue = Boolean.TRUE.toString();
+								propDesc.defaultValue = new String[] {Boolean.TRUE.toString()};
 							} else {
 								logger.error("The property '".concat(propDesc.getPropertyName())
 										.concat("' is not instantiable! Cannot be marked as 'default'"));
@@ -325,5 +325,25 @@ public class DynaBeanDescriptor<T> implements Serializable {
                 }
             }
         }
+    }
+    /**
+     * Check that strings isn't null, have one or more items and all items {@link StringUtils#hasText(String) has text}.
+     * @param strings The array of strings
+     * @return true if has text and false if not
+     */
+    private boolean hasText(String ...strings)
+    {
+        if(strings != null && strings.length > 0)
+        {
+            for(String s : strings)
+            {
+                if(!StringUtils.hasText(s))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

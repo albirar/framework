@@ -17,36 +17,22 @@
  * Copyright (C) 2015 Octavi Fornés <ofornes@albirar.cat>
  */
 
-package cat.albirar.framework.dynabean.impl.models;
-
-import java.io.Serializable;
-import java.util.List;
-import java.util.Vector;
+package cat.albirar.framework.dynabean.impl.models.test;
 
 import cat.albirar.framework.dynabean.annotations.DynaBean;
 import cat.albirar.framework.dynabean.annotations.PropertyDefaultValue;
 
 /**
- * An annotated model to test functionality.
+ * A parent model with annotated {@link DynaBean} properties for test auto-creation.
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 2.0
  */
-@DynaBean
-public interface IAnnotatedModel extends Serializable, Cloneable {
-	public static final double DEFAULT_AMOUNT = 25.2D;
-	
+public interface IAnnotatedParentModel {
 	public String getId();
-	public void setId(String id);
-	
-	@PropertyDefaultValue(implementation=Vector.class)
-	public List<String> getNamesList();
-	public void setNamesList(List<String> names);
-	
-	public boolean isPending();
-	@PropertyDefaultValue("true")
-	public void setPending(boolean pending);
-	
-	@PropertyDefaultValue("" + DEFAULT_AMOUNT)
-	public double getAmount();
-	public void setAmount(double a);
+	public void setId();
+	@PropertyDefaultValue
+	public IAnnotatedModel getSubmodel();
+	public void setSubmodel(IAnnotatedModel submodel);
+	public ISimpleModel getDynabeanNotAnnotatedModel();
+	public void setDynabeanNotAnnotatedModel(ISimpleModel model);
 }

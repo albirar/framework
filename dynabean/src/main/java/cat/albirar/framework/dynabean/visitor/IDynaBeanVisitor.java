@@ -29,17 +29,21 @@ public interface IDynaBeanVisitor {
 	/**
 	 * Event fired on call a get method.
 	 * The {@code value} object is the current property value.
+	 * The visitor is called after get the property, in order to pass the current value to this visitor.
 	 * @param name The property name
 	 * @param value The current value of the property.
+	 * @param propertyType The property type
 	 * @return The value to return to. Generally, the same {@code value} as indicated
 	 */
-	public Object eventGet(String name, Object value);
+	public Object eventGet(String name, Object value, Class<?> propertyType);
 	/**
 	 * Event fired on call a set method.
+	 * The visitor is called before to set the value, in order to enable value modifications by visitor 
 	 * The {@code value} object is the new property value.
 	 * @param name The property name
 	 * @param value The new value for the property.
+	 * @param propertyType The property type
 	 * @return The value to set to. Generally, the same {@code value} as indicated
 	 */
-	public Object eventSet(String name, Object value);
+	public Object eventSet(String name, Object value, Class<?> propertyType);
 }

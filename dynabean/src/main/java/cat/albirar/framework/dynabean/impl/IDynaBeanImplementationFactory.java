@@ -20,6 +20,7 @@
 package cat.albirar.framework.dynabean.impl;
 
 import cat.albirar.framework.dynabean.IDynaBeanFactory;
+import cat.albirar.framework.dynabean.annotations.DynaBean;
 
 /**
  * Factory with method for implementation classes, not users.
@@ -30,8 +31,9 @@ public interface IDynaBeanImplementationFactory extends IDynaBeanFactory {
 	
 	/**
 	 * Search for a descriptor for the indicated dynaBean.
-	 * @param typeToImplement The type to implement
+	 * @param typeToImplement The type to implement, required
 	 * @return The descriptor.
+	 * @throws IllegalArgumentException If {@code typeToImplement} is null or isn't suitable for {@link DynaBean}
 	 */
 	public <T> DynaBeanDescriptor<T> getDescriptorFor(Class<T> typeToImplement);
 

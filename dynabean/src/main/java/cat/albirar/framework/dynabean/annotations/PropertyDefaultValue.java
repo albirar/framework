@@ -50,10 +50,10 @@ import java.util.TreeMap;
 @Target({ElementType.METHOD})
 public @interface PropertyDefaultValue {
 	/**
-	 * A specific value
+	 * A specific value string representation of the value to use.
 	 * @return the value
 	 */
-	String value() default "";
+	String [] value() default {""};
 	/**
 	 * A specific implementation class to be instantiated.
 	 * @return the implementation class

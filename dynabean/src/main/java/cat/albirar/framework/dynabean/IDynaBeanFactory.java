@@ -23,6 +23,8 @@ import java.beans.PropertyEditor;
 
 import org.springframework.beans.PropertyEditorRegistry;
 
+import cat.albirar.framework.dynabean.visitor.IDynaBeanVisitor;
+
 /**
  * The contract for DynaBean factories.
  * 
@@ -30,13 +32,21 @@ import org.springframework.beans.PropertyEditorRegistry;
  * @since 2.0
  */
 public interface IDynaBeanFactory {
-	/**
-	 * DynaBean instantiator.
-	 * @param typeToImplement The Class of the type to implement.
-	 * @param <T> The type to implement
-	 * @return The instance dynaBean
-	 */
-	public <T> T newDynaBean(Class<T> typeToImplement);
+    /**
+     * DynaBean instantiator.
+     * @param <T> The type to implement
+     * @param typeToImplement The Class of the type to implement.
+     * @return The instance dynaBean
+     */
+    public <T> T newDynaBean(Class<T> typeToImplement);
+    /**
+     * DynaBean instantiator for visitors.
+     * @param <T> The type to implement
+     * @param typeToImplement The Class of the type to implement.
+     * @param visitor The visitor to add to
+     * @return The instance dynaBean
+     */
+    public <T> T newDynaBean(Class<T> typeToImplement, IDynaBeanVisitor visitor);
 	/**
 	 * Clone a dynaBean
 	 * @param <T> The type to implement
@@ -44,6 +54,15 @@ public interface IDynaBeanFactory {
 	 * @return The new cloned dynaBean
 	 */
 	public <T> T cloneDynaBean(T dynaBean);
+	
+	/**
+	 * Add a new visitor to the indicated dynabean.
+	 * @param <T> The implemented type
+	 * @param dynaBean The dynaBean
+	 * @param visitor The visitor
+	 * @return The dynaBean with the visitor added.
+	 */
+	public <T> T addVisitorToDynaBean(T dynaBean, IDynaBeanVisitor visitor);
 	
 	/**
 	 * Gets the {@link PropertyEditor} registry associated with this factory.

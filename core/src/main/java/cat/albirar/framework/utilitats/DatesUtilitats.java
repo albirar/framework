@@ -38,13 +38,7 @@ public abstract class DatesUtilitats {
 	 * @return true si són iguals i false en cas contrari. Si ambdues són nul·les, també es consideren iguals
 	 */
 	public static final boolean nullSafeEqualsDataHora(Date d1, Date d2) {
-		if(d1 == null || d2 == null) {
-			if(d1 == d2) {
-				return true;
-			}
-			return false;
-		}
-		return DateUtils.truncatedEquals(d1, d2, Calendar.SECOND);
+		return (nullSafeCompareDataHora(d1, d2) == 0);
 	}
 	/**
 	 * Compara dues data+hora tot tenint cura dels nulls.
@@ -66,4 +60,34 @@ public abstract class DatesUtilitats {
 		}
 		return DateUtils.truncatedCompareTo(d1, d2, Calendar.SECOND);
 	}
+    /**
+     * Comprova si dues dates són iguals o no tot tenint cura dels nulls.
+     * Ignora la part menor de hora.
+     * @param d1 La primera data.
+     * @param d2 La segona data.
+     * @return true si són iguals i false en cas contrari. Si ambdues són nul·les, també es consideren iguals
+     */
+    public static final boolean nullSafeEqualsData(Date d1, Date d2) {
+        return (nullSafeCompareData(d1, d2) == 0);
+    }
+    /**
+     * Compara dues dates tot tenint cura dels nulls.
+     * Ignora la part menor de hora.
+     * Un valor null és considera un valor menor que qualsevol altre valor.
+     * @param d1 La primera data.
+     * @param d2 La segona data.
+     * @return igual a zero si són iguals, menor que zero si d1 és menor que d2 i major que zero si d1 és major que d2. Si ambdues són nul·les, també es consideren iguals
+     */
+    public static final int nullSafeCompareData(Date d1, Date d2) {
+        if(d1 == null || d2 == null) {
+            if(d1 == d2) {
+                return 0;
+            }
+            if(d1 == null) {
+                return -1;
+            }
+            return 1;
+        }
+        return DateUtils.truncatedCompareTo(d1, d2, Calendar.DATE);
+    }
 }

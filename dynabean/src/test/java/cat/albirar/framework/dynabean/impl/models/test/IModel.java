@@ -16,7 +16,7 @@
  *
  * Copyright (C) 2013 Octavi Fornés
  */
-package cat.albirar.framework.dynabean.impl.models;
+package cat.albirar.framework.dynabean.impl.models.test;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -38,9 +38,9 @@ public interface IModel extends Serializable, Cloneable
 	/** Name */
 	public void setName(String name);
 	/** Last name */
-	public String getLasName();
+	public String getLastName();
 	/** Last name */
-	public void setLasName(String lastName);
+	public void setLastName(String lastName);
 	/** Birth date */
 	public Date getBirthDate();
 	/** Birth date */
@@ -57,6 +57,9 @@ public interface IModel extends Serializable, Cloneable
 	public EGender getGender();
 	/** Gender */
 	public void setGender(EGender gender);
+    
+    public String[] getNames();
+    public void setNames(String [] names);
 	/**
 	 * Clone this bean.
 	 */

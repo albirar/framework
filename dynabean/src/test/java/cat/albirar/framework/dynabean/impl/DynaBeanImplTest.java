@@ -30,10 +30,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cat.albirar.framework.dynabean.DynaBeanUtils;
-import cat.albirar.framework.dynabean.impl.models.EGender;
-import cat.albirar.framework.dynabean.impl.models.IModel;
-import cat.albirar.framework.dynabean.impl.models.ISimpleModel;
-import cat.albirar.framework.dynabean.impl.models.ModelImpl;
+import cat.albirar.framework.dynabean.impl.models.test.EGender;
+import cat.albirar.framework.dynabean.impl.models.test.IModel;
+import cat.albirar.framework.dynabean.impl.models.test.ISimpleModel;
+import cat.albirar.framework.dynabean.impl.models.test.ModelImpl;
 
 /**
  * Test of {@link DynaBeanImpl}.
@@ -56,6 +56,8 @@ public class DynaBeanImplTest
 	private static final double INCOMING_YEAR_VALUE = 32056.12D;
 	/** Test value for gender prop. */
 	private static final EGender GENDER_VALUE = EGender.Female;
+	
+	private static final String [] NAMES_VALUES = new String [] { "VALUE1", "VALUE2", "VALUE3", "VALUE4"};
 	/*
 	 * Initialize instance
 	 */
@@ -83,74 +85,92 @@ public class DynaBeanImplTest
 		m = DynaBeanUtils.instanceFactory().newDynaBean(IModel.class);
 		Assert.assertEquals(0L, m.getId());
 		Assert.assertNull(m.getName());
-		Assert.assertNull(m.getLasName());
+		Assert.assertNull(m.getLastName());
 		Assert.assertNull(m.getBirthDate());
         Assert.assertEquals(0,m.getNumberOfChildren());
         Assert.assertEquals(0.0D,m.getIncomingYear(),0.0D);
 		Assert.assertNull(m.getGender());
+		Assert.assertNull(m.getNames());
 		
 		m.setId(ID_VALUE);
         Assert.assertEquals(ID_VALUE, m.getId());
         Assert.assertNull(m.getName());
-        Assert.assertNull(m.getLasName());
+        Assert.assertNull(m.getLastName());
         Assert.assertNull(m.getBirthDate());
         Assert.assertEquals(0,m.getNumberOfChildren());
         Assert.assertEquals(0.0D,m.getIncomingYear(),0.0D);
         Assert.assertNull(m.getGender());
+        Assert.assertNull(m.getNames());
 		
 		m.setName(NAME_VALUE);
         Assert.assertEquals(ID_VALUE, m.getId());
 		Assert.assertEquals(NAME_VALUE, m.getName());
-        Assert.assertNull(m.getLasName());
+        Assert.assertNull(m.getLastName());
         Assert.assertNull(m.getBirthDate());
         Assert.assertEquals(0,m.getNumberOfChildren());
         Assert.assertEquals(0.0D,m.getIncomingYear(),0.0D);
         Assert.assertNull(m.getGender());
+        Assert.assertNull(m.getNames());
 		
-		m.setLasName(LAST_NAME_VALUE);
+		m.setLastName(LAST_NAME_VALUE);
         Assert.assertEquals(ID_VALUE, m.getId());
         Assert.assertEquals(NAME_VALUE, m.getName());
-        Assert.assertEquals(LAST_NAME_VALUE, m.getLasName());
+        Assert.assertEquals(LAST_NAME_VALUE, m.getLastName());
         Assert.assertNull(m.getBirthDate());
         Assert.assertEquals(0,m.getNumberOfChildren());
         Assert.assertEquals(0.0D,m.getIncomingYear(),0.0D);
         Assert.assertNull(m.getGender());
+        Assert.assertNull(m.getNames());
 		
 		m.setBirthDate(BIRTHDATE_VALUE);
         Assert.assertEquals(ID_VALUE, m.getId());
         Assert.assertEquals(NAME_VALUE, m.getName());
-        Assert.assertEquals(LAST_NAME_VALUE, m.getLasName());
+        Assert.assertEquals(LAST_NAME_VALUE, m.getLastName());
 		Assert.assertEquals(new Date(BIRTHDATE_VALUE.getTime()), m.getBirthDate());
         Assert.assertEquals(0,m.getNumberOfChildren());
         Assert.assertEquals(0.0D,m.getIncomingYear(),0.0D);
         Assert.assertNull(m.getGender());
+        Assert.assertNull(m.getNames());
 
         m.setNumberOfChildren(NUMBER_OF_CHILDREN_VALUE);
         Assert.assertEquals(ID_VALUE, m.getId());
         Assert.assertEquals(NAME_VALUE, m.getName());
-        Assert.assertEquals(LAST_NAME_VALUE, m.getLasName());
+        Assert.assertEquals(LAST_NAME_VALUE, m.getLastName());
         Assert.assertEquals(new Date(BIRTHDATE_VALUE.getTime()), m.getBirthDate());
         Assert.assertEquals(NUMBER_OF_CHILDREN_VALUE,m.getNumberOfChildren());
         Assert.assertEquals(0.0D,m.getIncomingYear(),0.0D);
         Assert.assertNull(m.getGender());
+        Assert.assertNull(m.getNames());
 
         m.setIncomingYear(INCOMING_YEAR_VALUE);
         Assert.assertEquals(ID_VALUE, m.getId());
         Assert.assertEquals(NAME_VALUE, m.getName());
-        Assert.assertEquals(LAST_NAME_VALUE, m.getLasName());
+        Assert.assertEquals(LAST_NAME_VALUE, m.getLastName());
         Assert.assertEquals(new Date(BIRTHDATE_VALUE.getTime()), m.getBirthDate());
         Assert.assertEquals(NUMBER_OF_CHILDREN_VALUE,m.getNumberOfChildren());
         Assert.assertEquals(INCOMING_YEAR_VALUE,m.getIncomingYear(),0.0D);
         Assert.assertNull(m.getGender());
+        Assert.assertNull(m.getNames());
         
 		m.setGender(GENDER_VALUE);
         Assert.assertEquals(ID_VALUE, m.getId());
         Assert.assertEquals(NAME_VALUE, m.getName());
-        Assert.assertEquals(LAST_NAME_VALUE, m.getLasName());
+        Assert.assertEquals(LAST_NAME_VALUE, m.getLastName());
         Assert.assertEquals(new Date(BIRTHDATE_VALUE.getTime()), m.getBirthDate());
         Assert.assertEquals(NUMBER_OF_CHILDREN_VALUE,m.getNumberOfChildren());
         Assert.assertEquals(INCOMING_YEAR_VALUE,m.getIncomingYear(),0.0D);
 		Assert.assertEquals(GENDER_VALUE,m.getGender());
+        Assert.assertNull(m.getNames());
+
+        m.setNames(NAMES_VALUES);
+        Assert.assertEquals(ID_VALUE, m.getId());
+        Assert.assertEquals(NAME_VALUE, m.getName());
+        Assert.assertEquals(LAST_NAME_VALUE, m.getLastName());
+        Assert.assertEquals(new Date(BIRTHDATE_VALUE.getTime()), m.getBirthDate());
+        Assert.assertEquals(NUMBER_OF_CHILDREN_VALUE,m.getNumberOfChildren());
+        Assert.assertEquals(INCOMING_YEAR_VALUE,m.getIncomingYear(),0.0D);
+        Assert.assertEquals(GENDER_VALUE,m.getGender());
+        Assert.assertArrayEquals(NAMES_VALUES, m.getNames());
 	}
 	/**
 	 * Test the 'clone' feature
@@ -183,7 +203,7 @@ public class DynaBeanImplTest
 
 		for(n = 0; n < 10; n++)
 		{
-		    Assert.assertTrue(m1.hashCode() == m2.hashCode());
+		    Assert.assertEquals(m1.hashCode(), m2.hashCode());
 		}
 	}
 	/**
@@ -250,7 +270,7 @@ public class DynaBeanImplTest
 	 */
 	@Test public void testMixedClone()
 	{
-		IModel m1, m2;
+		IModel m1, m2, m3;
 		
 		m1 = DynaBeanUtils.instanceFactory().newDynaBean(IModel.class);
 		assignValues(m1);
@@ -258,9 +278,9 @@ public class DynaBeanImplTest
 		m2 = new ModelImpl(m1);
 		
 		Assert.assertEquals(m1, m2);
-		m2 = m1.clone();
-		Assert.assertNotSame(m1, m2);
-		Assert.assertEquals(m1, m2);
+		m3 = m1.clone();
+		Assert.assertNotSame(m3, m2);
+		Assert.assertEquals(m3, m2);
 	}
 	
 	/**
@@ -271,10 +291,11 @@ public class DynaBeanImplTest
 	{
         model.setId(ID_VALUE);
         model.setName(NAME_VALUE);
-        model.setLasName(LAST_NAME_VALUE);
+        model.setLastName(LAST_NAME_VALUE);
         model.setBirthDate(BIRTHDATE_VALUE);
         model.setNumberOfChildren(NUMBER_OF_CHILDREN_VALUE);
         model.setIncomingYear(INCOMING_YEAR_VALUE);
         model.setGender(GENDER_VALUE);
+        model.setNames(NAMES_VALUES);
 	}
 }
