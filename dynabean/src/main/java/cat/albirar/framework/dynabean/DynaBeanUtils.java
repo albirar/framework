@@ -53,9 +53,10 @@ public abstract class DynaBeanUtils
 	};
 	/**
 	 * Gets a factory instance.
+	 * This is a {@link ThreadLocal} factory
 	 * @return The factory
 	 */
-	public static final IDynaBeanFactory instanceFactory() {
+	public static final IDynaBeanFactory instanceDefaultFactory() {
 		return singleton.get();
 	}
 }

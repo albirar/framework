@@ -31,10 +31,10 @@ public interface IDynaBeanImplementationFactory extends IDynaBeanFactory {
 	
 	/**
 	 * Search for a descriptor for the indicated dynaBean.
-	 * @param typeToImplement The type to implement, required
+	 * @param <T> The type to implement
+	 * @param typeToImplement The {@link Class} type to implement, required
 	 * @return The descriptor.
 	 * @throws IllegalArgumentException If {@code typeToImplement} is null or isn't suitable for {@link DynaBean}
 	 */
 	public <T> DynaBeanDescriptor<T> getDescriptorFor(Class<T> typeToImplement);
-
 }

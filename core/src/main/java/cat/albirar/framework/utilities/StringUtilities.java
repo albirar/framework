@@ -16,7 +16,7 @@
  *
  * Copyright (C) 2015 Octavi Fornés
  */
-package cat.albirar.framework.utilitats;
+package cat.albirar.framework.utilities;
 
 import org.springframework.util.StringUtils;
 
@@ -25,7 +25,7 @@ import org.springframework.util.StringUtils;
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.0
  */
-public abstract class StringUtilitats
+public abstract class StringUtilities
 {
     /**
      * Check that strings is not null, have at least one item and all items have text.

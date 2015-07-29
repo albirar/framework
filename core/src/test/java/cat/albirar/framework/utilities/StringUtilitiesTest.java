@@ -16,43 +16,45 @@
  *
  * Copyright (C) 2015 Octavi Fornés
  */
-package cat.albirar.framework.utilitats;
+package cat.albirar.framework.utilities;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import cat.albirar.framework.utilities.StringUtilities;
+
 /**
- * Test for {@link StringUtilitats}.
+ * Test for {@link StringUtilities}.
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.0
  */
-public class StringUtilitatsTest
+public class StringUtilitiesTest
 {
     /**
-     * Test {@link StringUtilitats#hashText(String...)} with different values and expected results.
+     * Test {@link StringUtilities#hashText(String...)} with different values and expected results.
      */
     @Test public void testhasText()
     {
         String [] texts;
         
         texts = null;
-        Assert.assertFalse(StringUtilitats.hashText());
-        Assert.assertFalse(StringUtilitats.hashText(texts));
+        Assert.assertFalse(StringUtilities.hashText());
+        Assert.assertFalse(StringUtilities.hashText(texts));
         texts = new String[] {null, null, null};
-        Assert.assertFalse(StringUtilitats.hashText(texts));
+        Assert.assertFalse(StringUtilities.hashText(texts));
         texts[0] = "A";
-        Assert.assertFalse(StringUtilitats.hashText(texts));
+        Assert.assertFalse(StringUtilities.hashText(texts));
         texts[1] = "B";
-        Assert.assertFalse(StringUtilitats.hashText(texts));
+        Assert.assertFalse(StringUtilities.hashText(texts));
         texts[2] = "         ";
-        Assert.assertFalse(StringUtilitats.hashText(texts));
+        Assert.assertFalse(StringUtilities.hashText(texts));
         texts[2] = "";
-        Assert.assertFalse(StringUtilitats.hashText(texts));
+        Assert.assertFalse(StringUtilities.hashText(texts));
         texts[2] = " ";
-        Assert.assertFalse(StringUtilitats.hashText(texts));
+        Assert.assertFalse(StringUtilities.hashText(texts));
         texts[2] = "C";
-        Assert.assertTrue(StringUtilitats.hashText(texts));
+        Assert.assertTrue(StringUtilities.hashText(texts));
         texts[0] = "            ";
-        Assert.assertFalse(StringUtilitats.hashText(texts));
+        Assert.assertFalse(StringUtilities.hashText(texts));
     }
 }

@@ -31,12 +31,6 @@ import cat.albirar.framework.dynabean.DynaBeanUtils;
  */
 public abstract class DynaBeanImplementationUtils
 {
-    /** The boolean primitive type name. */
-    private static final String BOOLEAN_TYPE_NAME = boolean.class.getName();
-
-    /** The void type name. */
-    private static final String VOID_NAME_CONSTANT = void.class.getName();
-
     /** The prefix for getter method name (not boolean property). */
     private static final String GET_PREFIX_CONSTANT = "get";
 
@@ -97,6 +91,7 @@ public abstract class DynaBeanImplementationUtils
      * <ul>
      * <li>Un {@link #isSetter(String) mètode set} amb arguments i sense retorn</li>
      * <li>Un {@link #isGetter(String) mètode get} sense arguments i amb retorn diferent de 'void'.</li>
+     * <li>Un {@link #isGetterBoolean(String) mètode 'is'} sense arguments i amb retorn 'boolean'.</li>
      * </ul>
      * 
      * @param method El mètode
@@ -106,11 +101,16 @@ public abstract class DynaBeanImplementationUtils
     {
         if(isGetter(method.getName()))
         {
-            return (method.getReturnType() != null && !method.getReturnType().getName().equals(VOID_NAME_CONSTANT) && method.getParameterTypes().length == 0);
+            if(isGetterBoolean(method.getName()))
+            {
+                return (method.getParameterTypes().length == 0 && method.getReturnType().equals(boolean.class));
+            }
+            return (!method.getReturnType().equals(void.class) 
+                    && method.getParameterTypes().length == 0);
         }
         else
         {
-            return (method.getParameterTypes().length == 1 && method.getReturnType() != null && method.getReturnType().getName().equals(VOID_NAME_CONSTANT));
+            return (method.getParameterTypes().length == 1 && method.getReturnType().equals(void.class));
         }
     }
 
@@ -207,8 +207,7 @@ public abstract class DynaBeanImplementationUtils
         }
         else
         {
-            isBoolean = (BOOLEAN_TYPE_NAME.equalsIgnoreCase(type.getSimpleName()) 
-                    || Boolean.class.getName().equals(type.getName()));
+            isBoolean = (boolean.class.equals(type) || Boolean.class.equals(type));
         }
         return fromPropertyToGetMethodName(propertyName, isBoolean);
     }

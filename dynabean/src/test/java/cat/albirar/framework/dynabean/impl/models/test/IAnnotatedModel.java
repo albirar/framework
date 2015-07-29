@@ -38,13 +38,14 @@ public interface IAnnotatedModel extends Serializable, Cloneable {
     public static final double DEFAULT_OTHER_AMOUNTS_2 = 3.1416D;
     public static final double DEFAULT_OTHER_AMOUNTS_3 = 1D;
     public static final double DEFAULT_OTHER_AMOUNTS_4 = 25.599288181D;
+    public static final String [] DEFAULT_NAMES = {"A","B","C"};
 	public static final double [] DEFAULT_OTHER_AMOUNTS = { DEFAULT_OTHER_AMOUNTS_1, DEFAULT_OTHER_AMOUNTS_2, DEFAULT_OTHER_AMOUNTS_3, DEFAULT_OTHER_AMOUNTS_4};
-	public static final String [] DEFAULT_OTHER_NAMES = {"A","B","C"};
+	public static final String [] DEFAULT_OTHER_NAMES = {"aa","bb","cc"};
 	
 	public String getId();
 	public void setId(String id);
 	
-	@PropertyDefaultValue(implementation=Vector.class)
+	@PropertyDefaultValue(implementation=Vector.class, value={"A", "B", "C"})
 	public List<String> getNamesList();
 	public void setNamesList(List<String> names);
 	
@@ -57,7 +58,7 @@ public interface IAnnotatedModel extends Serializable, Cloneable {
 	public void setAmount(double a);
 	
     public String [] getOtherNames();
-    @PropertyDefaultValue({"A","B","C"})
+    @PropertyDefaultValue({"aa","bb","cc"})
     public void setOtherNames(String [] otherNames);
     
     @PropertyDefaultValue({"" + DEFAULT_OTHER_AMOUNTS_1,"" + DEFAULT_OTHER_AMOUNTS_2,"" + DEFAULT_OTHER_AMOUNTS_3, "" + DEFAULT_OTHER_AMOUNTS_4})

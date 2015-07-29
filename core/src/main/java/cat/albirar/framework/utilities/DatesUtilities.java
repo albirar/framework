@@ -17,7 +17,7 @@
  * Copyright (C) 2015 Octavi Fornés <ofornes@albirar.cat>
  */
 
-package cat.albirar.framework.utilitats;
+package cat.albirar.framework.utilities;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -29,7 +29,7 @@ import org.apache.commons.lang3.time.DateUtils;
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0
  */
-public abstract class DatesUtilitats {
+public abstract class DatesUtilities {
 	/**
 	 * Comprova si dues data+hora són iguals o no tot tenint cura dels nulls.
 	 * Ignora la part menor de segons.

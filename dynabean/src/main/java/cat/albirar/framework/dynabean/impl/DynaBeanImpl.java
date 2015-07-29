@@ -20,13 +20,15 @@ import static cat.albirar.framework.dynabean.impl.DynaBeanImplementationUtils.is
 import static cat.albirar.framework.dynabean.impl.DynaBeanImplementationUtils.isPropertyMethod;
 
 import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,6 +42,7 @@ import org.springframework.util.ObjectUtils;
 import cat.albirar.framework.dynabean.DynaBeanUtils;
 import cat.albirar.framework.dynabean.IDynaBeanFactory;
 import cat.albirar.framework.dynabean.visitor.IDynaBeanVisitor;
+import cat.albirar.framework.patterns.ITransformerVisitor;
 
 /**
  * A proxy for create dynamic beans from interfaces.
@@ -50,7 +53,7 @@ import cat.albirar.framework.dynabean.visitor.IDynaBeanVisitor;
  * <pre>
  * InterfaceJavaBean a;
  * 
- * a = {@link DynaBeanUtils#instanceFactory()}.{@link IDynaBeanFactory#newDynaBean(Class) newDynaBean(InterfaceJavaBean.class)};
+ * a = {@link DynaBeanUtils#instanceDefaultFactory()}.{@link IDynaBeanFactory#newDynaBean(Class) newDynaBean(InterfaceJavaBean.class)};
  * ...
  * a.setXXX("xxx");
  * </pre>
@@ -89,7 +92,7 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
     {
         this();
         this.descriptor = descriptor;
-        doInstantiate(null);
+        doInstantiate();
     }
 
     /**
@@ -101,7 +104,7 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
     {
         this();
         this.descriptor = origin.descriptor;
-        doInstantiate(origin);
+        doClone(origin);
     }
 
     /**
@@ -115,70 +118,44 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
         this();
 
         descriptor = factory.getDescriptorFor(typeToImplement);
-        doInstantiate(null);
+        doInstantiate();
     }
 
     /**
      * Check and assign the values for the properties.
-     * 
-     * @param origin The origin to copy from. Can be null, so new instance is created and only default values are
-     *            assigned
      */
-    private void doInstantiate(DynaBeanImpl<T> origin)
+    private void doInstantiate()
     {
-        // Assign values
-        if(origin != null)
+        // Default instantiation
+        for(DynaBeanPropertyDescriptor prop : descriptor.getProperties())
         {
-            // Copy instantiation
-            for(DynaBeanPropertyDescriptor propDesc : descriptor.getProperties())
+            // Test: dynaBean; implementation; defaultValue; null (or 0 or false)
+            if(prop.isDynaBean())
             {
-                if(Cloneable.class.isAssignableFrom(descriptor.getImplementedType()))
-                {
-                    // clone values...
-                    values.put(propDesc.getPropertyName(), nullSafeValue(cloneValue(propDesc, origin.values.get(propDesc.getPropertyName())), propDesc));
-                }
-                else
-                {
-                    // copy values
-                    values.put(propDesc.getPropertyName(), nullSafeValue(origin.values.get(propDesc.getPropertyName()), propDesc));
-                }
+                // Instantiate by factory
+                values.put(prop.propertyName, descriptor.getFactory().newDynaBean(prop.getPropertyType()));
+            }
+            else
+            {
+                values.put(prop.propertyName, nullSafeValue(generateDefaultValue(prop), prop));
             }
         }
-        else
+    }
+    /**
+     * Do a clone instantiation.
+     * @param origin The origin to get values from. If null, a call to {@link #doInstantiate()} is made.
+     */
+    private void doClone(DynaBeanImpl<T> origin)
+    {
+        if(origin == null)
         {
-            // Default instantiation
-            for(DynaBeanPropertyDescriptor prop : descriptor.getProperties())
-            {
-                // Test: dynaBean; implementation; defaultValue; null (or 0 or false)
-                if(prop.dynaBean)
-                {
-                    // Instantiate by factory
-                    values.put(prop.propertyName, descriptor.getFactory().newDynaBean(prop.getPropertyType()));
-                }
-                else
-                {
-                    if(prop.defaultImplementation != null)
-                    {
-                        // Instantiate a concrete class
-                        try
-                        {
-                            values.put(prop.propertyName, prop.defaultImplementation.newInstance());
-                        }
-                        catch(InstantiationException | IllegalAccessException e)
-                        {
-                            String s;
-
-                            s = String.format("On instantiate '%s.%s': %s", descriptor.getImplementedType(), prop.propertyName, e.getMessage());
-                            logger.error(s, e);
-                            throw new RuntimeException(s, e);
-                        }
-                    }
-                    else
-                    {
-                        values.put(prop.propertyName, nullSafeValue(cloneValue(prop, prop.defaultValue), prop));
-                    }
-                }
-            }
+            doInstantiate();
+            return;
+        }
+        // Copy instantiation
+        for(DynaBeanPropertyDescriptor propDesc : descriptor.getProperties())
+        {
+            values.put(propDesc.getPropertyName(), nullSafeValue(cloneValue(propDesc, origin.values.get(propDesc.getPropertyName())), propDesc));
         }
     }
 
@@ -334,7 +311,7 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
     /**
      * Dynamically implemented {@link Object#equals(Object)} method.
      * 
-     * @param o The 'other' object
+     * @param oOrigin The 'other' object
      * @return as equals specification
      * @see java.lang.Object#equals(java.lang.Object)
      */
@@ -343,15 +320,24 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
     {
             "rawtypes", "unchecked"
     })
-    public boolean equals(Object o)
+    public boolean equals(Object oOrigin)
     {
         T theOther;
         DynaBeanImpl theOtherDynaBean = null;
+        Object o;
 
         // Check if 'other' is a null
-        if(o == null)
+        if(oOrigin == null)
         {
             return false;
+        }
+        if(Proxy.isProxyClass(oOrigin.getClass()))
+        {
+            o = Proxy.getInvocationHandler(oOrigin);
+        }
+        else
+        {
+            o = oOrigin;
         }
         // Check for self-equals...
         if(o == this)
@@ -398,176 +384,188 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
                     return false;
                 }
             }
-            catch(Exception e)
+            catch(SecurityException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e)
             {
-                /*
-                 * Includes: SecurityException, IllegalArgumentException, IllegalAccessException,
-                 * InvocationTargetException
-                 */
                 throw new RuntimeException("On equals call!", e);
             }
         }
         return true;
     }
+    /**
+     * Generate the value for the property taking care of {@link DynaBeanPropertyDescriptor#defaultImplementation} and {@link DynaBeanPropertyDescriptor#defaultValue}.
+     * @param propDesc The property descriptor
+     * @return The value for that property
+     */
+    private Object generateDefaultValue(DynaBeanPropertyDescriptor propDesc)
+    {
+        PropertyEditor pEditor;
+        IPropertyWriter writer;
+        ITransformerVisitor<Object> reader;
+        
+        if(propDesc.getDefaultValue() != null 
+                && propDesc.getDefaultValue().length > 0)
+        {
+            if(propDesc.getPropertyItemEditor() != null)
+            {
+                pEditor = propDesc.getPropertyItemEditor();
+                reader = new ObjectCopyReaderVisitor(pEditor);
+                writer = prepareWriter(propDesc, reader);
+                for(String iv : propDesc.getDefaultValue())
+                {
+                    writer.visit(iv);
+                }
+                return writer.getReturnValue();
+            }
+            // No editor, return the default value directly
+            if(propDesc.isArray())
+            {
+                // is array, return an array
+                return propDesc.getDefaultValue();
+            }
+            // not an array, return a single value
+            return propDesc.getDefaultValue()[0];
+        }
+        // No default value, return default implementation (or null if none are defined)
+        return instantiateDefaultImplementation(propDesc);
+    }
 
     /**
-     * Clone a property value.
-     * 
+     * Clone or copy a property value.
+     * Only applicable on clone call.
+     * <ul>
+     * <li>If {@code originalValue} is {@link Cloneable}, makes a clone.</li>
+     * <li>If {@code originalValue} IS NOT {@link Cloneable}, search for an {@link PropertyEditor editor} and copy.</li>
+     * <li>If cannot found a properly {@link PropertyEditor editor}, simply return the {@code originalValue}</li>
+     * </ul>
      * @param propDesc The property descriptor
      * @param originalValue The value to clone
      * @return The cloned value
      */
     private Object cloneValue(DynaBeanPropertyDescriptor propDesc, Object originalValue)
     {
-        PropertyEditor pEditor;
-        Class<?> originalType;
-        Object valueArray;
-        Method m;
-        int n, l;
+        Iterator<?> iterator;
+        int n;
+        IPropertyWriter writer;
+        ITransformerVisitor<Object> reader;
 
+        // only null?
         if(originalValue == null)
         {
             return null;
         }
         
-        if(originalValue.getClass().isArray())
+        if(propDesc.isItemDynaBean())
         {
-            originalType = originalValue.getClass().getComponentType();
+            reader = new ObjectCopyReaderVisitor(descriptor.getFactory());
         }
         else
         {
-            originalType = originalValue.getClass();
-        }
-
-        if(Cloneable.class.isAssignableFrom(originalType))
-        {
-
-            try
+            if(propDesc.getPropertyItemCloneMethod() != null)
             {
-                m = originalType.getMethod("clone", (Class<?>[]) null);
-                if(originalValue.getClass().isArray() && propDesc.getPropertyType().isArray())
-                {
-                    // Clone an array
-                    // Assign with conversion, one to one
-                    valueArray = Array.newInstance(propDesc.getPropertyType().getComponentType(), ((Object[])originalValue).length);
-                    n = 0;
-                    for(Object val : (Object[])originalValue)
-                    {
-                        Array.set(valueArray, n++, m.invoke(val, (Object[]) null));
-                    }
-                    return valueArray;
-                }
-                else
-                {
-                    if(originalValue.getClass().isArray())
-                    {
-                        return m.invoke(Array.get(originalValue, 0), (Object[]) null);
-                    }
-                    else
-                    {
-                        return m.invoke(originalValue, (Object[]) null);
-                    }
-                }
-            }
-            catch(NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
-            {
-                logger.error("On cloning value for property '" + propDesc.getPropertyName() + "' (" + e.getMessage() + ")", e);
-            }
-        }
-
-        // Try with editors
-        if((pEditor = findPropertyEditorForProperty(propDesc, originalValue.getClass())) != null)
-        {
-            if(originalValue.getClass().isArray()
-                    && propDesc.getPropertyType().isArray())
-            {
-                // Assign with conversion, one to one
-                l = Array.getLength(originalValue);
-                valueArray = Array.newInstance(propDesc.getPropertyType().getComponentType(), l);
-                n = 0;
-                for(n = 0; n < l; n++)
-                {
-                    Array.set(valueArray, n, resolveValue(pEditor, Array.get(originalValue, n)));
-                }
-                return valueArray;
+                reader = new ObjectCopyReaderVisitor(propDesc.getPropertyItemCloneMethod());
             }
             else
             {
-                if(originalValue.getClass().isArray())
+                reader = new ObjectCopyReaderVisitor();
+            }
+        }
+        writer = prepareWriter(propDesc, reader);
+        if(propDesc.isArray())
+        {
+            for(n = 0; n < Array.getLength(originalValue); n++)
+            {
+                writer.visit(Array.get(originalValue, n));
+            }
+        }
+        else
+        {
+            if(propDesc.isCollection())
+            {
+                iterator = ((Collection<?>)originalValue).iterator();
+                while(iterator.hasNext())
                 {
-                    return resolveValue(pEditor, ((Object[])originalValue)[0]);
+                    writer.visit(iterator.next());
+                }
+            }
+            else
+            {
+                writer.visit(originalValue);
+            }
+        }
+        return writer.getReturnValue();
+    }
+    /**
+     * Prepare a writer for the indicated property.
+     * @param propDesc The property descriptor
+     * @param reader The reader
+     * @return The writer
+     */
+    @SuppressWarnings("unchecked")
+    private IPropertyWriter prepareWriter(DynaBeanPropertyDescriptor propDesc, ITransformerVisitor<Object> reader)
+    {
+        IPropertyWriter writer;
+        Object di;
+        
+        // Specific writer
+        if(propDesc.isArray() || propDesc.isCollection())
+        {
+            // 1t and 2d cases
+            // We use a visitor pattern to assign values
+            if(propDesc.isArray())
+            {
+                writer = new ArrayWriterVisitor(reader, propDesc.getPropertyType().getComponentType());
+            }
+            else
+            {
+                // Check if default collection is assigned
+                if( (di = instantiateDefaultImplementation(propDesc)) != null)
+                {
+                    writer = new CollectionWriterVisitor(reader, (List<Object>)di);
                 }
                 else
                 {
-                    return resolveValue(pEditor, originalValue);
+                    writer = new CollectionWriterVisitor(reader, new Vector<Object>());
                 }
             }
         }
-        // Nothing more we can do, return the same object
-        return originalValue;
-    }
-    /**
-     * Resolve a value with a corresponent {@link PropertyEditor}.
-     * @param pEditor The editor, cannot be null
-     * @param originalValue The original value
-     * @return The resolved value
-     */
-    private Object resolveValue(PropertyEditor pEditor, Object originalValue)
-    {
-        if(String.class.isAssignableFrom(originalValue.getClass()))
-        {
-            pEditor.setAsText((String) originalValue);
-        }
         else
         {
-            pEditor.setValue(originalValue);
-            pEditor.setAsText(pEditor.getAsText());
+            writer = new IndividualWriterVisitor(reader);
         }
-        return pEditor.getValue();
+        return writer;
     }
     /**
-     * Search for a {@link PropertyEditor} for the given property.
-     * 
-     * @param propDesc The descriptor, required
-     * @param originalType The original type (in case of clonning), can be null
-     * @return The {@link PropertyEditor} or null if none was found
+     * Instantiate the default implementation for the property.
+     * @param propDesc The property descriptor
+     * @return The default instance or null if no default implementation are indicated
      */
-    private PropertyEditor findPropertyEditorForProperty(DynaBeanPropertyDescriptor propDesc, Class<?> originalType)
+    private Object instantiateDefaultImplementation(DynaBeanPropertyDescriptor propDesc)
     {
-        PropertyEditor pEditor;
-        Class<?> propType;
-
-        pEditor = null;
-
-        if(propDesc.getPropertyType().isArray())
+        String s;
+        
+        if(propDesc.getDefaultImplementation() != null)
         {
-            propType = propDesc.getPropertyType().getComponentType();
-        }
-        else
-        {
-            propType = propDesc.getPropertyType();
-        }
-        if((pEditor = descriptor.getFactory().getPropertyEditorRegistry().findCustomEditor(propType, propDesc.getPropertyPath())) != null)
-        {
-            return pEditor;
-        }
-        if((pEditor = descriptor.getFactory().getPropertyEditorRegistry().findCustomEditor(propType, null)) != null)
-        {
-            return pEditor;
-        }
-        // Last, find in
-        if((pEditor = PropertyEditorManager.findEditor(propType)) != null)
-        {
-            descriptor.getFactory().getPropertyEditorRegistry().registerCustomEditor(propType, pEditor);
-            return pEditor;
-        }
-        if(originalType != null)
-        {
-            return descriptor.getFactory().getPropertyEditorRegistry().findCustomEditor(originalType, propDesc.getPropertyPath());
+            try
+            {
+                return propDesc.getDefaultImplementation().newInstance();
+            }
+            catch(InstantiationException | IllegalAccessException e)
+            {
+                s = "On instantiating default implementation of type '"
+                        .concat(propDesc.getDefaultImplementation().getName())
+                        .concat("' for property '")
+                        .concat(propDesc.getPropertyName())
+                        .concat("' of type '")
+                        .concat(propDesc.getPropertyType().getName())
+                        .concat("' at dynaBean '")
+                        .concat(getImplementedType().getName())
+                        .concat("'");
+                logger.error(s, e);
+                throw new RuntimeException(s, e);
+            }
         }
         return null;
     }
-
     /**
      * Test if the value is for a primitive type and return an object representation with default (0) value. If value is
      * null and the type is primitive, return a representation of default value for the primitive corresponding type.
@@ -578,7 +576,7 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
      */
     private Object nullSafeValue(Object value, DynaBeanPropertyDescriptor pb)
     {
-        if(!pb.getPropertyType().isPrimitive())
+        if(!pb.isPrimitive())
         {
             return value;
         }
@@ -610,16 +608,7 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
         {
             return (value == null ? Character.valueOf('\u0000') : (Character) value);
         }
-        if(pb.getPropertyType().getName().equals("boolean"))
-        {
-            return (value == null ? Boolean.FALSE : (Boolean) value);
-        }
-        if(pb.getPropertyType().getSimpleName().equals("String"))
-        {
-            return value;
-        }
-        // Unknown??
-        throw new IllegalArgumentException("No handler found for type '" + pb.getPropertyType().getSimpleName() + "'.");
+        return (value == null ? Boolean.FALSE : (Boolean) value);
     }
 
     /**
@@ -635,7 +624,7 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
         List<Object> vals;
         
         vals = new Vector<Object>();
-        for(Entry<String,Object> e : values.entrySet())
+        for(Entry<String, Object> e : values.entrySet())
         {
             vals.add(e.getValue());
         }

@@ -58,12 +58,20 @@ public interface IDynaBeanFactory {
 	/**
 	 * Add a new visitor to the indicated dynabean.
 	 * @param <T> The implemented type
-	 * @param dynaBean The dynaBean
-	 * @param visitor The visitor
+	 * @param dynaBean The dynaBean, required and should to be a true DynaBean implementation
+	 * @param visitor The visitor, required
 	 * @return The dynaBean with the visitor added.
+	 * @throws IllegalArgumentException if {@code dynaBean} is null or is not a dynaBean implementation
 	 */
 	public <T> T addVisitorToDynaBean(T dynaBean, IDynaBeanVisitor visitor);
-	
+    /**
+     * Remove the visitor from the indicated dynabean.
+     * @param <T> The implemented type
+     * @param dynaBean The dynaBean, required and should to be a true DynaBean implementation
+     * @return The dynaBean with the visitor removed.
+     * @throws IllegalArgumentException if {@code dynaBean} is null or is not a dynaBean implementation
+     */
+	public <T> T removeVisitorFromDynaBean(T dynaBean);
 	/**
 	 * Gets the {@link PropertyEditor} registry associated with this factory.
 	 * @return The registry

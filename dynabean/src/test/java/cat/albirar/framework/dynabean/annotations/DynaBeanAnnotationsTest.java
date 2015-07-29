@@ -30,6 +30,7 @@ import cat.albirar.framework.dynabean.DynaBeanUtils;
 import cat.albirar.framework.dynabean.impl.models.test.AnnotatedModelImpl;
 import cat.albirar.framework.dynabean.impl.models.test.IAnnotatedModel;
 import cat.albirar.framework.dynabean.impl.models.test.IAnnotatedParentModel;
+import cat.albirar.framework.dynabean.impl.models.test.SimpleModelImpl;
 
 /**
  * DynBean annotations tests.
@@ -47,7 +48,7 @@ public class DynaBeanAnnotationsTest
     {
         IAnnotatedModel model;
 
-        model = DynaBeanUtils.instanceFactory().newDynaBean(IAnnotatedModel.class);
+        model = DynaBeanUtils.instanceDefaultFactory().newDynaBean(IAnnotatedModel.class);
         // Assert default values
         Assert.assertTrue(model.isPending());
         Assert.assertEquals(Vector.class, model.getNamesList().getClass());
@@ -64,11 +65,13 @@ public class DynaBeanAnnotationsTest
     {
         IAnnotatedParentModel model;
 
-        model = DynaBeanUtils.instanceFactory().newDynaBean(IAnnotatedParentModel.class);
+        model = DynaBeanUtils.instanceDefaultFactory().newDynaBean(IAnnotatedParentModel.class);
         Assert.assertNull(model.getId());
         Assert.assertNotNull(model.getSubmodel());
         Assert.assertNotNull(model.getSubmodel().getNamesList());
         Assert.assertNull(model.getDynabeanNotAnnotatedModel());
+        Assert.assertNotNull(model.getSimpleModel());
+        Assert.assertEquals(SimpleModelImpl.class, model.getSimpleModel().getClass());
     }
     /**
      * Test the clone feature with annotated model.
@@ -77,13 +80,43 @@ public class DynaBeanAnnotationsTest
     {
         IAnnotatedModel m1, m2;
         
-        m1 = DynaBeanUtils.instanceFactory().newDynaBean(IAnnotatedModel.class);
+        m1 = DynaBeanUtils.instanceDefaultFactory().newDynaBean(IAnnotatedModel.class);
         m2 = m1.clone();
         Assert.assertEquals(m1, m2);
         // Test clone of date
         Assert.assertNotSame(m1.getNamesList(), m2.getNamesList());
         Assert.assertNotSame(m1.getOtherAmounts(), m2.getOtherAmounts());
         Assert.assertNotSame(m1.getOtherNames(), m2.getOtherNames());
+    }
+    /**
+     * Test the clone feature with annotated model.
+     */
+    @Test public void testCloneComplex()
+    {
+        IAnnotatedModel m1, m2;
+        IAnnotatedParentModel pm1, pm2;
+        
+        pm1 = DynaBeanUtils.instanceDefaultFactory().newDynaBean(IAnnotatedParentModel.class);
+        m1 = DynaBeanUtils.instanceDefaultFactory().newDynaBean(IAnnotatedModel.class);
+        m1.getNamesList().clear();
+        m1.getNamesList().add("X");
+        m1.getNamesList().add("Y");
+        m1.getNamesList().add("Z");
+        pm1.setOtherSubmodels(new Vector<IAnnotatedModel>());
+        pm1.getOtherSubmodels().add(m1);
+        pm1.setId("WWW");
+        
+        pm2 = pm1.clone();
+        
+        
+        Assert.assertEquals(pm1, pm2);
+        Assert.assertNotSame(pm1,  pm2);
+        
+        Assert.assertEquals(pm1.getOtherSubmodels(), pm2.getOtherSubmodels());
+        Assert.assertNotSame(pm1.getOtherSubmodels(), pm2.getOtherSubmodels());
+        m2 = pm2.getOtherSubmodels().get(0);
+        Assert.assertEquals(m1, m2);
+        Assert.assertNotSame(m1, m2);
     }
     /**
      * Test the hashCode feature with annotated model.
@@ -93,7 +126,7 @@ public class DynaBeanAnnotationsTest
         IAnnotatedModel m1, m2;
         int n;
         
-        m1 = DynaBeanUtils.instanceFactory().newDynaBean(IAnnotatedModel.class);
+        m1 = DynaBeanUtils.instanceDefaultFactory().newDynaBean(IAnnotatedModel.class);
         m2 = m1.clone();
         
         for(n = 0; n < 10; n++)
@@ -113,7 +146,7 @@ public class DynaBeanAnnotationsTest
         ObjectInputStream in;
         
         // Prepare bean
-        model = DynaBeanUtils.instanceFactory().newDynaBean(IAnnotatedModel.class);
+        model = DynaBeanUtils.instanceDefaultFactory().newDynaBean(IAnnotatedModel.class);
 
         // Prepare stream
         baos = new ByteArrayOutputStream();
@@ -140,6 +173,7 @@ public class DynaBeanAnnotationsTest
         List<String> names;
         double [] oamount = {10.5D, 125.223D, 998.66271D};
         
+        m2 = DynaBeanUtils.instanceDefaultFactory().newDynaBean(IAnnotatedModel.class);
         m1 = new AnnotatedModelImpl();
         m1.setId("XX");
         m1.setAmount(IAnnotatedModel.DEFAULT_AMOUNT + 2.0D);
@@ -157,7 +191,6 @@ public class DynaBeanAnnotationsTest
         m1.setOtherNames(names.toArray(new String[]{}));
         m1.setOtherAmounts(oamount);
 
-        m2 = DynaBeanUtils.instanceFactory().newDynaBean(IAnnotatedModel.class);
         m2.setId(m1.getId());
         m2.setAmount(m1.getAmount());
         m2.setNamesList(cloneList(m1.getNamesList()));

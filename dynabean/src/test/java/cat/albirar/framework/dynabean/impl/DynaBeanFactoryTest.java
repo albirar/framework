@@ -33,7 +33,7 @@ import cat.albirar.framework.dynabean.visitor.IDynaBeanVisitor;
 
 /**
  * The class test for {@link IDynaBeanFactory} implementations.
- * <strong>USES the {@link DynaBeanUtils#instanceFactory()} to ensure test of static thread factories.
+ * <strong>USES the {@link DynaBeanUtils#instanceDefaultFactory()} to ensure test of static thread factories.
  * 
  * @author Octavi Fornés ofornes@albirar.cat
  * @sinze 2.0
@@ -62,7 +62,7 @@ public class DynaBeanFactoryTest
         List<String> list, list1;
         
         visitor = new RecordingVisitorTest();
-        factory = DynaBeanUtils.instanceFactory();
+        factory = DynaBeanUtils.instanceDefaultFactory();
         dbean = factory.newDynaBean(IAnnotatedModel.class,visitor);
         
         Assert.assertSame(visitor, ((DynaBeanImpl<?>)Proxy.getInvocationHandler(dbean)).getVisitor());
@@ -117,7 +117,7 @@ public class DynaBeanFactoryTest
         List<String> list, list1;
         
         visitor = new ModifyingVisitorTest();
-        factory = DynaBeanUtils.instanceFactory();
+        factory = DynaBeanUtils.instanceDefaultFactory();
         dbean = factory.newDynaBean(IAnnotatedModel.class,visitor);
         
         Assert.assertSame(visitor, ((DynaBeanImpl<?>)Proxy.getInvocationHandler(dbean)).getVisitor());
@@ -161,7 +161,6 @@ public class DynaBeanFactoryTest
         Assert.assertEquals(dbean.getNamesList(), list1);
     }
 
-    
     // Private auxiliary test classes
     /** A visitor for recording events on get and set. */
     class RecordingVisitorTest implements IDynaBeanVisitor

@@ -54,10 +54,7 @@ public class DefaultDynaBeanFactory implements IDynaBeanImplementationFactory
     @Override
     public <T> T newDynaBean(Class<T> typeToImplement)
     {
-        if(typeToImplement == null)
-        {
-            throw new IllegalArgumentException("typeToImplement can not to be null");
-        }
+        Assert.notNull(typeToImplement, "typeToImplement can not to be null");
         return createDynaBean(new DynaBeanImpl<T>(this, typeToImplement));
     }
 
@@ -77,30 +74,29 @@ public class DefaultDynaBeanFactory implements IDynaBeanImplementationFactory
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("rawtypes")
     @Override
     public <T> T addVisitorToDynaBean(T dynaBean, IDynaBeanVisitor visitor)
     {
-        Object db;
+        DynaBeanImpl<?> db;
 
         Assert.notNull(dynaBean, "The dynaBean to assign the visitor is required");
-        try
-        {
-            if(Proxy.isProxyClass(dynaBean.getClass()))
-            {
-                db = Proxy.getInvocationHandler(dynaBean);
-            }
-            else
-            {
-                db = dynaBean;
-            }
+        Assert.notNull(visitor, "The visitor to add to dynaBean is required");
+        db = DynaBeanFactoryUtils.deproxifyDynabean(dynaBean);
+        db.setVisitor(visitor);
+        return dynaBean;
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T> T removeVisitorFromDynaBean(T dynaBean)
+    {
+        DynaBeanImpl<?> db;
 
-            ((DynaBeanImpl) db).setVisitor(visitor);
-        }
-        catch(ClassCastException e)
-        {
-            // Nothign to do
-        }
+        Assert.notNull(dynaBean, "The dynaBean to remove the visitor is required");
+        DynaBeanFactoryUtils.assertDynaBean(dynaBean, "The dynaBean to remove their visitor should to be a dynaBean implementation");
+        db = DynaBeanFactoryUtils.deproxifyDynabean(dynaBean);
+        db.setVisitor(null);
         return dynaBean;
     }
 
@@ -112,12 +108,8 @@ public class DefaultDynaBeanFactory implements IDynaBeanImplementationFactory
     public <T> T cloneDynaBean(T dynaBean)
     {
         Assert.notNull(dynaBean, "The dynaBean to clone is required");
-        if(DynaBeanImpl.class.isAssignableFrom(dynaBean.getClass()))
-        {
-            return createDynaBean(new DynaBeanImpl<T>((DynaBeanImpl<T>) dynaBean));
-        }
-
-        throw new IllegalArgumentException("To clone a dynaBean, another dynaBean is required!");
+        DynaBeanFactoryUtils.assertDynaBean(dynaBean, "The dynaBean to clone should to be a dynaBean implementation");
+        return createDynaBean(new DynaBeanImpl<T>((DynaBeanImpl<T>)DynaBeanFactoryUtils.deproxifyDynabean(dynaBean)));
     }
 
     /**
@@ -167,5 +159,4 @@ public class DefaultDynaBeanFactory implements IDynaBeanImplementationFactory
         }
         return (DynaBeanDescriptor<T>) d;
     }
-
 }

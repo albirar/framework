@@ -19,6 +19,10 @@
 
 package cat.albirar.framework.dynabean.impl.models.test;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.Vector;
+
 import cat.albirar.framework.dynabean.annotations.DynaBean;
 import cat.albirar.framework.dynabean.annotations.PropertyDefaultValue;
 
@@ -27,12 +31,20 @@ import cat.albirar.framework.dynabean.annotations.PropertyDefaultValue;
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 2.0
  */
-public interface IAnnotatedParentModel {
+public interface IAnnotatedParentModel extends Cloneable, Serializable {
 	public String getId();
-	public void setId();
+	public void setId(String id);
 	@PropertyDefaultValue
 	public IAnnotatedModel getSubmodel();
 	public void setSubmodel(IAnnotatedModel submodel);
-	public ISimpleModel getDynabeanNotAnnotatedModel();
-	public void setDynabeanNotAnnotatedModel(ISimpleModel model);
+	public List<IAnnotatedModel> getOtherSubmodels();
+	@PropertyDefaultValue(implementation=Vector.class)
+	public void setOtherSubmodels(List<IAnnotatedModel> otherSubmodels);
+    public ISimpleModel getDynabeanNotAnnotatedModel();
+    public void setDynabeanNotAnnotatedModel(ISimpleModel model);
+    @PropertyDefaultValue(implementation=SimpleModelImpl.class)
+    public ISimpleModel getSimpleModel();
+    public void setSimpleModel(ISimpleModel model);
+	
+	public IAnnotatedParentModel clone();
 }

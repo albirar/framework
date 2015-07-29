@@ -53,6 +53,24 @@ public interface IModel extends Serializable, Cloneable
 	public double getIncomingYear();
 	/** The incoming for year */
 	public void setIncomingYear(double incomingYear);
+
+    /** The incoming for year */
+    public float getTaxesYear();
+    /** The incoming for year */
+    public void setTaxesYear(float taxesYear);
+	
+    public byte getByteProp();
+    public void setByteProp(byte byteProp);
+    
+    public char getCharProp();
+    public void setCharProp(char charProp);
+    
+    public short getShortProp();
+    public void setShortProp(short shortProp);
+    
+    public boolean isBooleanProp();
+    public void setBooleanProp(boolean booleanProp);
+    
 	/** Gender */
 	public EGender getGender();
 	/** Gender */

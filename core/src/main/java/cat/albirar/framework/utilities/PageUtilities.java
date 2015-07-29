@@ -17,7 +17,7 @@
  * Copyright (C) 2015 Octavi Fornés <ofornes@albirar.cat>
  */
 
-package cat.albirar.framework.utilitats;
+package cat.albirar.framework.utilities;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +27,7 @@ import org.springframework.data.domain.Pageable;
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0
  */
-public abstract class PageUtilitats {
+public abstract class PageUtilities {
 	/** Nombre d'elements per pàgina per defecte. */
 	public static final int ELEMENTS_PER_PAGINA = 25;
 	/**
@@ -35,7 +35,7 @@ public abstract class PageUtilitats {
 	 * @param origen L'origen
 	 * @return Una nova còpia de 'origen' o null si no en tenia, d'origen
 	 */
-	public static final Pageable copiaPageable(Pageable origen) {
+	public static final Pageable copyPageable(Pageable origen) {
 		Pageable d;
 		
 		if(origen != null) {
@@ -52,11 +52,11 @@ public abstract class PageUtilitats {
 	 * @param origen L'origen de les dades. Si s'especifica un null, es crea un de nou, amb la primera pàgina i {@value #ELEMENTS_PER_PAGINA} elements per pàgina.
 	 * @return L'objecte de paginació copiat o creat.
 	 */
-	public static final Pageable copiaOCreaPageable(Pageable origen) {
+	public static final Pageable copyOrCreatePageable(Pageable origen) {
 		Pageable d;
 		
 		if(origen != null) {
-			d = copiaPageable(origen);
+			d = copyPageable(origen);
 		} else {
 			d = new PageRequest(0, ELEMENTS_PER_PAGINA);
 		}
@@ -75,7 +75,7 @@ public abstract class PageUtilitats {
 	 * @param origen L'origen
 	 * @return Una còpia corregida, si s'escau
 	 */
-	public static final Pageable comprovaIAjusta(Pageable origen) {
+	public static final Pageable checkAndAdjust(Pageable origen) {
 		int elements, pagina;
 		
 		if(origen.getPageSize() < 1) {

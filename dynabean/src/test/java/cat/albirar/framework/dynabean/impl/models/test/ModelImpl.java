@@ -44,6 +44,13 @@ public class ModelImpl implements IModel
     private EGender gender;
 
     private String [] names;
+    
+    private float taxesYear;
+    private byte byteProp;
+    private char charProp;
+    private short shortProp;
+    private boolean booleanProp;
+    
     /**
      * Default constructor, the properties are left with default values.
      */
@@ -217,6 +224,66 @@ public class ModelImpl implements IModel
         this.names = names;
     }
 
+    @Override
+    public float getTaxesYear()
+    {
+        return taxesYear;
+    }
+
+    @Override
+    public void setTaxesYear(float taxesYear)
+    {
+        this.taxesYear = taxesYear;
+    }
+
+    @Override
+    public byte getByteProp()
+    {
+        return byteProp;
+    }
+
+    @Override
+    public void setByteProp(byte byteProp)
+    {
+        this.byteProp = byteProp;
+    }
+
+    @Override
+    public char getCharProp()
+    {
+        return charProp;
+    }
+
+    @Override
+    public void setCharProp(char charProp)
+    {
+        this.charProp = charProp;
+    }
+
+    @Override
+    public short getShortProp()
+    {
+        return shortProp;
+    }
+
+    @Override
+    public void setShortProp(short shortProp)
+    {
+        this.shortProp = shortProp;
+    }
+
+    @Override
+    public boolean isBooleanProp()
+    {
+        return booleanProp;
+    }
+
+    @Override
+    public void setBooleanProp(boolean booleanProp)
+    {
+        this.booleanProp = booleanProp;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -224,7 +291,7 @@ public class ModelImpl implements IModel
     public int hashCode()
     {
         return ObjectUtils.nullSafeHashCode(new Object[] {id, name, lastName, gender, birthDate, numberOfChildren
-                , incomingYear, names});
+                , incomingYear, names, taxesYear, byteProp, charProp, shortProp, booleanProp});
     }
 
     /**
@@ -260,7 +327,7 @@ public class ModelImpl implements IModel
     @Override
     public String toString()
     {
-        return String.format("ModelImpl [id=%d, name=%s, lastName=%s, gender=%s, birthDate=%s, numberOfChildren=%d, incomingYear=%d, names=%s]"
+        return String.format("ModelImpl [id=%s, name=%s, lastName=%s, gender=%s, birthDate=%s, numberOfChildren=%d, incomingYear=%s, names=%s]"
                 , id, name, lastName, gender, birthDate, numberOfChildren, incomingYear, names);
     }
 

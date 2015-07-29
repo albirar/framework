@@ -16,7 +16,7 @@
  *
  * Copyright (C) 2015 Octavi Fornés
  */
-package cat.albirar.framework.utilitats;
+package cat.albirar.framework.utilities;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,33 +25,35 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
+import cat.albirar.framework.utilities.PageUtilities;
+
 /**
- * Test for {@link PageUtilitats}.
+ * Test for {@link PageUtilities}.
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.0
  */
-public class PageUtilitatsTest
+public class PageUtilitiesTest
 {
     /**
-     * Test for {@link PageUtilitats#copiaPageable(org.springframework.data.domain.Pageable)} with null.
+     * Test for {@link PageUtilities#copyPageable(org.springframework.data.domain.Pageable)} with null.
      */
     @Test public void testCopiaPageableNull()
     {
-        Assert.assertNull(PageUtilitats.copiaPageable(null));
+        Assert.assertNull(PageUtilities.copyPageable(null));
     }
     /**
-     * Test for {@link PageUtilitats#copiaPageable(org.springframework.data.domain.Pageable)} with unasigned data.
+     * Test for {@link PageUtilities#copyPageable(org.springframework.data.domain.Pageable)} with unasigned data.
      */
     @Test public void testCopiaPageableUnasigned()
     {
         Pageable pag, r;
         
         pag = new PageRequest(0, 10);
-        r = PageUtilitats.copiaPageable(pag);
+        r = PageUtilities.copyPageable(pag);
         Assert.assertEquals(pag, r);
     }
     /**
-     * Test for {@link PageUtilitats#copiaPageable(org.springframework.data.domain.Pageable)} with asigned data.
+     * Test for {@link PageUtilities#copyPageable(org.springframework.data.domain.Pageable)} with asigned data.
      */
     @Test public void testCopiaPageableAsigned()
     {
@@ -60,37 +62,37 @@ public class PageUtilitatsTest
         
         s = new Sort(Direction.ASC, "name");
         pag = new PageRequest(0, 10, s);
-        r = PageUtilitats.copiaPageable(pag);
+        r = PageUtilities.copyPageable(pag);
         Assert.assertEquals(pag, r);
         Assert.assertNotSame(r, pag);
     }
     /**
-     * Test for {@link PageUtilitats#copiaOCreaPageable(org.springframework.data.domain.Pageable)} with null.
+     * Test for {@link PageUtilities#copyOrCreatePageable(org.springframework.data.domain.Pageable)} with null.
      */
     @Test public void testCopiaOCreaPageableNull()
     {
         Pageable pag, r;
         
         pag = null;
-        r = PageUtilitats.copiaOCreaPageable(pag);
+        r = PageUtilities.copyOrCreatePageable(pag);
         Assert.assertNotNull(r);
-        Assert.assertEquals(PageUtilitats.ELEMENTS_PER_PAGINA, r.getPageSize());
+        Assert.assertEquals(PageUtilities.ELEMENTS_PER_PAGINA, r.getPageSize());
         Assert.assertEquals(0, r.getPageNumber());
     }
     /**
-     * Test for {@link PageUtilitats#copiaOCreaPageable(org.springframework.data.domain.Pageable)} with null.
+     * Test for {@link PageUtilities#copyOrCreatePageable(org.springframework.data.domain.Pageable)} with null.
      */
     @Test public void testCopiaOCreaPageableUnasigned()
     {
         Pageable pag, r;
         
         pag = new PageRequest(0, 10);
-        r = PageUtilitats.copiaOCreaPageable(pag);
+        r = PageUtilities.copyOrCreatePageable(pag);
         Assert.assertNotNull(r);
         Assert.assertEquals(pag, r);
     }
     /**
-     * Test for {@link PageUtilitats#copiaOCreaPageable(org.springframework.data.domain.Pageable)} with assigned data.
+     * Test for {@link PageUtilities#copyOrCreatePageable(org.springframework.data.domain.Pageable)} with assigned data.
      */
     @Test public void testCopiaOCreaPageableAsigned()
     {
@@ -99,7 +101,7 @@ public class PageUtilitatsTest
         
         s = new Sort(Direction.ASC, "name");
         pag = new PageRequest(0, 10, s);
-        r = PageUtilitats.copiaOCreaPageable(pag);
+        r = PageUtilities.copyOrCreatePageable(pag);
         Assert.assertNotNull(r);
         Assert.assertEquals(pag, r);
     }
