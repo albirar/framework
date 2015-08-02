@@ -12,10 +12,7 @@
 		<menu>
 			<item name="Introduction" href="index.html" />
 		</menu>
-		<menu>
-			<item name="Test reports" href="surefire-report.html" />
-			<item name="Javadocs" href="apidocs/index.html" />
-			<item name="Test Javadocs" href="testapidocs/index.html" />
-		</menu>
+		
+		<menu ref="reports"/>
 	</body>
 </project>
