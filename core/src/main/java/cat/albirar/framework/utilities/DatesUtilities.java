@@ -25,30 +25,32 @@ import java.util.Date;
 import org.apache.commons.lang3.time.DateUtils;
 
 /**
- * Utilitat de dates.
+ * Extra utilities for dates.
+ * @see DateUtils
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0
  */
 public abstract class DatesUtilities {
 	/**
-	 * Comprova si dues data+hora són iguals o no tot tenint cura dels nulls.
-	 * Ignora la part menor de segons.
-	 * @param d1 La primera data+hora.
-	 * @param d2 La segona data+hora.
-	 * @return true si són iguals i false en cas contrari. Si ambdues són nul·les, també es consideren iguals
+	 * Check if two date+time are equals or not, with care of null.
+     * The information bellow second part of time are ignored.
+	 * @param d1 The first date+time
+	 * @param d2 The second date+time
+	 * @return true if are equals (even if both are null), false if not.
 	 */
-	public static final boolean nullSafeEqualsDataHora(Date d1, Date d2) {
-		return (nullSafeCompareDataHora(d1, d2) == 0);
+	public static final boolean nullSafeEqualsDateTime(Date d1, Date d2) {
+		return (nullSafeCompareDateTime(d1, d2) == 0);
 	}
 	/**
-	 * Compara dues data+hora tot tenint cura dels nulls.
-	 * Ignora la part menor de segons.
-	 * Un valor null és considera un valor menor que qualsevol altre valor.
-	 * @param d1 La primera data+hora.
-	 * @param d2 La segona data+hora.
-	 * @return igual a zero si són iguals, menor que zero si d1 és menor que d2 i major que zero si d1 és major que d2. Si ambdues són nul·les, també es consideren iguals
+     * Compare two date+time, with care of null.
+     * The information bellow second part of time are ignored.
+     * A null value is considered less than any non-null value.
+     * @param d1 The first date+time
+     * @param d2 The second date+time
+	 * @return Zero if both are equals (even if both are nulls), a number less than zero if d1 is minor than d2 and a number greater than zero if d1 is greater than d2.
+	 * @see DateUtils#truncatedCompareTo(Calendar, Calendar, int)
 	 */
-	public static final int nullSafeCompareDataHora(Date d1, Date d2) {
+	public static final int nullSafeCompareDateTime(Date d1, Date d2) {
 		if(d1 == null || d2 == null) {
 			if(d1 == d2) {
 				return 0;
@@ -61,24 +63,24 @@ public abstract class DatesUtilities {
 		return DateUtils.truncatedCompareTo(d1, d2, Calendar.SECOND);
 	}
     /**
-     * Comprova si dues dates són iguals o no tot tenint cura dels nulls.
-     * Ignora la part menor de hora.
-     * @param d1 La primera data.
-     * @param d2 La segona data.
-     * @return true si són iguals i false en cas contrari. Si ambdues són nul·les, també es consideren iguals
+     * Check if two dates are equals or not, with care of null.
+     * The time part of both dates are ignored (from hour and bellow)
+     * @param d1 The first date
+     * @param d2 The second date
+     * @return true if are equals (even if both are null), false if not.
      */
-    public static final boolean nullSafeEqualsData(Date d1, Date d2) {
-        return (nullSafeCompareData(d1, d2) == 0);
+    public static final boolean nullSafeEqualsDate(Date d1, Date d2) {
+        return (nullSafeCompareDate(d1, d2) == 0);
     }
     /**
-     * Compara dues dates tot tenint cura dels nulls.
-     * Ignora la part menor de hora.
-     * Un valor null és considera un valor menor que qualsevol altre valor.
-     * @param d1 La primera data.
-     * @param d2 La segona data.
-     * @return igual a zero si són iguals, menor que zero si d1 és menor que d2 i major que zero si d1 és major que d2. Si ambdues són nul·les, també es consideren iguals
+     * Compare two dates, with care of null.
+     * The time part of both dates are ignored (from hour and bellow)
+     * @param d1 The first date
+     * @param d2 The second date
+     * @return Zero if both are equals (even if both are nulls), a number less than zero if d1 is minor than d2 and a number greater than zero if d1 is greater than d2.
+     * @see DateUtils#truncatedCompareTo(Calendar, Calendar, int)
      */
-    public static final int nullSafeCompareData(Date d1, Date d2) {
+    public static final int nullSafeCompareDate(Date d1, Date d2) {
         if(d1 == null || d2 == null) {
             if(d1 == d2) {
                 return 0;

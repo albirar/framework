@@ -28,6 +28,7 @@
  * <li>The dynaBean can be serialized safely; only errors if some java bean property was defined as non-serializable</li>
  * <li>Also implement a clone method if declared on interface</li>
  * </ul>
+ * @author Octavi Fornés ofornes@albirar.cat
  * @since 1.0.0
  */
 package cat.albirar.framework.dynabean;

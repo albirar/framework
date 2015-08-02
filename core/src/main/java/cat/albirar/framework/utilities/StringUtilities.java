@@ -21,7 +21,8 @@ package cat.albirar.framework.utilities;
 import org.springframework.util.StringUtils;
 
 /**
- * Utilitats extra per a strings.
+ * Extra utilities for {@link String}.
+ * @see StringUtils
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.0
  */
@@ -33,7 +34,7 @@ public abstract class StringUtilities
      * @return true if not null, greather than 0 and all items {@link StringUtils#hasText(String)}
      * @see StringUtils#hasText(String)
      */
-    public static final boolean hashText(String ...strings)
+    public static final boolean hasText(String ...strings)
     {
         if(strings != null && strings.length > 0)
         {

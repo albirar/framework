@@ -17,18 +17,8 @@
  * Copyright (C) 2013 Octavi Fornés
  */
 /**
- * Utilities for beans dynamic implementations.
- * 
- * Enables data definition as JavaBean applying the "facade pattern".
- * Next, you can create a implementation with the Proxy utility.<br>
- * Features:
- * <ul>
- * <li>Implement getters and setters as declared on interface</li>
- * <li>Implement equals, hashCode and toString default methods</li>
- * <li>The proxy can be serialized safely; only errors if some java bean property was defined as non-serializable</li>
- * <li>Also implement a clone method if declared on interface</li>
- * </ul>
+ * Annotations for dynaBean declaration and for configure aspects of dynaBean instantiation.
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.0
  */
-package cat.albirar.framework.dynabean.impl;
+package cat.albirar.framework.dynabean.annotations;

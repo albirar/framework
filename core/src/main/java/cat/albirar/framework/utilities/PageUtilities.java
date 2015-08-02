@@ -23,71 +23,71 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Utilitats per a gestionar paginació.
+ * Utilities for {@link Pageable}.
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0
  */
 public abstract class PageUtilities {
-	/** Nombre d'elements per pàgina per defecte. */
-	public static final int ELEMENTS_PER_PAGINA = 25;
+	/** Default number of items for a page. */
+	public static final int ITEMS_FOR_PAGE = 25;
 	/**
-	 * Copia un objecte de paginació.
-	 * @param origen L'origen
-	 * @return Una nova còpia de 'origen' o null si no en tenia, d'origen
+	 * Clone a {@link Pageable} object.
+	 * @param origin The origin
+	 * @return The new instance with all the origin values. Null if origin is null
 	 */
-	public static final Pageable copyPageable(Pageable origen) {
+	public static final Pageable copyPageable(Pageable origin) {
 		Pageable d;
 		
-		if(origen != null) {
-			d = new PageRequest(origen.getPageNumber()
-					, origen.getPageSize()
-					, origen.getSort());
+		if(origin != null) {
+			d = new PageRequest(origin.getPageNumber()
+					, origin.getPageSize()
+					, origin.getSort());
 		} else {
 			d = null;
 		}
 		return d;
 	}
 	/**
-	 * Copia o crea un objecte de paginació
-	 * @param origen L'origen de les dades. Si s'especifica un null, es crea un de nou, amb la primera pàgina i {@value #ELEMENTS_PER_PAGINA} elements per pàgina.
-	 * @return L'objecte de paginació copiat o creat.
+	 * Clone or instantiate a {@link Pageable}.
+	 * @param origin  The origin. If null, a new instance with page one and {@value #ITEMS_FOR_PAGE} items for page is created.
+	 * @return The cloned object or a new instance with default values if origin is null
 	 */
-	public static final Pageable copyOrCreatePageable(Pageable origen) {
+	public static final Pageable copyOrCreatePageable(Pageable origin) {
 		Pageable d;
 		
-		if(origen != null) {
-			d = copyPageable(origen);
+		if(origin != null) {
+			d = copyPageable(origin);
 		} else {
-			d = new PageRequest(0, ELEMENTS_PER_PAGINA);
+			d = new PageRequest(0, ITEMS_FOR_PAGE);
 		}
 		return d;
 	}
 
 	/**
-	 * Comprova els paràmetres de paginació.
-	 * Comprova que:
+	 * Check (and adjust) the values of a {@link Pageable} object.
+	 * Check that:
 	 * <ul>
-	 * <li>{@link Pageable#getPageSize() origen.getPageSize()} és igual o major de 1</li>
-	 * <li> {@link Pageable#getPageNumber() origen.getPageNumber()} és igual o major de zero</li>
+	 * <li>{@link Pageable#getPageSize() origin.getPageSize()} is equals or great than one</li>
+	 * <li>{@link Pageable#getPageNumber() origin.getPageNumber()} is equals or great than zero</li>
 	 * </ul>
-	 * <strong>ATENCIÓ!!</strong>
-	 * {@link Pageable} és immutable, o sigui que heu d'emprar l'objecte retornat
-	 * @param origen L'origen
-	 * @return Una còpia corregida, si s'escau
+	 * <strong>WARNING!!</strong>
+	 * {@link Pageable} is immutable, so you should to use the same returned object
+	 * @param origin The origin
+	 * @return A new instance, amended if needed
 	 */
-	public static final Pageable checkAndAdjust(Pageable origen) {
+	public static final Pageable checkAndAdjust(Pageable origin) {
 		int elements, pagina;
 		
-		if(origen.getPageSize() < 1) {
-			elements = ELEMENTS_PER_PAGINA;
+		if(origin.getPageSize() < 1) {
+			elements = ITEMS_FOR_PAGE;
 		} else {
-			elements = origen.getPageSize();
+			elements = origin.getPageSize();
 		}
 		
-		if(origen.getPageNumber() < 0) {
+		if(origin.getPageNumber() < 0) {
 			pagina = 0;
 		} else {
-			pagina = origen.getPageNumber();
+			pagina = origin.getPageNumber();
 		}
 		return new PageRequest(pagina, elements);
 	}

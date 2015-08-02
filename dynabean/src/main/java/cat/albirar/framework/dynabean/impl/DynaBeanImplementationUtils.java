@@ -201,14 +201,7 @@ public abstract class DynaBeanImplementationUtils
         
         Assert.hasText(propertyName, "propertyName argument is required and should to have at least 1 non-whitespace character");
 
-        if(type == null)
-        {
-            isBoolean = false;
-        }
-        else
-        {
-            isBoolean = (boolean.class.equals(type) || Boolean.class.equals(type));
-        }
+        isBoolean = (type != null && (boolean.class.equals(type) || Boolean.class.equals(type)));
         return fromPropertyToGetMethodName(propertyName, isBoolean);
     }
 

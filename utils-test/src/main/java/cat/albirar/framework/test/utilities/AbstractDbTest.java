@@ -1,12 +1,12 @@
 /*
- * This file is part of "spike-mongodb".
+ * This file is part of "albirar-framework".
  * 
- * "spike-mongodb" is free software: you can redistribute it and/or modify
+ * "albirar-framework" is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * "spike-mongodb" is distributed in the hope that it will be useful,
+ * "albirar-framework" is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -17,7 +17,7 @@
  * Copyright (C) 2015 Octavi Fornés <ofornes@albirar.cat>
  */
 
-package cat.albirar.framework.test.utilitats;
+package cat.albirar.framework.test.utilities;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -30,7 +30,7 @@ import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version.Main;
 
 /**
- * Classe abstracta per a configurar una base de dades.
+ * Abstract class to configure mongoDB test database.
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  */
 public abstract class AbstractDbTest {
@@ -39,11 +39,11 @@ public abstract class AbstractDbTest {
 	private static MongodProcess mongodProcess; 
 	
 	/**
-	 * Inicia la base de dades.
-	 * @throws Exception En preparar la base de dades
+	 * Init database server.
+	 * @throws Exception On error on preparing database
 	 */
 	@BeforeClass
-	public static void iniciarDb() throws Exception {
+	public static void startupDb() throws Exception {
 		MongodConfigBuilder cBuilder;
 		Net net;
 		MongodStarter runtime;
@@ -59,22 +59,23 @@ public abstract class AbstractDbTest {
 	}
 
 	/**
-	 * Atura la base de dades.
+	 * Shutdown the database server.
 	 */
 	@AfterClass
-	public static void aturarDb() {
+	public static void shutdownDb() {
 		mongodProcess.stop();
 		mongodExecutable.stop();
 	}
 	/**
-	 * Retorna el nom de la col·lecció associada amb l'entitat indicada.
-	 * @param entitat La classe de l'entitat
-	 * @return El nom, o null si s'ha indicat una classe nul·la.
+	 * Get the name of the collection associated with the indicated entity.
+	 * The name is calculated from entity {@link Class#getSimpleName()} with the first letter in lowercase and the rest as is.
+	 * @param entity The entity class
+	 * @return The name, or null if entity is null.
 	 */
-	public static final String getNomColleccio(Class<?> entitat) {
-		if(entitat != null) {
-			return (entitat.getSimpleName().substring(0,1).toLowerCase()
-					+ entitat.getSimpleName().substring(1));
+	public static final String getCollectionName(Class<?> entity) {
+		if(entity != null) {
+			return (entity.getSimpleName().substring(0,1).toLowerCase()
+					+ entity.getSimpleName().substring(1));
 		}
 		return null;
 	}

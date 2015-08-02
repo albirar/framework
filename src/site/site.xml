@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.6.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd"
+	name="Albirar Framework">
+	<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-fluido-skin</artifactId>
+		<version>1.4</version>
+	</skin>
+	<body>
+		<menu>
+			<item name="Introduction" href="index.html" />
+		</menu>
+		<menu>
+			<item name="Test reports" href="surefire-report.html" />
+			<item name="Javadocs" href="apidocs/index.html" />
+			<item name="Test Javadocs" href="testapidocs/index.html" />
+		</menu>
+	</body>
+</project>

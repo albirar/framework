@@ -34,7 +34,7 @@ import cat.albirar.framework.utilities.DatesUtilities;
 public class DatesUtilitiesTest
 {
     /**
-     * Test for {@link DatesUtilities#nullSafeCompareData(Date, Date)}
+     * Test for {@link DatesUtilities#nullSafeCompareDate(Date, Date)}
      */
     @Test public void nullSafeCompareData()
     {
@@ -45,26 +45,26 @@ public class DatesUtilitiesTest
         d2 = null;
 
         cal = Calendar.getInstance();
-        Assert.assertEquals(0, DatesUtilities.nullSafeCompareData(d1, d2));
+        Assert.assertEquals(0, DatesUtilities.nullSafeCompareDate(d1, d2));
 
         d1 = cal.getTime();
-        Assert.assertTrue(DatesUtilities.nullSafeCompareData(d1, d2) > 0);
-        Assert.assertTrue(DatesUtilities.nullSafeCompareData(d2, d1) < 0);
+        Assert.assertTrue(DatesUtilities.nullSafeCompareDate(d1, d2) > 0);
+        Assert.assertTrue(DatesUtilities.nullSafeCompareDate(d2, d1) < 0);
 
         d2 = cal.getTime();
-        Assert.assertEquals(0, DatesUtilities.nullSafeCompareData(d1, d2));
+        Assert.assertEquals(0, DatesUtilities.nullSafeCompareDate(d1, d2));
         
         cal.set(Calendar.HOUR, cal.get(Calendar.HOUR) + 2);
         d2 = cal.getTime();
-        Assert.assertEquals(0, DatesUtilities.nullSafeCompareData(d1, d2));
+        Assert.assertEquals(0, DatesUtilities.nullSafeCompareDate(d1, d2));
         
         cal.add(Calendar.DATE, 2);
         d1 = cal.getTime();
-        Assert.assertTrue(DatesUtilities.nullSafeCompareData(d1, d2) > 0);
-        Assert.assertTrue(DatesUtilities.nullSafeCompareData(d2, d1) < 0);
+        Assert.assertTrue(DatesUtilities.nullSafeCompareDate(d1, d2) > 0);
+        Assert.assertTrue(DatesUtilities.nullSafeCompareDate(d2, d1) < 0);
     }
     /**
-     * Test for {@link DatesUtilities#nullSafeEqualsData(Date, Date)}
+     * Test for {@link DatesUtilities#nullSafeEqualsDate(Date, Date)}
      */
     @Test public void nullSafeEqualsData()
     {
@@ -75,26 +75,26 @@ public class DatesUtilitiesTest
         d2 = null;
 
         cal = Calendar.getInstance();
-        Assert.assertTrue(DatesUtilities.nullSafeEqualsData(d1, d2));
+        Assert.assertTrue(DatesUtilities.nullSafeEqualsDate(d1, d2));
 
         d1 = cal.getTime();
-        Assert.assertFalse(DatesUtilities.nullSafeEqualsData(d1, d2));
-        Assert.assertFalse(DatesUtilities.nullSafeEqualsData(d2, d1));
+        Assert.assertFalse(DatesUtilities.nullSafeEqualsDate(d1, d2));
+        Assert.assertFalse(DatesUtilities.nullSafeEqualsDate(d2, d1));
 
         d2 = cal.getTime();
-        Assert.assertTrue(DatesUtilities.nullSafeEqualsData(d1, d2));
+        Assert.assertTrue(DatesUtilities.nullSafeEqualsDate(d1, d2));
         
         cal.set(Calendar.HOUR, cal.get(Calendar.HOUR) + 2);
         d2 = cal.getTime();
-        Assert.assertTrue(DatesUtilities.nullSafeEqualsData(d1, d2));
+        Assert.assertTrue(DatesUtilities.nullSafeEqualsDate(d1, d2));
         
         cal.add(Calendar.DATE, 2);
         d1 = cal.getTime();
-        Assert.assertFalse(DatesUtilities.nullSafeEqualsData(d1, d2));
-        Assert.assertFalse(DatesUtilities.nullSafeEqualsData(d2, d1));
+        Assert.assertFalse(DatesUtilities.nullSafeEqualsDate(d1, d2));
+        Assert.assertFalse(DatesUtilities.nullSafeEqualsDate(d2, d1));
     }
     /**
-     * Test for {@link DatesUtilities#nullSafeCompareDataHora(Date, Date)}
+     * Test for {@link DatesUtilities#nullSafeCompareDateTime(Date, Date)}
      */
     @Test public void nullSafeCompareDataHora()
     {
@@ -105,26 +105,26 @@ public class DatesUtilitiesTest
         d2 = null;
 
         cal = Calendar.getInstance();
-        Assert.assertEquals(0, DatesUtilities.nullSafeCompareDataHora(d1, d2));
+        Assert.assertEquals(0, DatesUtilities.nullSafeCompareDateTime(d1, d2));
 
         d1 = cal.getTime();
-        Assert.assertTrue(DatesUtilities.nullSafeCompareDataHora(d1, d2) > 0);
-        Assert.assertTrue(DatesUtilities.nullSafeCompareDataHora(d2, d1) < 0);
+        Assert.assertTrue(DatesUtilities.nullSafeCompareDateTime(d1, d2) > 0);
+        Assert.assertTrue(DatesUtilities.nullSafeCompareDateTime(d2, d1) < 0);
 
         d2 = cal.getTime();
-        Assert.assertEquals(0, DatesUtilities.nullSafeCompareDataHora(d1, d2));
+        Assert.assertEquals(0, DatesUtilities.nullSafeCompareDateTime(d1, d2));
         
         cal.set(Calendar.MILLISECOND, cal.get(Calendar.MILLISECOND) + 2);
         d2 = cal.getTime();
-        Assert.assertEquals(0, DatesUtilities.nullSafeCompareDataHora(d1, d2));
+        Assert.assertEquals(0, DatesUtilities.nullSafeCompareDateTime(d1, d2));
         
         cal.add(Calendar.SECOND, 2);
         d1 = cal.getTime();
-        Assert.assertTrue(DatesUtilities.nullSafeCompareDataHora(d1, d2) > 0);
-        Assert.assertTrue(DatesUtilities.nullSafeCompareDataHora(d2, d1) < 0);
+        Assert.assertTrue(DatesUtilities.nullSafeCompareDateTime(d1, d2) > 0);
+        Assert.assertTrue(DatesUtilities.nullSafeCompareDateTime(d2, d1) < 0);
     }
     /**
-     * Test for {@link DatesUtilities#nullSafeEqualsDataHora(Date, Date)}
+     * Test for {@link DatesUtilities#nullSafeEqualsDateTime(Date, Date)}
      */
     @Test public void nullSafeEqualsDataHora()
     {
@@ -135,23 +135,23 @@ public class DatesUtilitiesTest
         d2 = null;
 
         cal = Calendar.getInstance();
-        Assert.assertTrue(DatesUtilities.nullSafeEqualsDataHora(d1, d2));
+        Assert.assertTrue(DatesUtilities.nullSafeEqualsDateTime(d1, d2));
 
         d1 = cal.getTime();
-        Assert.assertFalse(DatesUtilities.nullSafeEqualsDataHora(d1, d2));
-        Assert.assertFalse(DatesUtilities.nullSafeEqualsDataHora(d2, d1));
+        Assert.assertFalse(DatesUtilities.nullSafeEqualsDateTime(d1, d2));
+        Assert.assertFalse(DatesUtilities.nullSafeEqualsDateTime(d2, d1));
 
         d2 = cal.getTime();
-        Assert.assertTrue(DatesUtilities.nullSafeEqualsDataHora(d1, d2));
+        Assert.assertTrue(DatesUtilities.nullSafeEqualsDateTime(d1, d2));
         
         cal.set(Calendar.MILLISECOND, cal.get(Calendar.MILLISECOND) + 2);
         d2 = cal.getTime();
-        Assert.assertTrue(DatesUtilities.nullSafeEqualsDataHora(d1, d2));
+        Assert.assertTrue(DatesUtilities.nullSafeEqualsDateTime(d1, d2));
         
         cal.add(Calendar.SECOND, 2);
         d1 = cal.getTime();
-        Assert.assertFalse(DatesUtilities.nullSafeEqualsDataHora(d1, d2));
-        Assert.assertFalse(DatesUtilities.nullSafeEqualsDataHora(d2, d1));
+        Assert.assertFalse(DatesUtilities.nullSafeEqualsDateTime(d1, d2));
+        Assert.assertFalse(DatesUtilities.nullSafeEqualsDateTime(d2, d1));
     }
     
 }

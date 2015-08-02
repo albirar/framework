@@ -31,30 +31,30 @@ import cat.albirar.framework.utilities.StringUtilities;
 public class StringUtilitiesTest
 {
     /**
-     * Test {@link StringUtilities#hashText(String...)} with different values and expected results.
+     * Test {@link StringUtilities#hasText(String...)} with different values and expected results.
      */
     @Test public void testhasText()
     {
         String [] texts;
         
         texts = null;
-        Assert.assertFalse(StringUtilities.hashText());
-        Assert.assertFalse(StringUtilities.hashText(texts));
+        Assert.assertFalse(StringUtilities.hasText());
+        Assert.assertFalse(StringUtilities.hasText(texts));
         texts = new String[] {null, null, null};
-        Assert.assertFalse(StringUtilities.hashText(texts));
+        Assert.assertFalse(StringUtilities.hasText(texts));
         texts[0] = "A";
-        Assert.assertFalse(StringUtilities.hashText(texts));
+        Assert.assertFalse(StringUtilities.hasText(texts));
         texts[1] = "B";
-        Assert.assertFalse(StringUtilities.hashText(texts));
+        Assert.assertFalse(StringUtilities.hasText(texts));
         texts[2] = "         ";
-        Assert.assertFalse(StringUtilities.hashText(texts));
+        Assert.assertFalse(StringUtilities.hasText(texts));
         texts[2] = "";
-        Assert.assertFalse(StringUtilities.hashText(texts));
+        Assert.assertFalse(StringUtilities.hasText(texts));
         texts[2] = " ";
-        Assert.assertFalse(StringUtilities.hashText(texts));
+        Assert.assertFalse(StringUtilities.hasText(texts));
         texts[2] = "C";
-        Assert.assertTrue(StringUtilities.hashText(texts));
+        Assert.assertTrue(StringUtilities.hasText(texts));
         texts[0] = "            ";
-        Assert.assertFalse(StringUtilities.hashText(texts));
+        Assert.assertFalse(StringUtilities.hasText(texts));
     }
 }

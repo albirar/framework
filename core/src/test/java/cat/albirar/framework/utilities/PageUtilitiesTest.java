@@ -76,7 +76,7 @@ public class PageUtilitiesTest
         pag = null;
         r = PageUtilities.copyOrCreatePageable(pag);
         Assert.assertNotNull(r);
-        Assert.assertEquals(PageUtilities.ELEMENTS_PER_PAGINA, r.getPageSize());
+        Assert.assertEquals(PageUtilities.ITEMS_FOR_PAGE, r.getPageSize());
         Assert.assertEquals(0, r.getPageNumber());
     }
     /**
