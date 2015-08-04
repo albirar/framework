@@ -297,33 +297,30 @@ public class DynaBeanDescriptor<T> implements Serializable
     {
         Class<?> pType;
         
-        if(!propDesc.isDynaBean())
+        if(propDesc.isArray() || propDesc.isCollection())
         {
-            if(propDesc.isArray() || propDesc.isCollection())
+            pType = propDesc.getItemType();
+        }
+        else
+        {
+            pType = propDesc.getPropertyType();
+        }
+        if(Cloneable.class.isAssignableFrom(pType))
+        {
+            try
             {
-                pType = propDesc.getItemType();
+                propDesc.propertyItemCloneMethod = pType.getMethod("clone", (Class<?>[]) null);
             }
-            else
+            catch(NoSuchMethodException | SecurityException e)
             {
-                pType = propDesc.getPropertyType();
-            }
-            if(Cloneable.class.isAssignableFrom(pType))
-            {
-                try
-                {
-                    propDesc.propertyItemCloneMethod = pType.getMethod("clone", (Class<?>[]) null);
-                }
-                catch(NoSuchMethodException | SecurityException e)
-                {
-                    logger.error("On assigning value for '"
-                            .concat(propDesc.getPropertyName())
-                            .concat("' from dynaBean '")
-                            .concat(getImplementedType().getName()),e);
-                    throw new RuntimeException("On assigning value for '"
-                            .concat(propDesc.getPropertyName())
-                            .concat("' from dynaBean '")
-                            .concat(getImplementedType().getName()),e);
-                }
+                logger.error("On assigning value for '"
+                        .concat(propDesc.getPropertyName())
+                        .concat("' from dynaBean '")
+                        .concat(getImplementedType().getName()),e);
+                throw new RuntimeException("On assigning value for '"
+                        .concat(propDesc.getPropertyName())
+                        .concat("' from dynaBean '")
+                        .concat(getImplementedType().getName()),e);
             }
         }
     }

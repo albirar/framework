@@ -54,7 +54,7 @@ public class DatesUtilitiesTest
         d2 = cal.getTime();
         Assert.assertEquals(0, DatesUtilities.nullSafeCompareDate(d1, d2));
         
-        cal.set(Calendar.HOUR, cal.get(Calendar.HOUR) + 2);
+        cal.roll(Calendar.HOUR, 2);
         d2 = cal.getTime();
         Assert.assertEquals(0, DatesUtilities.nullSafeCompareDate(d1, d2));
         
@@ -84,11 +84,11 @@ public class DatesUtilitiesTest
         d2 = cal.getTime();
         Assert.assertTrue(DatesUtilities.nullSafeEqualsDate(d1, d2));
         
-        cal.set(Calendar.HOUR, cal.get(Calendar.HOUR) + 2);
+        cal.roll(Calendar.HOUR, 2);
         d2 = cal.getTime();
         Assert.assertTrue(DatesUtilities.nullSafeEqualsDate(d1, d2));
         
-        cal.add(Calendar.DATE, 2);
+        cal.roll(Calendar.DATE, 2);
         d1 = cal.getTime();
         Assert.assertFalse(DatesUtilities.nullSafeEqualsDate(d1, d2));
         Assert.assertFalse(DatesUtilities.nullSafeEqualsDate(d2, d1));
@@ -114,7 +114,7 @@ public class DatesUtilitiesTest
         d2 = cal.getTime();
         Assert.assertEquals(0, DatesUtilities.nullSafeCompareDateTime(d1, d2));
         
-        cal.set(Calendar.MILLISECOND, cal.get(Calendar.MILLISECOND) + 2);
+        cal.roll(Calendar.MILLISECOND, 2);
         d2 = cal.getTime();
         Assert.assertEquals(0, DatesUtilities.nullSafeCompareDateTime(d1, d2));
         
@@ -144,7 +144,7 @@ public class DatesUtilitiesTest
         d2 = cal.getTime();
         Assert.assertTrue(DatesUtilities.nullSafeEqualsDateTime(d1, d2));
         
-        cal.set(Calendar.MILLISECOND, cal.get(Calendar.MILLISECOND) + 2);
+        cal.roll(Calendar.MILLISECOND, 2);
         d2 = cal.getTime();
         Assert.assertTrue(DatesUtilities.nullSafeEqualsDateTime(d1, d2));
         
