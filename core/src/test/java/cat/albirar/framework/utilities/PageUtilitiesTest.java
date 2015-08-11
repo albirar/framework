@@ -37,14 +37,14 @@ public class PageUtilitiesTest
     /**
      * Test for {@link PageUtilities#copyPageable(org.springframework.data.domain.Pageable)} with null.
      */
-    @Test public void testCopiaPageableNull()
+    @Test public void testCopyPageableNull()
     {
         Assert.assertNull(PageUtilities.copyPageable(null));
     }
     /**
      * Test for {@link PageUtilities#copyPageable(org.springframework.data.domain.Pageable)} with unasigned data.
      */
-    @Test public void testCopiaPageableUnasigned()
+    @Test public void testCopyPageableUnasigned()
     {
         Pageable pag, r;
         
@@ -55,7 +55,7 @@ public class PageUtilitiesTest
     /**
      * Test for {@link PageUtilities#copyPageable(org.springframework.data.domain.Pageable)} with asigned data.
      */
-    @Test public void testCopiaPageableAsigned()
+    @Test public void testCopyPageableAsigned()
     {
         Pageable pag, r;
         Sort s;
@@ -69,20 +69,20 @@ public class PageUtilitiesTest
     /**
      * Test for {@link PageUtilities#copyOrCreatePageable(org.springframework.data.domain.Pageable)} with null.
      */
-    @Test public void testCopiaOCreaPageableNull()
+    @Test public void testCopyOrCreatePageableNull()
     {
         Pageable pag, r;
         
         pag = null;
         r = PageUtilities.copyOrCreatePageable(pag);
         Assert.assertNotNull(r);
-        Assert.assertEquals(PageUtilities.ITEMS_FOR_PAGE, r.getPageSize());
+        Assert.assertEquals(PageUtilities.PAGE_SIZE, r.getPageSize());
         Assert.assertEquals(0, r.getPageNumber());
     }
     /**
      * Test for {@link PageUtilities#copyOrCreatePageable(org.springframework.data.domain.Pageable)} with null.
      */
-    @Test public void testCopiaOCreaPageableUnasigned()
+    @Test public void testCopyOrCreatePageableUnasigned()
     {
         Pageable pag, r;
         
@@ -94,7 +94,7 @@ public class PageUtilitiesTest
     /**
      * Test for {@link PageUtilities#copyOrCreatePageable(org.springframework.data.domain.Pageable)} with assigned data.
      */
-    @Test public void testCopiaOCreaPageableAsigned()
+    @Test public void testCopyOrCreatePageableAsigned()
     {
         Pageable pag, r;
         Sort s;
@@ -104,5 +104,139 @@ public class PageUtilitiesTest
         r = PageUtilities.copyOrCreatePageable(pag);
         Assert.assertNotNull(r);
         Assert.assertEquals(pag, r);
+    }
+    /**
+     * Test for {@link PageUtilities#checkAndAdjust(Pageable)} with null argument.
+     */
+    @Test public void testCheckAndAdjustNull()
+    {
+        Assert.assertNull(PageUtilities.checkAndAdjust(null));
+    }
+    /**
+     * Test for {@link PageUtilities#checkAndAdjust(Pageable)} with incorrect pagination (all cases).
+     */
+    @Test public void testCheckAndAdjustIncorrect()
+    {
+        Pageable page, adjusted;
+        
+        page = new PageableTestImpl(-1, 0);
+        adjusted = PageUtilities.checkAndAdjust(page);
+        Assert.assertEquals(0, adjusted.getPageNumber());
+        Assert.assertEquals(PageUtilities.PAGE_SIZE, adjusted.getPageSize());
+        
+        page = new PageableTestImpl(5, -10);
+        adjusted = PageUtilities.checkAndAdjust(page);
+        Assert.assertEquals(5, adjusted.getPageNumber());
+        Assert.assertEquals(PageUtilities.PAGE_SIZE, adjusted.getPageSize());
+        
+        page = new PageableTestImpl(-5, 10);
+        adjusted = PageUtilities.checkAndAdjust(page);
+        Assert.assertEquals(0, adjusted.getPageNumber());
+        Assert.assertEquals(10, adjusted.getPageSize());
+    }
+    /**
+     * Test for {@link PageUtilities#checkAndAdjust(Pageable)} with Correct pagination (all cases).
+     */
+    @Test public void testCheckAndAdjustCorrect()
+    {
+        Pageable page, adjusted;
+        
+        page = new PageableTestImpl(25, 530);
+        adjusted = PageUtilities.checkAndAdjust(page);
+        Assert.assertEquals(25, adjusted.getPageNumber());
+        Assert.assertEquals(530, adjusted.getPageSize());
+        
+        page = new PageableTestImpl(0, PageUtilities.PAGE_SIZE);
+        adjusted = PageUtilities.checkAndAdjust(page);
+        Assert.assertEquals(0, adjusted.getPageNumber());
+        Assert.assertEquals(PageUtilities.PAGE_SIZE, adjusted.getPageSize());
+        
+        page = new PageableTestImpl(0, 1);
+        adjusted = PageUtilities.checkAndAdjust(page);
+        Assert.assertEquals(0, adjusted.getPageNumber());
+        Assert.assertEquals(1, adjusted.getPageSize());
+    }
+    
+    class PageableTestImpl implements Pageable
+    {
+        private int page;
+        private int size;
+        PageableTestImpl(int page, int size)
+        {
+            this.page = page;
+            this.size = size;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int getPageNumber()
+        {
+            return page;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int getPageSize()
+        {
+            return size;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int getOffset()
+        {
+            return (page * size);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Sort getSort()
+        {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Pageable next()
+        {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Pageable previousOrFirst()
+        {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Pageable first()
+        {
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean hasPrevious()
+        {
+            return false;
+        }
+        
     }
 }

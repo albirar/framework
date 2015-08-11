@@ -46,5 +46,8 @@ public interface IAnnotatedParentModel extends Cloneable, Serializable {
     public ISimpleModel getSimpleModel();
     public void setSimpleModel(ISimpleModel model);
 	
+    @DynaBean
+    public ISimpleModel getSecondSimpleModel();
+    public void setSecondSimpleModel(ISimpleModel secondSimpleModel);
 	public IAnnotatedParentModel clone();
 }

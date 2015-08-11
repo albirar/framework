@@ -23,6 +23,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.text.Format;
 import java.util.TreeMap;
 
 /**
@@ -33,8 +34,11 @@ import java.util.TreeMap;
  * <li><b>25.3F</b> for a {@code float} value.</li>
  * <li>etc...</li>
  * </ul>
+ * <p>You can, also, indicate a format text to apply with a {@link Format} derived class. Depending on
+ * the property type, DynaBean instantiate the corresponding derived formatter.
+ * </p>
  * If indicates an implementation class, {@link DynaBean} will create a new instance and
- * assign them to the property, by exemple:
+ * assign them to the property, by example:
  * <pre>
     &#64;DynaBean
     &#64;PropertyDefaultValue(implementation={&#64;link TreeMap java.util.TreeMap})
@@ -55,8 +59,13 @@ public @interface PropertyDefaultValue {
 	 */
 	String [] value() default {""};
 	/**
+	 * A pattern to apply transformation in case of dates or calendars.
+	 * @return The pattern
+	 */
+	String [] pattern() default {""};
+	/**
 	 * A specific implementation class to be instantiated.
 	 * @return the implementation class
 	 */
-	Class<?> implementation() default Object.class;
+	Class<?> implementation() default void.class;
 }

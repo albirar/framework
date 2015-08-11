@@ -168,19 +168,6 @@ class DynaBeanPropertyDescriptor implements Serializable
     {
         return Collection.class.isAssignableFrom(getPropertyType());
     }
-
-    /**
-     * Indicates if this property implements the {@link Cloneable} interface.
-     * @return true if implements it and false if not
-     */
-    public boolean isCloneable()
-    {
-        if(isCollection() || isArray())
-        {
-            return Cloneable.class.isAssignableFrom(getItemType().getClass());
-        }
-        return Cloneable.class.isAssignableFrom(getPropertyType().getClass());
-    }
     /**
      * Default value for this property, as indicated in {@link PropertyDefaultValue} anotation.
      * 
