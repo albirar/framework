@@ -37,6 +37,7 @@ public interface IDynaBeanFactory {
      * @param <T> The type to implement
      * @param typeToImplement The Class of the type to implement.
      * @return The instance dynaBean
+     * @throws IllegalArgumentException If errors on definition
      */
     public <T> T newDynaBean(Class<T> typeToImplement);
     /**
@@ -45,6 +46,7 @@ public interface IDynaBeanFactory {
      * @param typeToImplement The Class of the type to implement.
      * @param visitor The visitor to add to
      * @return The instance dynaBean
+     * @throws IllegalArgumentException If errors on definition
      */
     public <T> T newDynaBean(Class<T> typeToImplement, IDynaBeanVisitor visitor);
 	/**
@@ -52,6 +54,7 @@ public interface IDynaBeanFactory {
 	 * @param <T> The type to implement
 	 * @param dynaBean The dynaBean to clone
 	 * @return The new cloned dynaBean
+     * @throws IllegalArgumentException If errors on definition
 	 */
 	public <T> T cloneDynaBean(T dynaBean);
 	

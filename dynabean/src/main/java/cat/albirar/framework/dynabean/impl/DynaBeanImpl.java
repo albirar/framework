@@ -17,7 +17,6 @@
 package cat.albirar.framework.dynabean.impl;
 
 import static cat.albirar.framework.dynabean.impl.DynaBeanImplementationUtils.isGetter;
-import static cat.albirar.framework.dynabean.impl.DynaBeanImplementationUtils.isPropertyMethod;
 
 import java.beans.PropertyEditor;
 import java.io.Serializable;
@@ -37,6 +36,7 @@ import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 import cat.albirar.framework.dynabean.DynaBeanUtils;
@@ -103,6 +103,7 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
     DynaBeanImpl(DynaBeanImpl<T> origin)
     {
         this();
+        Assert.notNull(origin, "The 'origin' object is required!");
         this.descriptor = origin.descriptor;
         doClone(origin);
     }
@@ -147,12 +148,6 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
      */
     private void doClone(DynaBeanImpl<T> origin)
     {
-        if(origin == null)
-        {
-            doInstantiate();
-            return;
-        }
-        // Copy instantiation
         for(DynaBeanPropertyDescriptor propDesc : descriptor.getProperties())
         {
             values.put(propDesc.getPropertyName(), nullSafeValue(cloneValue(propDesc, origin.values.get(propDesc.getPropertyName())), propDesc));
@@ -214,18 +209,15 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
 
         name = method.getName();
         // Check if is a get/set method
-        if(isPropertyMethod(name))
+        if((propDesc = descriptor.getPropertyByMethodName(name)) != null)
         {
-            if((propDesc = descriptor.getPropertyByMethodName(name)) != null)
+            if(isGetter(name))
             {
-                if(isGetter(name))
-                {
-                    return doGetter(propDesc);
-                }
-                // is a setter
-                doSetter(propDesc, args);
-                return null;
+                return doGetter(propDesc);
             }
+            // is a setter
+            doSetter(propDesc, args);
+            return null;
         }
         // Can be hashCode, toString or equals
         if("hashCode".equals(name))
@@ -402,28 +394,23 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
         IPropertyWriter writer;
         ITransformerVisitor<Object> reader;
         
-        if(propDesc.getDefaultValue() != null 
-                && propDesc.getDefaultValue().length > 0)
+        if(propDesc.getDefaultValue() != null)
         {
             if(propDesc.getPropertyItemEditor() != null)
             {
                 pEditor = propDesc.getPropertyItemEditor();
                 reader = new ObjectCopyReaderVisitor(pEditor);
-                writer = prepareWriter(propDesc, reader);
-                for(String iv : propDesc.getDefaultValue())
-                {
-                    writer.visit(iv);
-                }
-                return writer.getReturnValue();
             }
-            // No editor, return the default value directly
-            if(propDesc.isArray())
+            else
             {
-                // is array, return an array
-                return propDesc.getDefaultValue();
+                reader = new ObjectCopyReaderVisitor();
             }
-            // not an array, return a single value
-            return propDesc.getDefaultValue()[0];
+            writer = prepareWriter(propDesc, reader);
+            for(String iv : propDesc.getDefaultValue())
+            {
+                writer.visit(iv);
+            }
+            return writer.getReturnValue();
         }
         // No default value, return default implementation (or null if none are defined)
         return instantiateDefaultImplementation(propDesc);
@@ -466,7 +453,14 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
             }
             else
             {
-                reader = new ObjectCopyReaderVisitor();
+                if(propDesc.getPropertyItemEditor() != null)
+                {
+                    reader = new ObjectCopyReaderVisitor(propDesc.getPropertyItemEditor());
+                }
+                else
+                {
+                    reader = new ObjectCopyReaderVisitor();
+                }
             }
         }
         writer = prepareWriter(propDesc, reader);
@@ -538,6 +532,7 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
      * Instantiate the default implementation for the property.
      * @param propDesc The property descriptor
      * @return The default instance or null if no default implementation are indicated
+     * @throws IllegalArgumentException If the implementation class is cannot be instantiated
      */
     private Object instantiateDefaultImplementation(DynaBeanPropertyDescriptor propDesc)
     {
@@ -561,7 +556,7 @@ public class DynaBeanImpl<T> implements InvocationHandler, Serializable
                         .concat(getImplementedType().getName())
                         .concat("'");
                 logger.error(s, e);
-                throw new RuntimeException(s, e);
+                throw new IllegalArgumentException(s, e);
             }
         }
         return null;

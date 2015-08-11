@@ -433,6 +433,19 @@ public class DynaBeanImplTest
 	    Assert.assertFalse(m1.equals(Proxy.getInvocationHandler(m3)));
 	}
 	/**
+	 * To test {@link Object#equals(Object)} with an exception on getter of other object.
+	 */
+	@Test(expected=RuntimeException.class)
+	public void testEqualsException()
+	{
+	    IDynaBeanEqualsException d1, d2;
+	    
+	    d1 = DynaBeanUtils.instanceDefaultFactory().newDynaBean(IDynaBeanEqualsException.class);
+	    d1.setFieldInt(10);
+	    d2 = new DynaBeanEqualsExceptionImpl();
+	    d1.equals(d2);
+	}
+	/**
 	 * Test the clone with explicit bean implementation.
 	 */
 	@Test public void testMixedClone()
@@ -472,5 +485,31 @@ public class DynaBeanImplTest
         model.setIncomingYear(INCOMING_YEAR_VALUE);
         model.setGender(GENDER_VALUE);
         model.setNames(NAMES_VALUES);
+	}
+    /**
+     * To test an equals method with exception.
+     */
+	interface IDynaBeanEqualsException
+	{
+	    public int getFieldInt();
+	    public void setFieldInt(int fieldInt);
+	}
+	/**
+	 * To test an equals method with exception.
+	 */
+	class DynaBeanEqualsExceptionImpl implements IDynaBeanEqualsException
+	{
+        @Override
+        public int getFieldInt()
+        {
+            throw new SecurityException();
+        }
+
+        @Override
+        public void setFieldInt(int fieldInt)
+        {
+            // Nothing to do!
+        }
+	    
 	}
 }

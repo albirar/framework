@@ -31,7 +31,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -43,6 +45,7 @@ import org.springframework.util.StringUtils;
 
 import cat.albirar.framework.dynabean.annotations.DynaBean;
 import cat.albirar.framework.dynabean.annotations.PropertyDefaultValue;
+import cat.albirar.framework.utilities.StringUtilities;
 
 /**
  * A descriptor for a {@link DynaBeanImpl}.
@@ -228,8 +231,6 @@ public class DynaBeanDescriptor<T> implements Serializable
         Type [] t;
         Class<?> propType;
         
-        propType = null;
-        t = null;
         if(propDesc.isCollection())
         {
             if(propDesc.getterMethod != null)
@@ -240,13 +241,9 @@ public class DynaBeanDescriptor<T> implements Serializable
             {
                 t = ((ParameterizedType)propDesc.setterMethod.getGenericParameterTypes()[0]).getActualTypeArguments();
             }
-            if(t != null && t.length > 0)
-            {
-                propType = (Class<?>)t[0];
-            }
+            propType = (Class<?>)t[0];
         }
-        
-        if(propType == null)
+        else
         {
             if(propDesc.isArray())
             {
@@ -275,10 +272,11 @@ public class DynaBeanDescriptor<T> implements Serializable
     private void resolvePropertyEditorForProperty(DynaBeanPropertyDescriptor propDesc)
     {
         PropertyEditor pEditor;
-
-        if((pEditor = getFactory().getPropertyEditorRegistry().findCustomEditor(propDesc.getItemType(), propDesc.getPropertyPath())) == null)
+        
+        // Ignore String editor
+        if(!String.class.equals(propDesc.getItemType()))
         {
-            if((pEditor = getFactory().getPropertyEditorRegistry().findCustomEditor(propDesc.getItemType(), null)) == null)
+            if((pEditor = getFactory().getPropertyEditorRegistry().findCustomEditor(propDesc.getItemType(), propDesc.getPropertyPath())) == null)
             {
                 // Last, find in
                 if((pEditor = PropertyEditorManager.findEditor(propDesc.getItemType())) == null)
@@ -286,8 +284,8 @@ public class DynaBeanDescriptor<T> implements Serializable
                     getFactory().getPropertyEditorRegistry().registerCustomEditor(propDesc.getItemType(), pEditor);
                 }
             }
+            propDesc.propertyItemEditor = pEditor;
         }
-        propDesc.propertyItemEditor = pEditor;
     }
     /**
      * Search -if applicable- for a clone method for the given property or item component if array or collection.
@@ -333,11 +331,16 @@ public class DynaBeanDescriptor<T> implements Serializable
     {
         PropertyDefaultValue pdv;
         DynaBean db;
+        String msg;
 
-        // Is a dynaBean property?
-        if((db = getAnnotationForProperty(propDesc, DynaBean.class)) != null
-                && propDesc.getPropertyType().isInterface())
+        // Check for dynabean annotation at property or property type
+        if( ((db = getAnnotationForProperty(propDesc, DynaBean.class)) != null)
+                || ((db = getAnnotationForPropertyType(propDesc, DynaBean.class)) != null) )
         {
+            Assert.isTrue(propDesc.getPropertyType().isInterface(), "The property '" 
+                        + propDesc.getPropertyName() + "' of type '" 
+                        + implementedType.getName() + " is using DynaBean annotation incorrectly. "
+                        + "Only interfaces can be DynaBean");
             // Check for DynaBean conditions
             propDesc.dynaBean = true;
             propDesc.defaultValue = new String[]
@@ -347,27 +350,22 @@ public class DynaBeanDescriptor<T> implements Serializable
         }
         else
         {
+            // Not a dynabean, check for PropertyDefaultValue
             if((pdv = getAnnotationForProperty(propDesc, PropertyDefaultValue.class)) != null)
             {
-                if(pdv.implementation() != null && !Object.class.getName().equals(pdv.implementation().getName()))
+                // Implementation was indicated?
+                if(!void.class.equals(pdv.implementation()))
                 {
-                    if(pdv.implementation().isInterface())
+                    // Implementation and no default
+                    // The implementation is an interface (dynabean)?
+                    if(pdv.implementation().isInterface()
+                            || Modifier.isAbstract(pdv.implementation().getModifiers()) )
                     {
-                        // Check for DynaBean
-                        if(pdv.implementation().isAnnotationPresent(DynaBean.class))
-                        {
-                            // Instantiate by factory
-                            propDesc.dynaBean = true;
-                            propDesc.defaultValue = new String[]
-                            {
-                                Boolean.TRUE.toString()
-                            };
-                        }
-                        else
-                        {
-                            logger.error("The implementation type (" + pdv.implementation().getName() + ") for the property '" + propDesc.getPropertyName()
-                                    + "' isn't a concrete class!");
-                        }
+                        msg = "The implementation type (" + pdv.implementation().getName() + ") for the property '" + propDesc.getPropertyName()
+                        + "' isn't a concrete and instantiable class!";
+                        
+                        logger.error(msg);
+                        throw new IllegalArgumentException(msg);
                     }
                     else
                     {
@@ -377,35 +375,39 @@ public class DynaBeanDescriptor<T> implements Serializable
                 }
                 else
                 {
-                    if(!hasText(pdv.value()))
+                    // No implementation, value was indicated?
+                    if(!StringUtilities.hasText(pdv.value()))
                     {
-                        // No implementation && no value
-                        if(propDesc.getPropertyType().isInterface())
-                        {
-                            // Check for DynaBean
-                            if(propDesc.getPropertyType().isAnnotationPresent(DynaBean.class))
-                            {
-                                // Instantiate by factory
-                                propDesc.dynaBean = true;
-                                propDesc.defaultValue = new String[]
-                                {
-                                    Boolean.TRUE.toString()
-                                };
-                            }
-                            else
-                            {
-                                logger.error("The property '".concat(propDesc.getPropertyName()).concat("' is not instantiable! Cannot be marked as 'default'"));
-                            }
-                        }
-                        else
-                        {
-                            // Concrete class implementation!
-                            propDesc.defaultImplementation = propDesc.getPropertyType();
-                        }
+                        // No implementation && no value, no default implementation
+                        msg = "The property '".concat(propDesc.getPropertyName()).concat("' was annotated with DefaultPropertyValue but "
+                                + "no value and no default implementation was indicated. Cannot be marked as 'default'");
+                        logger.error(msg);
+                        throw new IllegalArgumentException(msg);
                     }
                     else
                     {
                         propDesc.defaultValue = pdv.value();
+                        if(StringUtilities.hasText(pdv.pattern()))
+                        {
+                            // Test if a date or calendar...
+                            if(Date.class.isAssignableFrom(propDesc.getPropertyType())
+                                    || Calendar.class.isAssignableFrom(propDesc.getPropertyType()))
+                            {
+                                // dates
+                                propDesc.propertyItemEditor = new DynaBeanDateEditor(pdv.pattern()[0], Calendar.class.isAssignableFrom(propDesc.getPropertyType()));
+                                getFactory().getPropertyEditorRegistry().registerCustomEditor(propDesc.getPropertyType()
+                                        , propDesc.getPropertyPath()
+                                        , propDesc.propertyItemEditor);
+                            }
+                            else
+                            {
+                                msg = String.format("On processing '%s' property of '%s' type. The pattern property of annotation is only applicable to Date or Calendar types!"
+                                            ,propDesc.getPropertyName(), implementedType.getName());
+                                
+                                logger.error(msg);
+                                throw new IllegalArgumentException(msg);
+                            }
+                        }
                     }
                 }
             }
@@ -442,6 +444,16 @@ public class DynaBeanDescriptor<T> implements Serializable
         }
         return annotation;
     }
+    /**
+     * Check for {@code annotationClass} at property type.
+     * @param propDesc The property descriptor
+     * @param annotationClass The annotation class
+     * @return The annotation; null if annotation was not found.
+     */
+    private <A extends Annotation> A getAnnotationForPropertyType(DynaBeanPropertyDescriptor propDesc, Class<A> annotationClass)
+    {
+        return propDesc.getPropertyType().getAnnotation(annotationClass);
+    }
 
     /**
      * The factory associated with this descriptor.
@@ -464,16 +476,6 @@ public class DynaBeanDescriptor<T> implements Serializable
     }
 
     /**
-     * The implemented type.
-     * 
-     * @param implementedType The class of implemented type
-     */
-    public void setImplementedType(Class<T> implementedType)
-    {
-        this.implementedType = implementedType;
-    }
-
-    /**
      * Get the property descriptor for the indicated method name.
      * 
      * @param methodName The method name; required, should to be a 'get' or 'is' or 'set'.
@@ -485,21 +487,6 @@ public class DynaBeanDescriptor<T> implements Serializable
         if(StringUtils.hasText(methodName) && DynaBeanImplementationUtils.isPropertyMethod(methodName))
         {
             return properties.get(fromMethodToPropertyName(methodName));
-        }
-        return null;
-    }
-
-    /**
-     * Get the property descriptor for the indicated property name.
-     * 
-     * @param propName The property name, is required.
-     * @return The property descriptor, if found, or null if not found
-     */
-    public DynaBeanPropertyDescriptor getPropertyByPropertyName(String propName)
-    {
-        if(StringUtils.hasText(propName))
-        {
-            return properties.get(propName);
         }
         return null;
     }
@@ -551,7 +538,6 @@ public class DynaBeanDescriptor<T> implements Serializable
      */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
-
         in.defaultReadObject();
         resolveAfterDeserialization();
     }
@@ -568,7 +554,7 @@ public class DynaBeanDescriptor<T> implements Serializable
 
         for(Method method : implementedType.getMethods())
         {
-            if(Modifier.isPublic(method.getModifiers()) && isPropertyMethod(method.getName()))
+            if(isPropertyMethod(method.getName()))
             {
                 pb = properties.get(fromMethodToPropertyName(method.getName()));
                 if(isGetter(method.getName()))
@@ -589,27 +575,5 @@ public class DynaBeanDescriptor<T> implements Serializable
                 }
             }
         }
-    }
-
-    /**
-     * Check that strings isn't null, have one or more items and all items {@link StringUtils#hasText(String) has text}.
-     * 
-     * @param strings The array of strings
-     * @return true if has text and false if not
-     */
-    private boolean hasText(String... strings)
-    {
-        if(strings != null && strings.length > 0)
-        {
-            for(String s : strings)
-            {
-                if(!StringUtils.hasText(s))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
     }
 }

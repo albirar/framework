@@ -160,7 +160,6 @@ public class DynaBeanFactoryTest
         visitor.setModifySet(false);
         Assert.assertEquals(dbean.getNamesList(), list1);
     }
-
     // Private auxiliary test classes
     /** A visitor for recording events on get and set. */
     class RecordingVisitorTest implements IDynaBeanVisitor
