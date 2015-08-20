@@ -30,7 +30,7 @@ import cat.albirar.framework.dynabean.annotations.PropertyDefaultValue;
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 2.0
  */
-class DynaBeanPropertyDescriptor implements Serializable
+public class DynaBeanPropertyDescriptor implements Serializable
 {
     private static final long serialVersionUID = 6311968165570922423L;
 
