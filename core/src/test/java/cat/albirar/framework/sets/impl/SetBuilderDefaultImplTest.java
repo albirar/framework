@@ -24,15 +24,15 @@ import org.junit.Test;
 
 import cat.albirar.framework.sets.ISet;
 import cat.albirar.framework.sets.ISetBuilder;
-import cat.albirar.framework.sets.impl.SetBuilderDefaultImpl;
-import cat.albirar.framework.sets.impl.SetBuilderUtils;
+import cat.albirar.framework.sets.SetUtils;
+import cat.albirar.framework.sets.impl.models.TestModelRoot;
 
 /**
  * Test for {@link SetBuilderDefaultImpl}.
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
-public class SetBuilderTest
+public class SetBuilderDefaultImplTest
 {
     private static final String NAME_2L_MODEL = "secondLevelModelProperty";
     private static final String NAME_3L_MODEL = "thirdLevelModelProperty";
@@ -89,6 +89,66 @@ public class SetBuilderTest
         props = set.toArray(new String []{});
         Assert.assertEquals(NAME_INT_PROPERTY, props[0]);
         Assert.assertEquals(NAME_STRING_PROPERTY, props[1]);
+    }
+    /**
+     * Test methods related to path stack management.
+     */
+    @Test public void testPathStackManagement()
+    {
+        ISetBuilder setBuilder;
+        
+        setBuilder = new SetBuilderDefaultImpl(TestModelRoot.class);
+        // should to be null
+        Assert.assertNull(setBuilder.peekPropertyPathStack());
+        // Current property path at root level should to be empty string
+        Assert.assertEquals("", setBuilder.getCurrentPropertyPath());
+        // push
+        setBuilder.pushPropertyPath(NAME_2L_MODEL);
+        // should to be the current property path
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.peekPropertyPathStack());
+        // Current property path...
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.getCurrentPropertyPath());
+        // push another level
+        setBuilder.pushPropertyPath(NAME_2L3L_MODEL);
+        // should to be the new property path
+        Assert.assertEquals(NAME_2L3L_MODEL, setBuilder.peekPropertyPathStack());
+        // Current property path...
+        Assert.assertEquals(NAME_2L_MODEL + "." + NAME_2L3L_MODEL, setBuilder.getCurrentPropertyPath());
+        // Pop
+        setBuilder.popPropertyPath();
+        // should to be the first push
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.peekPropertyPathStack());
+        // Current property path...
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.getCurrentPropertyPath());
+        // Pop
+        setBuilder.popPropertyPath();
+        // should to be null
+        Assert.assertNull(setBuilder.peekPropertyPathStack());
+        // Current property path at root level should to be empty string
+        Assert.assertEquals("", setBuilder.getCurrentPropertyPath());
+        // Check more pops
+        setBuilder.popPropertyPath();
+        setBuilder.popPropertyPath();
+        setBuilder.popPropertyPath();
+        setBuilder.popPropertyPath();
+        setBuilder.popPropertyPath();
+        // should to be null
+        Assert.assertNull(setBuilder.peekPropertyPathStack());
+        // Current property path at root level should to be empty string
+        Assert.assertEquals("", setBuilder.getCurrentPropertyPath());
+        // push
+        setBuilder.pushPropertyPath(NAME_2L_MODEL);
+        // should to be the current property path, check invariability
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.peekPropertyPathStack());
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.peekPropertyPathStack());
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.peekPropertyPathStack());
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.peekPropertyPathStack());
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.peekPropertyPathStack());
+        // Current property path invariability...
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.getCurrentPropertyPath());
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.getCurrentPropertyPath());
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.getCurrentPropertyPath());
+        Assert.assertEquals(NAME_2L_MODEL, setBuilder.getCurrentPropertyPath());
     }
     /**
      * Test builder for add an inexistent property.
@@ -236,7 +296,7 @@ public class SetBuilderTest
         Assert.assertEquals(NAME_STRING_PROPERTY, props[3]);
     }
     /**
-     * Test for {@link SetBuilderUtils#instantiateBuilderFor(Class)}.
+     * Test for {@link SetUtils#instantiateBuilderFor(Class)}.
      */
     @Test public void testBuildUtilsNewInstance()
     {
@@ -244,7 +304,7 @@ public class SetBuilderTest
         ISet set;
         String [] props;
         
-        builder = SetBuilderUtils.instantiateBuilderFor(TestModelRoot.class);
+        builder = SetUtils.instantiateBuilderFor(TestModelRoot.class);
         builder.addProperty(NAME_INT_PROPERTY);
         set = builder.build();
         

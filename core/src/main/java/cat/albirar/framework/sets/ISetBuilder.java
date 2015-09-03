@@ -19,16 +19,13 @@
 
 package cat.albirar.framework.sets;
 
-import cat.albirar.framework.sets.impl.SetBuilderDefaultImpl;
-
 /**
- * A builder factory for build sets.
- * <p>Use:</p>
- * <p>Once a builder is instantiated (see {@link SetBuilderDefaultImpl}), operate as:
+ * A builder for create sets.
+ * <p>Implemented as a <i>fluent</i> API, you can use in fluent mode (instantiate and chained calls):
  * <pre>
  * ISet set;
  * 
- * set = builder.instantiateBuilderFor(IModel.class)
+ * set = SetUtils.instantiateBuilderFor(IModel.class)
  *      .addProperty("propertyOne")
  *      .addProperty("propertyTwo")
  *      .pushProperty("propertyAnotherModel")
@@ -38,19 +35,22 @@ import cat.albirar.framework.sets.impl.SetBuilderDefaultImpl;
  *      .addProperty("propertyFour")
  *      .build();
  * </pre>
- * The {@code push} method doesn't to be "leveled" with {@code pop} method if not needed:
+ * </p>
+ * <p>Or in classic mode (assign and call):
  * <pre>
+ * ISetBuilder builder;
  * ISet set;
  * 
- * set = SetBuilderUtils.instantiateSetBuilderFor(IModel.class)
- *      .addProperty("propertyOne")
- *      .addProperty("propertyTwo")
- *      .pushProperty("propertyAnotherModel")
- *      .addProperty("propertyAnotherOne")
- *      .addProperty("propertyThirdModel.propertyAnother")
- *      .build();
+ * builder = SetUtils.instantiateSetBuilderFor(IModel.class);
+ * builder.addProperty("propertyOne");
+ * builder.addProperty("propertyTwo");
+ * builder.pushProperty("propertyAnotherModel");
+ * builder.addProperty("propertyAnotherOne");
+ * builder.addProperty("propertyThirdModel.propertyAnother");
+ * set = builder.build();
  * </pre>
  * </p>
+ * @see SetUtils
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
@@ -78,6 +78,25 @@ public interface ISetBuilder
      * @return The builder itself with relative path to the last {@link #pushPropertyPath(String) push} operation or {@code root path} if no more pushed path are available
      */
     public ISetBuilder popPropertyPath();
+    /**
+     * Peek at property path stack and return the last property path pushed.
+     * @return The last property name pushed, or null if no property are pushed
+     */
+    public String peekPropertyPathStack();
+    /**
+     * Reset the stack of property path.
+     */
+    public void resetPropertyPathStack();
+    /**
+     * Gets the current property path, relative to root model.
+     * @return The current property path. If path is at root model, returns an empty string
+     */
+    public String getCurrentPropertyPath();
+    /**
+     * The root model for this builder.
+     * @return The root model
+     */
+    public Class<?> getModelRoot();
     /**
      * Final operation of building, creates the {@link ISet set} with the information recorded from the instantiation.
      * @return The builded set. Can be empty if no operations was made since call to {@link #instantiateBuilderFor(Class) instantiate} to call to {@link #build()}

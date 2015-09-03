@@ -25,6 +25,9 @@ import org.springframework.core.io.Resource;
 
 /**
  * Contract for registry of {@link INamedSet named sets}.
+ * Use the {@link SetRegistryFactory factory} and access to global JVM registry or thread local registry.
+ * 
+ * @see SetRegistryFactory
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */

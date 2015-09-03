@@ -17,14 +17,15 @@
  * Copyright (C) 2015 Octavi Fornés
  */
 
-package cat.albirar.framework.sets.registry;
+package cat.albirar.framework.sets.registry.impl;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import cat.albirar.framework.sets.ISet;
 import cat.albirar.framework.sets.impl.SetDefaultImplTest;
-import cat.albirar.framework.sets.impl.TestModelRoot;
+import cat.albirar.framework.sets.impl.models.TestModelRoot;
+import cat.albirar.framework.sets.registry.INamedSet;
 import cat.albirar.framework.sets.registry.impl.NamedSetDefaultImpl;
 
 /**

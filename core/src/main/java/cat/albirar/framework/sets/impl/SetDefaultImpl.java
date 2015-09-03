@@ -26,6 +26,7 @@ import java.util.TreeSet;
 import org.springframework.util.Assert;
 
 import cat.albirar.framework.sets.ISet;
+import cat.albirar.framework.sets.SetUtils;
 
 /**
  * A default implementation for {@link ISet}.
@@ -65,7 +66,7 @@ public class SetDefaultImpl extends TreeSet<String> implements ISet
         // Check for valid argument
         Assert.hasText(e, "The property name is required");
         // First check if property exists
-        if(!SetBuilderUtils.checkPathForModel(modelRoot, e))
+        if(!SetUtils.checkPathForModel(modelRoot, e))
         {
             throw new IllegalArgumentException("The property path '".concat(e)
                     .concat("' doesn't exists at model '")

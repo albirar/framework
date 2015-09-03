@@ -45,15 +45,18 @@ public class SetBuilderDefaultImpl implements ISetBuilder
     private Class<?> rootModel;
     /**
      * Unique constructor.
-     * @param rootModel The root model to build the {@link ISet}.
+     * @param rootModel The root model to build the {@link ISet}. <b>required</b>
+     * @throws IllegalArgumentException If the {@code rootModel} is null
      */
     public SetBuilderDefaultImpl(Class<?> rootModel)
     {
+        Assert.notNull(rootModel, "The rootModel argument is required");
         this.rootModel = rootModel;
         pathStack = new Stack<ModelDescriptor>();
         properties = new Vector<String>();
-        pathStack.push(new ModelDescriptor(rootModel));
-        currentModelDescriptor = pathStack.peek();
+        currentModelDescriptor = new ModelDescriptor(rootModel);
+        // The root always on bottom of stack
+        pathStack.push(currentModelDescriptor);
     }
     /**
      * {@inheritDocs}
@@ -90,7 +93,7 @@ public class SetBuilderDefaultImpl implements ISetBuilder
             spath = stk.nextToken();
             if( (pdesc = currentModelDescriptor.getProperties().get(spath)) != null)
             {
-                currentModelDescriptor = new ModelDescriptor(resolvePath(spath) ,pdesc.getPropertyType());
+                currentModelDescriptor = new ModelDescriptor(resolvePath(spath), propertyPath ,pdesc.getPropertyType());
             }
             else
             {
@@ -115,7 +118,47 @@ public class SetBuilderDefaultImpl implements ISetBuilder
         }
         return this;
     }
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String peekPropertyPathStack()
+    {
+        if(pathStack.size() > 1)
+        {
+            return pathStack.peek().getOriginalPath();
+        }
+        return null;
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void resetPropertyPathStack()
+    {
+        while(pathStack.size() > 1)
+        {
+            pathStack.pop();
+        }
+        currentModelDescriptor = pathStack.peek();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getCurrentPropertyPath()
+    {
+        return currentModelDescriptor.getRelativePath();
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Class<?> getModelRoot()
+    {
+        return rootModel;
+    }
     /**
      * {@inheritDocs}
      */

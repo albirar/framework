@@ -17,7 +17,9 @@
  * Copyright (C) 2015 Octavi Fornés
  */
 
-package cat.albirar.framework.sets.impl;
+package cat.albirar.framework.sets.impl.models;
+
+import java.util.Date;
 
 /**
  * A model for test purposes.
@@ -28,36 +30,76 @@ public class TestModelRoot
 {
     private int intProperty;
     private String stringProperty;
+    private Date dateProperty;
     private TestModelSecondLevel secondLevelModelProperty;
     private TestModelThirdLevel thirdLevelModelProperty;
+    /**
+     * {@inheritDoc}
+     */
     public int getIntProperty()
     {
         return intProperty;
     }
+    /**
+     * {@inheritDoc}
+     */
     public void setIntProperty(int intProperty)
     {
         this.intProperty = intProperty;
     }
+    /**
+     * {@inheritDoc}
+     */
     public String getStringProperty()
     {
         return stringProperty;
     }
+    /**
+     * {@inheritDoc}
+     */
     public void setStringProperty(String stringProperty)
     {
         this.stringProperty = stringProperty;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public Date getDateProperty()
+    {
+        return dateProperty;
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public void setDateProperty(Date dateProperty)
+    {
+        this.dateProperty = dateProperty;
+    }
+    /**
+     * {@inheritDoc}
+     */
     public TestModelSecondLevel getSecondLevelModelProperty()
     {
         return secondLevelModelProperty;
     }
+    /**
+     * {@inheritDoc}
+     */
     public void setSecondLevelModelProperty(TestModelSecondLevel secondLevelModelProperty)
     {
         this.secondLevelModelProperty = secondLevelModelProperty;
     }
+    /**
+     * {@inheritDoc}
+     */
     public TestModelThirdLevel getThirdLevelModelProperty()
     {
         return thirdLevelModelProperty;
     }
+    /**
+     * {@inheritDoc}
+     */
     public void setThirdLevelModelProperty(TestModelThirdLevel thirdLevelModelProperty)
     {
         this.thirdLevelModelProperty = thirdLevelModelProperty;

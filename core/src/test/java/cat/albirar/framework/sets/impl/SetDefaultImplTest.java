@@ -29,6 +29,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cat.albirar.framework.sets.ISet;
+import cat.albirar.framework.sets.impl.models.TestModelRoot;
 
 /**
  * Test for {@link SetDefaultImpl}.

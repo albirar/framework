@@ -17,32 +17,53 @@
  * Copyright (C) 2015 Octavi Fornés
  */
 
-package cat.albirar.framework.sets.impl;
+package cat.albirar.framework.sets.impl.models;
 
 /**
  * A model for test purposes.
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
-public class TestModelThirdLevel
+public class TestModelThirdLevelMixInterfaceClass
 {
     private int int3Property;
     private String string3Property;
+    private ITestModelSecondLevelMixInterfaceClass testModelSecondLevel3Property;
 
+    /**
+     * {@inheritDoc}
+     */
     public int getInt3Property()
     {
         return int3Property;
     }
+    /**
+     * {@inheritDoc}
+     */
     public void setInt3Property(int int3Property)
     {
         this.int3Property = int3Property;
     }
+    /**
+     * {@inheritDoc}
+     */
     public String getString3Property()
     {
         return string3Property;
     }
+    /**
+     * {@inheritDoc}
+     */
     public void setString3Property(String string3Property)
     {
         this.string3Property = string3Property;
+    }
+    public ITestModelSecondLevelMixInterfaceClass getTestModelSecondLevel3Property()
+    {
+        return testModelSecondLevel3Property;
+    }
+    public void setTestModelSecondLevel3Property(ITestModelSecondLevelMixInterfaceClass testModelSecondLevel3Property)
+    {
+        this.testModelSecondLevel3Property = testModelSecondLevel3Property;
     }
 }

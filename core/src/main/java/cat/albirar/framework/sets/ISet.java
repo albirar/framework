@@ -24,7 +24,9 @@ import java.util.Set;
 
 /**
  * A set is a collection of not-duplicated {@link String strings} that holds <i>paths</i> of property bean names.
- * 
+ * They can be used to determine parts of models to operate to in CRUD operations or
+ * to indicate the properties you should to return to a client from a service call.
+ *  
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */

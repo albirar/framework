@@ -15,7 +15,7 @@
  * Copyright (C) 2015 Octavi Fornés
  */
 
-package cat.albirar.framework.sets.registry;
+package cat.albirar.framework.sets.registry.impl;
 
 import java.util.Iterator;
 import java.util.Properties;
@@ -28,8 +28,10 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import cat.albirar.framework.sets.impl.TestModelRoot;
-import cat.albirar.framework.sets.impl.TestModelSecondLevel;
+import cat.albirar.framework.sets.impl.models.TestModelRoot;
+import cat.albirar.framework.sets.impl.models.TestModelSecondLevel;
+import cat.albirar.framework.sets.registry.INamedSet;
+import cat.albirar.framework.sets.registry.SetNotFoundException;
 import cat.albirar.framework.sets.registry.impl.NamedSetDefaultImpl;
 import cat.albirar.framework.sets.registry.impl.SetRegistryDefaultImpl;
 
@@ -151,7 +153,7 @@ public class SetRegistryDefaultImplTest
 
         props = new Properties();
         props.setProperty("set1", TestModelRoot.class.getName() + ":testpropxx,testpropyy");
-        props.setProperty("set2", "cat.albirar.framework.sets.impl.TestModelSecondLevel:testpropxx, testpropyy");
+        props.setProperty("set2", "cat.albirar.framework.sets.impl.models.TestModelSecondLevel:testpropxx, testpropyy");
         registry.loadFromProperties(props);
     }
 

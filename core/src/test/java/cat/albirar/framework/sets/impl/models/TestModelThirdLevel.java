@@ -17,40 +17,44 @@
  * Copyright (C) 2015 Octavi Fornés
  */
 
-package cat.albirar.framework.sets.impl;
+package cat.albirar.framework.sets.impl.models;
 
 /**
  * A model for test purposes.
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
-public class TestModelSecondLevel
+public class TestModelThirdLevel
 {
-    private int int2Property;
-    private String string2Property;
-    private TestModelThirdLevel thirdLevel2ModelProperty;
-    public int getInt2Property()
+    private int int3Property;
+    private String string3Property;
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getInt3Property()
     {
-        return int2Property;
+        return int3Property;
     }
-    public void setInt2Property(int int2Property)
+    /**
+     * {@inheritDoc}
+     */
+    public void setInt3Property(int int3Property)
     {
-        this.int2Property = int2Property;
+        this.int3Property = int3Property;
     }
-    public String getString2Property()
+    /**
+     * {@inheritDoc}
+     */
+    public String getString3Property()
     {
-        return string2Property;
+        return string3Property;
     }
-    public void setString2Property(String string2Property)
+    /**
+     * {@inheritDoc}
+     */
+    public void setString3Property(String string3Property)
     {
-        this.string2Property = string2Property;
-    }
-    public TestModelThirdLevel getThirdLevel2ModelProperty()
-    {
-        return thirdLevel2ModelProperty;
-    }
-    public void setThirdLevel2ModelProperty(TestModelThirdLevel thirdLevel2ModelProperty)
-    {
-        this.thirdLevel2ModelProperty = thirdLevel2ModelProperty;
+        this.string3Property = string3Property;
     }
 }

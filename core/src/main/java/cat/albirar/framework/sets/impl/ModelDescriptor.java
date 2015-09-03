@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.Assert;
 
 /**
  * A model descriptor.
@@ -34,15 +35,19 @@ import org.springframework.beans.BeanUtils;
 public class ModelDescriptor
 {
     private String relativePath;
+    private String originalPath;
     private Class<?> model;
     private Map<String, PropertyDescriptor> properties;
     /**
      * Constructor for model.
-     * @param model The model
+     * @param model The model, required
+     * @throws IllegalArgumentException If model is null
      */
     public ModelDescriptor(Class<?> model)
     {
+        Assert.notNull(model, "The model is required");
         relativePath = "";
+        originalPath = "";
         this.model = model;
         properties = Collections.synchronizedMap(new TreeMap<String, PropertyDescriptor>());
         resolveProperties();
@@ -52,10 +57,11 @@ public class ModelDescriptor
      * @param relativePath The relative path of this model
      * @param model The model
      */
-    public ModelDescriptor(String relativePath, Class<?> model)
+    public ModelDescriptor(String relativePath, String originalPath, Class<?> model)
     {
         this(model);
         this.relativePath = relativePath;
+        this.originalPath = originalPath;
     }
     /**
      * The relative path of this model; if root, the relative path is an empty string.
@@ -64,6 +70,15 @@ public class ModelDescriptor
     public String getRelativePath()
     {
         return relativePath;
+    }
+    
+    /**
+     * The original path for this descriptor.
+     * @return the originalPath
+     */
+    public String getOriginalPath()
+    {
+        return originalPath;
     }
     /**
      * Resolve the indicated path with relative.
@@ -77,14 +92,6 @@ public class ModelDescriptor
             return path;
         }
         return relativePath.concat(".").concat(path);
-    }
-    /**
-     * The model of this descriptor.
-     * @return The model class
-     */
-    public Class<?> getModel()
-    {
-        return model;
     }
     /**
      * The property descriptor map of the model

@@ -19,7 +19,7 @@
 /**
  * <p>Sets are a complement of javaBean to enable customization of reading properties sets from any javaBean.</p>
  * <p>A set is a collection of property path that defines that the client wants from any model in any operation of services or repository.</p>
- * <p>A set have a model root. That is, a qualified model interface definition. Any property path is related to this root.</p>
+ * <p>A set have a model root. That is, a qualified model interface or class definition. Any property path is related to this root.</p>
  * <p>By example, if you have a model with the following properties:
  * <ul>
  *  <li>intProperty</li>
@@ -31,7 +31,7 @@
  *  <li>propertyOne</li>
  *  <li>propertyTwo</li>
  * </ul>
- * And your client not need all the properties of all of the models, you can specify a set of properties to get:
+ * And your client does not need all the properties of all of the models, you can specify a set of properties to get:
  * <ul>
  * <li>stringProperty</li>
  * <li>anotherModelProperty.propertyTwo</li>

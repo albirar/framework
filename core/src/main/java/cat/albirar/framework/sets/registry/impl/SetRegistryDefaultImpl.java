@@ -48,15 +48,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
 {
     private static final Logger logger = LoggerFactory.getLogger(SetRegistryDefaultImpl.class);
     
-    private static final ThreadLocal<Map<String, INamedSet>> registry = new ThreadLocal<Map<String, INamedSet>>()
-    {
-        @Override
-        public Map<String, INamedSet> initialValue()
-        {
-            return Collections.synchronizedMap(new TreeMap<String, INamedSet>());
-        }
-
-    };
+    private Map<String, INamedSet> registry = Collections.synchronizedMap(new TreeMap<String, INamedSet>());
 
     /**
      * REGEX format of properties.
@@ -71,7 +63,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
     @Override
     public Iterator<INamedSet> iterator()
     {
-        return registry.get().values().iterator();
+        return registry.values().iterator();
     }
 
     /**
@@ -81,7 +73,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
     public boolean containsSet(String setName)
     {
         Assert.hasText(setName, "The setName are required and cannot be empty or only whitespace!");
-        return registry.get().containsKey(setName);
+        return registry.containsKey(setName);
     }
 
     /**
@@ -93,7 +85,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
         INamedSet s;
         
         Assert.hasText(setName, "The setName are required and cannot be empty or only whitespace!");
-        s = registry.get().get(setName);
+        s = registry.get(setName);
         if(s == null)
         {
             throw new SetNotFoundException("The named set '" + setName + "' doesn't exists in this registry");
@@ -109,7 +101,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
     {
         Assert.notNull(set, "The 'set' argument are required'");
         Assert.hasText(set.getName(), "The setName are required and cannot be empty or only whitespace!");
-        return (registry.get().put(set.getName(), set) == null);
+        return (registry.put(set.getName(), set) == null);
     }
 
     /**
@@ -119,7 +111,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
     public boolean removeSet(String setName)
     {
         Assert.hasText(setName, "The setName are required and cannot be empty or only whitespace!");
-        return (registry.get().remove(setName) != null);
+        return (registry.remove(setName) != null);
     }
 
     /**
@@ -187,9 +179,9 @@ public class SetRegistryDefaultImpl implements ISetRegistry
 
         if(logger.isTraceEnabled())
         {
-            logger.trace(String.format("Property file processed. %d sets added!", registry.get().size()));
+            logger.trace(String.format("Property file processed. %d sets added!", registry.size()));
         }
-        return registry.get().size();
+        return registry.size();
     }
 
     /**
@@ -235,7 +227,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
     @Override
     public boolean isEmpty()
     {
-        return registry.get().isEmpty();
+        return registry.isEmpty();
     }
 
     /**
@@ -244,7 +236,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
     @Override
     public int size()
     {
-        return registry.get().size();
+        return registry.size();
     }
 
     /**
@@ -267,7 +259,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
     @Override
     public void clear()
     {
-        registry.get().clear();
+        registry.clear();
     }
     
 }

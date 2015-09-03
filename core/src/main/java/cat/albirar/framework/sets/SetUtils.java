@@ -17,7 +17,7 @@
  * Copyright (C) 2015 Octavi Fornés
  */
 
-package cat.albirar.framework.sets.impl;
+package cat.albirar.framework.sets;
 
 import java.beans.PropertyDescriptor;
 import java.util.StringTokenizer;
@@ -25,21 +25,69 @@ import java.util.regex.Pattern;
 
 import org.springframework.util.Assert;
 
-import cat.albirar.framework.sets.ISet;
-import cat.albirar.framework.sets.ISetBuilder;
+import cat.albirar.framework.sets.impl.ModelDescriptor;
+import cat.albirar.framework.sets.impl.SetBuilderDefaultImpl;
+import cat.albirar.framework.sets.impl.SetDefaultImpl;
 
 /**
- * Utilities for {@link ISet} builder.
+ * Utilities and factory to instantiate {@link ISet sets} and {@link ISetBuilder builders}.
+ * <p>Use:</p>
+ * <p>For instantiate a set directly:
+ * <pre>
+ * ISet set;
+ * 
+ * set = SetUtils.instantiateSetFor(Model.class);
+ * // then you can operate
+ * set.add("propertyName");
+ * ...
+ * </pre>
+ * <p>
+ * <p>For instantiate a builder:
+ * <pre>
+ * ISetBuilder sb;
+ * 
+ * sb = SetUtils.instantiateBuilderFor(Model.class);
+ * // then operate
+ * sb.addProperty("propertyName");
+ * ...
+ * set = sb.build();
+ * </pre>
+ * </p>
+ * <p>The most common use is with builder:
+ * <pre>
+ * ISet set;
+ * 
+ * set = SetUtils.instantiateBuilderFor(Model.class)
+ *      .addProperty("propertyOne")
+ *      .addProperty("propertyTwo")
+ *      .pushProperty("propertyAnotherModel")
+ *      .addProperty("propertyAnotherOne")
+ *      .addProperty("propertyThirdModel.propertyAnother")
+ *      .popProperty()
+ *      .addProperty("propertyFour")
+ *      .build();
+ * </pre>
+ * </p>
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
-public abstract class SetBuilderUtils
+public abstract class SetUtils
 {
     /** The property RE pattern. */
     public static final String PROPERTY_PATTERN = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
+    /** The property path RE pattern. */
     public static final String PROPERTY_PATH_PATTERN = "(" + PROPERTY_PATTERN + ")(\\." + PROPERTY_PATTERN + ")*";
     /** A path pattern matcher for check. */
     private static final Pattern pathPattern = Pattern.compile(PROPERTY_PATH_PATTERN);
+    /**
+     * Instantiate a {@link ISet} for the indicated root model.
+     * @param rootModel The root model, required
+     * @return The instantiated set
+     */
+    public static ISet instantiateSetFor(Class<?> rootModel)
+    {
+        return new SetDefaultImpl(rootModel);
+    }
     /**
      * Create a new instance of builder to operate to.
      * @param rootModel The root model of the set
@@ -54,7 +102,7 @@ public abstract class SetBuilderUtils
      * @param model The model
      * @param propertyPath The property path, required
      * @return true if correct and false if not
-     * @throws IllegalArgumentException If the property path is null or empty or only whitespace or not correct format
+     * @throws IllegalArgumentException If model is null or if the property path is null or empty or only whitespace or not correct format
      */
     public static boolean checkPathForModel(Class<?> model, String propertyPath)
     {
