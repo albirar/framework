@@ -23,7 +23,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 /**
  * Extra utilities for dates.
- * 
+ * Some utilities methods to add to the Apache Common Date Utils.
  * @see DateUtils
  * @author <a href="mailto:ofornes@albirar.cat">Octavi Fornés ofornes@albirar.cat</a>
  * @since 1.0

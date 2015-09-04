@@ -42,6 +42,24 @@
  * </p>
  * <p>Sets can also be hold in a registry associated with a name. Then you can use this name to use the defined set. 
  * </p>
+ * <p>To instantiate a {@link cat.albirar.framework.sets.ISet} can use the
+ * {@link cat.albirar.framework.sets.SetUtils#instantiateSetFor(Class)}:
+ * <pre>
+ * ISet set;
+ * 
+ * set = SetUtils.instantiateSetFor(Model.class);
+ * ...
+ * </pre>
+ * </p>
+ * <p>A default implementation of {@link cat.albirar.framework.sets.ISetBuilder} can
+ * be instantiated with {@link cat.albirar.framework.sets.SetUtils#instantiateBuilderFor(Class)}:
+ * <pre>
+ * ISetBuilder builder;
+ * 
+ * builder = SetUtils.instantiateBuilderFor(Model.class);
+ * ...
+ * </pre>
+ * <p>
  * 
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0

@@ -38,7 +38,7 @@ public class SetDefaultImpl extends TreeSet<String> implements ISet
     private static final long serialVersionUID = 4450706681782137190L;
     private Class<?> modelRoot;
     /**
-     * Unique constructor.
+     * Constructor for class.
      * @param modelRoot The model root for this set, <em>required</em>
      * @throws IllegalArgumentException if modelRoot is null
      */
@@ -47,6 +47,18 @@ public class SetDefaultImpl extends TreeSet<String> implements ISet
         super();
         Assert.notNull(modelRoot, "The model root is required");
         this.modelRoot = modelRoot;
+    }
+    /**
+     * Copy constructor.
+     * @param origin The origin, required
+     * @throws IllegalArgumentException If origin is null
+     */
+    public SetDefaultImpl(ISet origin)
+    {
+        super();
+        Assert.notNull(origin, "The origin is required");
+        this.modelRoot = origin.getModelRoot();
+        addAll(origin);
     }
     /**
      * {@inheritDoc}

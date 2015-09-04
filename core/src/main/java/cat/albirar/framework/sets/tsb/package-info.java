@@ -19,6 +19,10 @@
 
 /**
  * Type Safe Builders utilities.
+ * <p>This package offers classes to use in creation of {@link cat.albirar.framework.sets.ISet} in a
+ * safely property name mode.</p>
+ * <p>Use {@link cat.albirar.framework.sets.tsb.TypeSafeBuilderFactory#instantiateBuilder(Class)} in order
+ * to get an implementation of {@link cat.albirar.framework.sets.tsb.ITypeSafeBuilder}.</p>
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */

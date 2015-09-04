@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
 
 /**
  * A model descriptor.
+ * Holds information about a model in set operations.
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */

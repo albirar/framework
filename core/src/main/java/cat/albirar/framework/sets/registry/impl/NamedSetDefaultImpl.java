@@ -22,6 +22,7 @@ package cat.albirar.framework.sets.registry.impl;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
+import cat.albirar.framework.sets.ISet;
 import cat.albirar.framework.sets.impl.SetDefaultImpl;
 import cat.albirar.framework.sets.registry.INamedSet;
 
@@ -36,12 +37,24 @@ public class NamedSetDefaultImpl extends SetDefaultImpl implements INamedSet
     private String name;
 
     /**
-     * Unique constructor
+     * Constructor.
      * @param modelRoot
+     * @param name The name for this set
      */
     public NamedSetDefaultImpl(Class<?> modelRoot, String name)
     {
         super(modelRoot);
+        Assert.hasText(name, "The name is a required argument, cannot be null, nor empty nor whitespace!");
+        this.name = name;
+    }
+    /**
+     * Copy constructor.
+     * @param origin The origin, required
+     * @param name The name for this set
+     */
+    public NamedSetDefaultImpl(ISet origin, String name)
+    {
+        super(origin);
         Assert.hasText(name, "The name is a required argument, cannot be null, nor empty nor whitespace!");
         this.name = name;
     }

@@ -18,9 +18,28 @@
  */
 
 /**
- * Register related items.
- * <p>A register holds named sets to use them.</p>
- * <p>Sets can be defined by property file and loaded on setup application time.</p>
+ * Named set and register related items.
+ * <p>A named set is a {@link cat.albirar.framework.sets.ISet} associated with a name.
+ * Is used to create a set and hold them in a register for use later, in code, repeatedly.</p>
+ * <p>The {@link cat.albirar.framework.sets.registry.NamedSetUtils} enables {@link cat.albirar.framework.sets.registry.INamedSet} instantiation:
+ * <ul>
+ * <li>For model class and name: {@link cat.albirar.framework.sets.registry.NamedSetUtils#instantiateNamedSetFor(Class, String)}</li>
+ * <li>For create from {@link cat.albirar.framework.sets.ISet} and name: {@link cat.albirar.framework.sets.registry.NamedSetUtils#instantiateNamedSetFor(cat.albirar.framework.sets.ISet, String)}</li>
+ * </ul>
+ * </p>
+ * <p>Once a {@link cat.albirar.framework.sets.registry.INamedSet} was created, can hold in any of two types of registers: JVM global register or thread local register.</p>
+ * <p>In order to access to any of this register, the {@link cat.albirar.framework.sets.registry.SetRegistryFactory} offers two methods:
+ * <ul>
+ * <li>JVM registry: {@link cat.albirar.framework.sets.registry.SetRegistryFactory#getJVMRegistry()}</li>
+ * <li>Thread local registry: {@link cat.albirar.framework.sets.registry.SetRegistryFactory#getThreadRegistry()}</li>
+ * </ul>
+ * </p>
+ * <p>Named sets also can be defined by property file and loaded on setup application time with two methods of {@link cat.albirar.framework.sets.registry.ISetRegistry}:
+ * <ul>
+ * <li>From a {@link java.util.Properties} with {@link cat.albirar.framework.sets.registry.ISetRegistry#loadFromProperties(java.util.Properties)}</li>
+ * <li>From a {@link org.springframework.core.io.Resource} with {@link cat.albirar.framework.sets.registry.ISetRegistry#loadFromResource(org.springframework.core.io.Resource)}</li>
+ * </ul>
+ * </p>
  * <p>The format of property files should to be:
  * <pre>
  * setName1=QualifiedModelName, property1, property2, property3,...
@@ -29,7 +48,9 @@
  * ...
  * </pre>
  * </p>
- * <p>The {@code QualifiedModelName} designates the applicable model root for this set. Next, the collection of property names relative to the model
+ * <p>The property name is the {@link cat.albirar.framework.sets.registry.INamedSet} name. 
+ * The {@code QualifiedModelName} designates the applicable model root for this set.
+ * Next, the collection of property names relative to the model separated by comma
  * </p>
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0

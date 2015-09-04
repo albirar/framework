@@ -20,10 +20,40 @@
 package cat.albirar.framework.sets.tsb;
 
 import cat.albirar.framework.sets.ISet;
+import cat.albirar.framework.sets.registry.INamedSet;
 
 /**
- * An abstract root TypeSafeBuilder for commons methods.
+ * A contract for type safe builder of sets.
+ * <p>A type safe builder can be used as a <i>fluent API</i>:
+ * <pre>
+ * ITypeSafeBuilder tsb;
+ * ISet set;
+ * 
+ * tsb = TypeSafeBuilderFactory.instantiateBuilder(Model.class);
+ * set = tsb.addProperty(tsb.getModel().getPropertyOne())
+ *          .addProperty(tsb.getModel().getObject().getPropertyTwo())
+ *          .build();
+ * </pre>
+ * </p>
+ * <p>The build set contains the following properties:
+ * <ul>
+ * <li>propertyOne</li>
+ * <li>object.propertyTwo</li>
+ * </ul>
+ * </p>
+ * <p>If you want to build a {@link INamedSet named set}, use as following:
+ * <pre>
+ * ITypeSafeBuilder tsb;
+ * INamedSet set;
+ * 
+ * tsb = TypeSafeBuilderFactory.instantiateBuilder(Model.class);
+ * set = NamedSetUtils.instantiateNamedSetFor(tsb.addProperty(tsb.getModel().getPropertyOne())
+ *          .addProperty(tsb.getModel().getObject().getPropertyTwo())
+ *          .build(), "name");
+ * </pre>
+ * <p>
  * @param <M> The model type
+ * @see TypeSafeBuilderFactory
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */

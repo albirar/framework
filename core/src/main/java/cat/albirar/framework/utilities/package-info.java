@@ -15,7 +15,7 @@
  * Copyright (C) 2015 Octavi Fornés
  */
 /**
- * Some utilities for programing.
+ * Some utilities for programming.
  * 
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.0

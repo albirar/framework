@@ -19,6 +19,7 @@
 
 package cat.albirar.framework.sets.registry;
 
+import cat.albirar.framework.sets.ISet;
 import cat.albirar.framework.sets.registry.impl.NamedSetDefaultImpl;
 
 /**
@@ -38,5 +39,16 @@ public abstract class NamedSetUtils
     public static INamedSet instantiateNamedSetFor(Class<?> rootModel, String setName)
     {
         return new NamedSetDefaultImpl(rootModel, setName);
+    }
+    /**
+     * Instantiate a {@link INamedSet} as a copy of the indicated set and for the indicated set name.
+     * @param origin The origin set, required
+     * @param setName The set name, required and not an empty string or whitespace string
+     * @return The named set
+     * @throws IllegalArgumentException If root model is null or name is null or empty or only whitespace string
+     */
+    public static INamedSet instantiateNamedSetFor(ISet origin, String setName)
+    {
+        return new NamedSetDefaultImpl(origin, setName);
     }
 }
