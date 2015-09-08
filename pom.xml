@@ -15,6 +15,10 @@
 	<version>2.1.0</version>
 	<packaging>pom</packaging>
 
+	<name>Albirar Framework</name>
+	<description>A little framework to modelling javaBeans with interfaces (aspects) and avoid problems with derived classes strategy</description>
+	<url>https://github.com/albirar/framework</url>
+
 	<organization>
 		<name>Albirar.cat</name>
 		<url>http://albirar.cat</url>
@@ -26,6 +30,12 @@
 			<email>ofornes@albirar.cat</email>
 		</developer>
 	</developers>
+
+	<scm>
+		<connection>scm:git:git@github.com:albirar/framework.git</connection>
+		<developerConnection>scm:git:git@github.com:albirar/framework.git</developerConnection>
+		<url>git@github.com:albirar/framework.git</url>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -180,6 +190,28 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<useReleaseProfile>false</useReleaseProfile>
+					<releaseProfiles>release</releaseProfiles>
+					<goals>deploy</goals>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.3</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<reporting>
@@ -192,7 +224,6 @@
 					<reportSet>
 						<reports>
 							<report>index</report>
-							<report>modules</report>
 							<report>project-team</report>
 							<report>license</report>
 							<report>scm</report>
@@ -232,9 +263,5 @@
 			<id>ossrh</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
 	</distributionManagement>
 </project>
