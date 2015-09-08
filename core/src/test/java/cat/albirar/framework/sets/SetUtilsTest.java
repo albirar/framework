@@ -47,7 +47,7 @@ public class SetUtilsTest
      */
     @Test public void testInstantiateSet()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = SetUtils.instantiateSetFor(TestModelRoot.class);
         Assert.assertNotNull(set);
@@ -66,7 +66,7 @@ public class SetUtilsTest
      */
     @Test public void testInstantiateBuilder()
     {
-        ISetBuilder b;
+        ISetBuilder<TestModelRoot> b;
         
         b = SetUtils.instantiateBuilderFor(TestModelRoot.class);
         Assert.assertNotNull(b);

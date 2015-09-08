@@ -38,7 +38,7 @@ package cat.albirar.framework.sets;
  * </p>
  * <p>Or in classic mode (assign and call):
  * <pre>
- * ISetBuilder builder;
+ * ISetBuilder<T> builder;
  * ISet set;
  * 
  * builder = SetUtils.instantiateSetBuilderFor(IModel.class);
@@ -54,7 +54,7 @@ package cat.albirar.framework.sets;
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
-public interface ISetBuilder
+public interface ISetBuilder<T>
 {
     /**
      * Add a property to the set.
@@ -62,7 +62,7 @@ public interface ISetBuilder
      * @return The builder itself
      * @throws IllegalArgumentException If the {@code propertyPath} is null or empty or whitespace or root model have not a property denoted with this path
      */
-    public ISetBuilder addProperty(String propertyPath);
+    public ISetBuilder<T> addProperty(String propertyPath);
     /**
      * Push builder relative path to the path denoted with the indicated {@code propertyPath}.
      * Simplifies building operations with models as properties, so push to the relative model property and then indicate properties relative
@@ -71,13 +71,13 @@ public interface ISetBuilder
      * @return The builder itself
      * @throws IllegalArgumentException If the {@code propertyPath} is null or empty or whitespace or root model have not a property denoted with this path or property denoted is not a model
      */
-    public ISetBuilder pushPropertyPath(String propertyPath);
+    public ISetBuilder<T> pushPropertyPath(String propertyPath);
     /**
      * Pop builder relative path to the path denoted with the last {@code push} operation or root if no more {@code pushed} path are available.
      * Is the counterpart of {@link #pushPropertyPath(String)}
      * @return The builder itself with relative path to the last {@link #pushPropertyPath(String) push} operation or {@code root path} if no more pushed path are available
      */
-    public ISetBuilder popPropertyPath();
+    public ISetBuilder<T> popPropertyPath();
     /**
      * Peek at property path stack and return the last property path pushed.
      * @return The last property name pushed, or null if no property are pushed
@@ -96,10 +96,10 @@ public interface ISetBuilder
      * The root model for this builder.
      * @return The root model
      */
-    public Class<?> getModelRoot();
+    public Class<? extends T> getModelRoot();
     /**
      * Final operation of building, creates the {@link ISet set} with the information recorded from the instantiation.
      * @return The builded set. Can be empty if no operations was made since call to {@link #instantiateBuilderFor(Class) instantiate} to call to {@link #build()}
      */
-    public ISet build();
+    public ISet<T> build();
 }

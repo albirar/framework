@@ -84,18 +84,18 @@ public abstract class SetUtils
      * @param rootModel The root model, required
      * @return The instantiated set
      */
-    public static ISet instantiateSetFor(Class<?> rootModel)
+    public static <T> ISet<T> instantiateSetFor(Class<T> rootModel)
     {
-        return new SetDefaultImpl(rootModel);
+        return new SetDefaultImpl<T>(rootModel);
     }
     /**
      * Create a new instance of builder to operate to.
      * @param rootModel The root model of the set
      * @return The instantiated builder
      */
-    public static ISetBuilder instantiateBuilderFor(Class<?> rootModel)
+    public static <T> ISetBuilder<T> instantiateBuilderFor(Class<T> rootModel)
     {
-        return new SetBuilderDefaultImpl(rootModel);
+        return new SetBuilderDefaultImpl<T>(rootModel);
     }
     /**
      * Check if path is correct for the indicated model.

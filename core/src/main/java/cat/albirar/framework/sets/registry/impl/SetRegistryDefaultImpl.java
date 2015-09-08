@@ -48,7 +48,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
 {
     private static final Logger logger = LoggerFactory.getLogger(SetRegistryDefaultImpl.class);
     
-    private Map<String, INamedSet> registry = Collections.synchronizedMap(new TreeMap<String, INamedSet>());
+    private Map<String, INamedSet<?>> registry = Collections.synchronizedMap(new TreeMap<String, INamedSet<?>>());
 
     /**
      * REGEX format of properties.
@@ -61,7 +61,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
      * {@inheritDoc}
      */
     @Override
-    public Iterator<INamedSet> iterator()
+    public Iterator<INamedSet<?>> iterator()
     {
         return registry.values().iterator();
     }
@@ -80,9 +80,9 @@ public class SetRegistryDefaultImpl implements ISetRegistry
      * {@inheritDoc}
      */
     @Override
-    public INamedSet getSet(String setName)
+    public INamedSet<?> getSet(String setName)
     {
-        INamedSet s;
+        INamedSet<?> s;
         
         Assert.hasText(setName, "The setName are required and cannot be empty or only whitespace!");
         s = registry.get(setName);
@@ -97,7 +97,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
      * {@inheritDoc}
      */
     @Override
-    public boolean putSet(INamedSet set)
+    public boolean putSet(INamedSet<?> set)
     {
         Assert.notNull(set, "The 'set' argument are required'");
         Assert.hasText(set.getName(), "The setName are required and cannot be empty or only whitespace!");
@@ -117,6 +117,9 @@ public class SetRegistryDefaultImpl implements ISetRegistry
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings({
+            "rawtypes", "unchecked"
+    })
     @Override
     public int loadFromProperties(Properties properties) throws ClassNotFoundException
     {
@@ -124,7 +127,7 @@ public class SetRegistryDefaultImpl implements ISetRegistry
         String nom;
         String valor;
         Matcher matcher;
-        INamedSet namedSet;
+        INamedSet<?> namedSet;
         String className;
         Class<?> modelClass;
         int n;
@@ -243,11 +246,11 @@ public class SetRegistryDefaultImpl implements ISetRegistry
      * {@inheritDoc}
      */
     @Override
-    public void addAll(Set<INamedSet> sets)
+    public void addAll(Set<INamedSet<?>> sets)
     {
         
         Assert.notNull(sets, "The sets collection argument are required");
-        for(INamedSet ns : sets)
+        for(INamedSet<?> ns : sets)
         {
             putSet(ns);
         }

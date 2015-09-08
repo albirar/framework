@@ -26,17 +26,17 @@ import java.util.Set;
  * A set is a collection of not-duplicated {@link String strings} that holds <i>paths</i> of property bean names.
  * They can be used to determine parts of models to operate to in CRUD operations or
  * to indicate the properties you should to return to a client from a service call.
- *  
+ * @param <T> The {@link #getModelRoot() model root} type
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
-public interface ISet extends Set<String>, Serializable
+public interface ISet<T> extends Set<String>, Serializable
 {
     /**
      * The model root of this set.
      * @return The model root.
      */
-    public Class<?> getModelRoot();
+    public Class<? extends T> getModelRoot();
 
     /**
      * Add the property name indicated to this set.

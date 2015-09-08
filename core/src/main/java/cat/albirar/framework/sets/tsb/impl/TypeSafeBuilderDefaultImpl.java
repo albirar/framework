@@ -38,7 +38,7 @@ import cat.albirar.framework.sets.tsb.ITypeSafeBuilder;
  */
 public class TypeSafeBuilderDefaultImpl<M> implements ITypeSafeBuilder<M>
 {
-    private ISetBuilder setBuilder;
+    private ISetBuilder<M> setBuilder;
     private BuilderAssistant builderAssistant;
     private M model;
     
@@ -47,7 +47,7 @@ public class TypeSafeBuilderDefaultImpl<M> implements ITypeSafeBuilder<M>
      */
     public TypeSafeBuilderDefaultImpl(Class<M> rootModel)
     {
-        setBuilder = new SetBuilderDefaultImpl(rootModel);
+        setBuilder = new SetBuilderDefaultImpl<M>(rootModel);
         builderAssistant = newAssistant();
     }
     
@@ -251,7 +251,7 @@ public class TypeSafeBuilderDefaultImpl<M> implements ITypeSafeBuilder<M>
      * {@inheritDoc}
      */
     @Override
-    public ISet build()
+    public ISet<M> build()
     {
         return setBuilder.build();
     }
@@ -259,7 +259,6 @@ public class TypeSafeBuilderDefaultImpl<M> implements ITypeSafeBuilder<M>
      * Create a new proxy builder assistant.
      * @return The new builder assistant
      */
-    @SuppressWarnings("unchecked")
     BuilderAssistant newAssistant()
     {
         BuilderAssistant ba;
@@ -283,7 +282,7 @@ public class TypeSafeBuilderDefaultImpl<M> implements ITypeSafeBuilder<M>
      */
     class BuilderAssistantData
     {
-        ISetBuilder builder;
+        ISetBuilder<M> builder;
         String lastProp;
     }
     /**
@@ -300,7 +299,7 @@ public class TypeSafeBuilderDefaultImpl<M> implements ITypeSafeBuilder<M>
             this.data = parent.data;
         }
         
-        BuilderAssistant(ISetBuilder builder)
+        BuilderAssistant(ISetBuilder<M> builder)
         {
             this.data = new BuilderAssistantData();
             this.data.builder = builder;

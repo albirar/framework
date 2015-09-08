@@ -31,7 +31,7 @@ import cat.albirar.framework.sets.registry.INamedSet;
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
-public class NamedSetDefaultImpl extends SetDefaultImpl implements INamedSet
+public class NamedSetDefaultImpl<T> extends SetDefaultImpl<T> implements INamedSet<T>
 {
     private static final long serialVersionUID = 3227604849293846449L;
     private String name;
@@ -41,7 +41,7 @@ public class NamedSetDefaultImpl extends SetDefaultImpl implements INamedSet
      * @param modelRoot
      * @param name The name for this set
      */
-    public NamedSetDefaultImpl(Class<?> modelRoot, String name)
+    public NamedSetDefaultImpl(Class<? extends T> modelRoot, String name)
     {
         super(modelRoot);
         Assert.hasText(name, "The name is a required argument, cannot be null, nor empty nor whitespace!");
@@ -52,7 +52,7 @@ public class NamedSetDefaultImpl extends SetDefaultImpl implements INamedSet
      * @param origin The origin, required
      * @param name The name for this set
      */
-    public NamedSetDefaultImpl(ISet origin, String name)
+    public NamedSetDefaultImpl(ISet<T> origin, String name)
     {
         super(origin);
         Assert.hasText(name, "The name is a required argument, cannot be null, nor empty nor whitespace!");
@@ -87,7 +87,7 @@ public class NamedSetDefaultImpl extends SetDefaultImpl implements INamedSet
         
         if(INamedSet.class.isAssignableFrom(o.getClass()))
         {
-            return (ObjectUtils.nullSafeEquals(name, ((INamedSet)o).getName())
+            return (ObjectUtils.nullSafeEquals(name, ((INamedSet<?>)o).getName())
                     && super.equals(o));
         }
         return false;
@@ -103,7 +103,7 @@ public class NamedSetDefaultImpl extends SetDefaultImpl implements INamedSet
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(INamedSet o)
+    public int compareTo(INamedSet<T> o)
     {
         return (getName().compareTo(o.getName()));
     }

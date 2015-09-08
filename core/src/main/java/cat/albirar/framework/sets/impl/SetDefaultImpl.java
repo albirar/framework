@@ -33,16 +33,16 @@ import cat.albirar.framework.sets.SetUtils;
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
-public class SetDefaultImpl extends TreeSet<String> implements ISet
+public class SetDefaultImpl<T> extends TreeSet<String> implements ISet<T>
 {
     private static final long serialVersionUID = 4450706681782137190L;
-    private Class<?> modelRoot;
+    private Class<? extends T> modelRoot;
     /**
      * Constructor for class.
      * @param modelRoot The model root for this set, <em>required</em>
      * @throws IllegalArgumentException if modelRoot is null
      */
-    public SetDefaultImpl(Class<?> modelRoot)
+    public SetDefaultImpl(Class<? extends T> modelRoot)
     {
         super();
         Assert.notNull(modelRoot, "The model root is required");
@@ -53,7 +53,7 @@ public class SetDefaultImpl extends TreeSet<String> implements ISet
      * @param origin The origin, required
      * @throws IllegalArgumentException If origin is null
      */
-    public SetDefaultImpl(ISet origin)
+    public SetDefaultImpl(ISet<T> origin)
     {
         super();
         Assert.notNull(origin, "The origin is required");
@@ -64,7 +64,7 @@ public class SetDefaultImpl extends TreeSet<String> implements ISet
      * {@inheritDoc}
      */
     @Override
-    public Class<?> getModelRoot()
+    public Class<? extends T> getModelRoot()
     {
         return modelRoot;
     }

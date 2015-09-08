@@ -105,16 +105,16 @@ public class SetDefaultImplTest
      * @return The instance
      */
     @SuppressWarnings("unchecked")
-    protected <T extends ISet> T instance(Class<?> rootModel, Object ... args)
+    protected <T, S extends ISet<T>> S instance(Class<T> rootModel, Object ... args)
     {
-        return (T) new SetDefaultImpl(rootModel);
+        return (S) new SetDefaultImpl<T>(rootModel);
     }
     /**
      * Returns the 'properties' fragment start
      * @param set The set to operate to
      * @return The corresponding fragment of 'properties' on {@link Object#toString()} method.
      */
-    protected <T extends ISet> String stringPropsStart(T set)
+    protected <T, S extends ISet<T>> String stringPropsStart(S set)
     {
         return "modelRoot=";
     }
@@ -131,7 +131,7 @@ public class SetDefaultImplTest
      */
     @Test public void testConstructionWithModel()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         Assert.assertEquals(TestModelRoot.class, set.getModelRoot());
@@ -142,7 +142,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddWithNull()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(null);
@@ -153,7 +153,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddWithEmptyString()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add("");
@@ -164,7 +164,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAdd2LWithEmptyString()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(KNOWN_2L_PROPERTY + ".");
@@ -175,7 +175,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAdd3LWithEmptyString()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(KNOWN_3L_PROPERTY + ".");
@@ -186,7 +186,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddWithWhitespaceString()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add("   ");
@@ -197,7 +197,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAdd2LWithWhitespaceString()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(KNOWN_2L_PROPERTY + ".    ");
@@ -208,7 +208,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAdd3LWithWhitespaceString()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(KNOWN_3L_PROPERTY + ".    ");
@@ -219,7 +219,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddWithDotStartString()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(".");
@@ -230,7 +230,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAdd1LWithDotStartString()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add("." + KNOWN_1L_PROPERTY);
@@ -241,7 +241,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAdd2LWithDotStartString()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add("." + KNOWN_2L_PROPERTY);
@@ -252,7 +252,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAdd3LWithDotStartString()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add("." + KNOWN_3L_PROPERTY);
@@ -263,7 +263,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddWithIncorrectOneLevelProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(INCORRECT_1L_PROPERTY);
@@ -274,7 +274,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddWithIncorrectTwoLevelProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(INCORRECT_2L_PROPERTY);
@@ -285,7 +285,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddWithIncorrectThreeLevelProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(INCORRECT_3L_PROPERTY);
@@ -296,7 +296,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddWithUnknownOneLevelProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(UNKNOWN_1L_PROPERTY);
@@ -307,7 +307,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddWithUnknownTwoLevelProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(UNKNOWN_2L_PROPERTY);
@@ -318,7 +318,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddWithUnknownThreeLevelProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(UNKNOWN_3L_PROPERTY);
@@ -328,7 +328,7 @@ public class SetDefaultImplTest
      */
     @Test public void testAddWithKnownOneLevelProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(KNOWN_1L_PROPERTY);
@@ -341,7 +341,7 @@ public class SetDefaultImplTest
      */
     @Test public void testAddWithKnownTwoLevelProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(KNOWN_2L_PROPERTY);
@@ -354,7 +354,7 @@ public class SetDefaultImplTest
      */
     @Test public void testAddWithKnownThreeLevelProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(KNOWN_3L_PROPERTY);
@@ -368,7 +368,7 @@ public class SetDefaultImplTest
      */
     @Test public void testAddCollectionNull()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         Assert.assertFalse(set.addAll(null));
@@ -379,7 +379,7 @@ public class SetDefaultImplTest
      */
     @Test public void testAddCollectionEmtpy()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         Assert.assertFalse(set.addAll(fromArray(EMPTY_COLLECTION)));
@@ -391,7 +391,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionIncorrectPropertyNull()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(INCORRECT_COLLECTION_N));
@@ -402,7 +402,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionIncorrectPropertyEmtpy()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(INCORRECT_COLLECTION_E));
@@ -413,7 +413,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionIncorrectPropertyWhitespace()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(INCORRECT_COLLECTION_W));
@@ -424,7 +424,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionUnknownL1Property()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(UNKNOWN_L1_COLLECTION));
@@ -435,7 +435,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionUnknownL2Property()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(UNKNOWN_L2_COLLECTION));
@@ -446,7 +446,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionUnknownL3Property()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(UNKNOWN_L3_COLLECTION));
@@ -457,7 +457,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionCorrectL1AndIncorrectNullProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(CORRECT_L1_AND_INCORRECT_COLLECTION_N));
@@ -468,7 +468,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionCorrectL1AndIncorrectEmptyProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(CORRECT_L1_AND_INCORRECT_COLLECTION_E));
@@ -479,7 +479,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionCorrectL1AndIncorrectWhitespaceProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(CORRECT_L1_AND_INCORRECT_COLLECTION_W));
@@ -490,7 +490,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionCorrectL2AndIncorrectNullProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(CORRECT_L2_AND_INCORRECT_COLLECTION_N));
@@ -501,7 +501,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionCorrectL2AndIncorrectEmptyProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(CORRECT_L2_AND_INCORRECT_COLLECTION_E));
@@ -512,7 +512,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionCorrectL2AndIncorrectWhitespaceProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(CORRECT_L2_AND_INCORRECT_COLLECTION_W));
@@ -523,7 +523,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionCorrectL3AndIncorrectNullProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(CORRECT_L3_AND_INCORRECT_COLLECTION_N));
@@ -534,7 +534,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionCorrectL3AndIncorrectEmptyProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(CORRECT_L3_AND_INCORRECT_COLLECTION_E));
@@ -545,7 +545,7 @@ public class SetDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testAddCollectionCorrectL3AndIncorrectWhitespaceProperty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.addAll(fromArray(CORRECT_L3_AND_INCORRECT_COLLECTION_W));
@@ -555,7 +555,7 @@ public class SetDefaultImplTest
      */
     @Test public void testAddCollectionCorrectL1()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         Assert.assertTrue(set.addAll(fromArray(CORRECT_L1_COLLECTION)));
@@ -568,7 +568,7 @@ public class SetDefaultImplTest
      */
     @Test public void testAddCollectionCorrectL2()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         Assert.assertTrue(set.addAll(fromArray(CORRECT_L2_COLLECTION)));
@@ -581,7 +581,7 @@ public class SetDefaultImplTest
      */
     @Test public void testAddCollectionCorrectL3()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         Assert.assertTrue(set.addAll(fromArray(CORRECT_L3_COLLECTION)));
@@ -594,7 +594,7 @@ public class SetDefaultImplTest
      */
     @Test public void testAddCollectionCorrectMixed()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         Iterator<String> it, it1;
         TreeSet<String> sCol;
         
@@ -617,7 +617,7 @@ public class SetDefaultImplTest
      */
     @Test public void testAddCollectionCorrectMixedTwice()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         Iterator<String> it, it1;
         TreeSet<String> sCol;
         
@@ -642,7 +642,7 @@ public class SetDefaultImplTest
     @Test public void testToStringEmtpySet()
     {
         String s;
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         s = set.toString();
@@ -656,7 +656,7 @@ public class SetDefaultImplTest
     @Test public void testToStringOneItemSet()
     {
         String s;
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(KNOWN2_1L_PROPERTY);
@@ -672,7 +672,7 @@ public class SetDefaultImplTest
     @Test public void testToStringSeveralItemSet()
     {
         String s;
-        ISet set;
+        ISet<TestModelRoot> set;
         
         set = instance(TestModelRoot.class);
         set.add(KNOWN2_1L_PROPERTY);

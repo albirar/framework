@@ -26,7 +26,7 @@ import cat.albirar.framework.sets.ISet;
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
-public interface INamedSet extends ISet, Comparable<INamedSet>
+public interface INamedSet<T> extends ISet<T>, Comparable<INamedSet<T>>
 {
     /**
      * The name of this set.

@@ -42,28 +42,28 @@ public class NamedSetDefaultImplTest extends SetDefaultImplTest
      */
     @SuppressWarnings("unchecked")
     @Override
-    protected <T extends ISet> T  instance(Class<?> rootModel, Object ... args)
+    protected <T, S extends ISet<T>> S  instance(Class<T> rootModel, Object ... args)
     {
         if(args == null || args.length == 0)
         {
-            return (T)new NamedSetDefaultImpl(rootModel, DEFAULT_NAME_1);
+            return (S)new NamedSetDefaultImpl<T>(rootModel, DEFAULT_NAME_1);
         }
-        return (T)new NamedSetDefaultImpl(rootModel, "" + args[0]);
+        return (S)new NamedSetDefaultImpl<T>(rootModel, "" + args[0]);
     }
     /**
      * {@inheritDoc}
      */
     @Override
-    protected <T extends ISet> String stringPropsStart(T set)
+    protected <T, S extends ISet<T>> String stringPropsStart(S set)
     {
-        return "name=" + ((INamedSet)set).getName() + ", " + super.stringPropsStart(set);
+        return "name=" + ((INamedSet<T>)set).getName() + ", " + super.stringPropsStart(set);
     }
     /**
      * Test for {@link INamedSet#equals(Object)} with null.
      */
     @Test public void testEqualsWithNull()
     {
-        INamedSet nset;
+        INamedSet<TestModelRoot> nset;
         
         nset = instance(TestModelRoot.class, DEFAULT_NAME_1);
         Assert.assertFalse(nset.equals(null));
@@ -73,7 +73,7 @@ public class NamedSetDefaultImplTest extends SetDefaultImplTest
      */
     @Test public void testEqualsWithAnotherType()
     {
-        INamedSet nset;
+        INamedSet<TestModelRoot> nset;
         
         nset = instance(TestModelRoot.class, DEFAULT_NAME_1);
         Assert.assertFalse(nset.equals("xx"));
@@ -83,7 +83,7 @@ public class NamedSetDefaultImplTest extends SetDefaultImplTest
      */
     @Test public void testEqualsSelf()
     {
-        INamedSet nset;
+        INamedSet<TestModelRoot> nset;
         
         nset = instance(TestModelRoot.class, DEFAULT_NAME_1);
         Assert.assertTrue(nset.equals(nset));
@@ -93,7 +93,7 @@ public class NamedSetDefaultImplTest extends SetDefaultImplTest
      */
     @Test public void testEqualsAntoher()
     {
-        INamedSet nset, nset1;
+        INamedSet<TestModelRoot> nset, nset1;
         
         nset = instance(TestModelRoot.class, DEFAULT_NAME_1);
         nset1 = instance(TestModelRoot.class, DEFAULT_NAME_1);

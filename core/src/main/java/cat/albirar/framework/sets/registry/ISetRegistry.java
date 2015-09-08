@@ -31,7 +31,7 @@ import org.springframework.core.io.Resource;
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
-public interface ISetRegistry extends Iterable<INamedSet>
+public interface ISetRegistry extends Iterable<INamedSet<?>>
 {
     /**
      * Check if a set with the indicated name is registered.
@@ -47,7 +47,7 @@ public interface ISetRegistry extends Iterable<INamedSet>
      * @throws IllegalArgumentException If {@code setName} are null or empty or only whitespace
      * @throws SetNotFoundException If no sets with the name are found
      */
-    public INamedSet getSet(String setName);
+    public INamedSet<?> getSet(String setName);
 
     /**
      * Put the {@code set} with name {@code setName}.
@@ -56,7 +56,7 @@ public interface ISetRegistry extends Iterable<INamedSet>
      * @return true if the set doesn't replace any other and false if replace a previously registered set
      * @throws IllegalArgumentException If any argument are null or if {@code setName} is empty or whitespace
      */
-    public boolean putSet(INamedSet set);
+    public boolean putSet(INamedSet<?> set);
 
     /**
      * Remove the set with name {@code setName}.
@@ -116,7 +116,7 @@ public interface ISetRegistry extends Iterable<INamedSet>
      * @param sets The sets collection, required but empty collection are admited
      * @throws IllegalArgumentException If sets is null
      */
-    public void addAll(Set<INamedSet> sets);
+    public void addAll(Set<INamedSet<?>> sets);
     
     /**
      * Remove all sets from the registry.

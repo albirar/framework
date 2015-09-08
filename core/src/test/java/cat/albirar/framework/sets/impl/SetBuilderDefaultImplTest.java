@@ -53,7 +53,7 @@ public class SetBuilderDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testBuildWithNoJavaBeanModel()
     {
-        new SetBuilderDefaultImpl(int.class)
+        new SetBuilderDefaultImpl<String>(String.class)
             .addProperty("propertyOne")
             .build();
     }
@@ -62,9 +62,9 @@ public class SetBuilderDefaultImplTest
      */
     @Test public void testBuildEmpty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
-        set = new SetBuilderDefaultImpl(TestModelRoot.class)
+        set = new SetBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class)
                 .build();
         
         Assert.assertNotNull(set);
@@ -75,10 +75,10 @@ public class SetBuilderDefaultImplTest
      */
     @Test public void testBuildSimplePath()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         String [] props;
         
-        set = new SetBuilderDefaultImpl(TestModelRoot.class)
+        set = new SetBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class)
                 .addProperty(NAME_INT_PROPERTY)
                 .addProperty(NAME_STRING_PROPERTY)
                 .build();
@@ -95,9 +95,9 @@ public class SetBuilderDefaultImplTest
      */
     @Test public void testPathStackManagement()
     {
-        ISetBuilder setBuilder;
+        ISetBuilder<TestModelRoot> setBuilder;
         
-        setBuilder = new SetBuilderDefaultImpl(TestModelRoot.class);
+        setBuilder = new SetBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class);
         // should to be null
         Assert.assertNull(setBuilder.peekPropertyPathStack());
         // Current property path at root level should to be empty string
@@ -156,7 +156,7 @@ public class SetBuilderDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testBuildInexistentProperty()
     {
-        new SetBuilderDefaultImpl(TestModelRoot.class)
+        new SetBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class)
             .addProperty("propertyOne")
             .build();
     }
@@ -165,10 +165,10 @@ public class SetBuilderDefaultImplTest
      */
     @Test public void testBuildComplexPath()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         String [] props;
         
-        set = new SetBuilderDefaultImpl(TestModelRoot.class)
+        set = new SetBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class)
                 .addProperty(NAME_2LEVEL_MODEL_INT2_PROPERTY)
                 .addProperty(NAME_2L_MODEL_3LEVEL_MODEL_INT3_PROPERTY)
                 .addProperty(NAME_3L_MODEL_INT3_PROPERTY)
@@ -188,7 +188,7 @@ public class SetBuilderDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testPushInexistentProperty()
     {
-        new SetBuilderDefaultImpl(TestModelRoot.class)
+        new SetBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class)
             .pushPropertyPath("xxx")
             .build();
     }
@@ -198,7 +198,7 @@ public class SetBuilderDefaultImplTest
     @Test(expected=IllegalArgumentException.class)
     public void testPush2LInexistentProperty()
     {
-        new SetBuilderDefaultImpl(TestModelRoot.class)
+        new SetBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class)
             .pushPropertyPath(NAME_2L_MODEL)
             .pushPropertyPath("xxx")
             .build();
@@ -208,9 +208,9 @@ public class SetBuilderDefaultImplTest
      */
     @Test public void testBuildPushEmpty()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         
-        set = new SetBuilderDefaultImpl(TestModelRoot.class)
+        set = new SetBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class)
             .pushPropertyPath(NAME_2L_MODEL)
             .build();
 
@@ -222,10 +222,10 @@ public class SetBuilderDefaultImplTest
      */
     public void testBuildPushSimplePath()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         String [] props;
         
-        set = new SetBuilderDefaultImpl(TestModelRoot.class)
+        set = new SetBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class)
                 .addProperty(NAME_INT_PROPERTY)
                 .addProperty(NAME_STRING_PROPERTY)
                 .pushPropertyPath(NAME_2L_MODEL)
@@ -245,10 +245,10 @@ public class SetBuilderDefaultImplTest
      */
     @Test public void testBuildPushAndPopComplexPath()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         String [] props;
         
-        set = new SetBuilderDefaultImpl(TestModelRoot.class)
+        set = new SetBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class)
                 .addProperty(NAME_INT_PROPERTY)     // 1st level
                 .pushPropertyPath(NAME_2L_MODEL)    // push to 2nd level
                 .addProperty(NAME_3L2_MODEL_INT3_PROPERTY)  // complex from 2nd level to 3rd level
@@ -269,10 +269,10 @@ public class SetBuilderDefaultImplTest
      */
     @Test public void testBuildPushAndPopBeyondRoot()
     {
-        ISet set;
+        ISet<TestModelRoot> set;
         String [] props;
         
-        set = new SetBuilderDefaultImpl(TestModelRoot.class)
+        set = new SetBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class)
                 .addProperty(NAME_INT_PROPERTY)     // 1st level
                 .pushPropertyPath(NAME_2L_MODEL)    // push to 2nd level
                 .addProperty(NAME_3L2_MODEL_INT3_PROPERTY)  // complex from 2nd level to 3rd level
@@ -300,8 +300,8 @@ public class SetBuilderDefaultImplTest
      */
     @Test public void testBuildUtilsNewInstance()
     {
-        ISetBuilder builder;
-        ISet set;
+        ISetBuilder<TestModelRoot> builder;
+        ISet<TestModelRoot> set;
         String [] props;
         
         builder = SetUtils.instantiateBuilderFor(TestModelRoot.class);

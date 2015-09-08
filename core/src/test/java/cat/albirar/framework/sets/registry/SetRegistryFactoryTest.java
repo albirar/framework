@@ -77,7 +77,7 @@ public class SetRegistryFactoryTest
     @Test public void testCheckDifferentRegistry()
     {
         ISetRegistry sr1, sr2;
-        INamedSet ns1;
+        INamedSet<TestModelRoot> ns1;
         
         sr1 = SetRegistryFactory.getJVMRegistry();
         Assert.assertNotNull(sr1);

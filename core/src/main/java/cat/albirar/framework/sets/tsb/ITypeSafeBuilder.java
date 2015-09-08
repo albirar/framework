@@ -208,5 +208,5 @@ public interface ITypeSafeBuilder<M>
      * The set from the current builder status.
      * @return The set
      */
-    public ISet build();
+    public ISet<M> build();
 }

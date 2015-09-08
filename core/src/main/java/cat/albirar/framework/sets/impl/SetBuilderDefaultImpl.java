@@ -35,20 +35,20 @@ import cat.albirar.framework.sets.ISetBuilder;
  * @author Octavi Fornés ofornes@albirar.cat
  * @since 2.1.0
  */
-public class SetBuilderDefaultImpl implements ISetBuilder
+public class SetBuilderDefaultImpl<T> implements ISetBuilder<T>
 {
     /** Text to use if current path is empty for messages. */
     private static final String TEXT_FOR_EMPTY_CURRENT_PATH = "root";
     private Stack<ModelDescriptor> pathStack;
     private ModelDescriptor currentModelDescriptor;
     private List<String> properties;
-    private Class<?> rootModel;
+    private Class<? extends T> rootModel;
     /**
      * Unique constructor.
      * @param rootModel The root model to build the {@link ISet}. <b>required</b>
      * @throws IllegalArgumentException If the {@code rootModel} is null
      */
-    public SetBuilderDefaultImpl(Class<?> rootModel)
+    public SetBuilderDefaultImpl(Class<? extends T> rootModel)
     {
         Assert.notNull(rootModel, "The rootModel argument is required");
         this.rootModel = rootModel;
@@ -62,7 +62,7 @@ public class SetBuilderDefaultImpl implements ISetBuilder
      * {@inheritDocs}
      */
     @Override
-    public ISetBuilder addProperty(String propertyPath)
+    public ISetBuilder<T> addProperty(String propertyPath)
     {
         if(!checkPath(propertyPath))
         {
@@ -79,7 +79,7 @@ public class SetBuilderDefaultImpl implements ISetBuilder
      * {@inheritDocs}
      */
     @Override
-    public ISetBuilder pushPropertyPath(String propertyPath)
+    public ISetBuilder<T> pushPropertyPath(String propertyPath)
     {
         StringTokenizer stk;
         String spath;
@@ -109,7 +109,7 @@ public class SetBuilderDefaultImpl implements ISetBuilder
      * {@inheritDocs}
      */
     @Override
-    public ISetBuilder popPropertyPath()
+    public ISetBuilder<T> popPropertyPath()
     {
         if(pathStack.size() > 1)
         {
@@ -155,7 +155,7 @@ public class SetBuilderDefaultImpl implements ISetBuilder
      * {@inheritDoc}
      */
     @Override
-    public Class<?> getModelRoot()
+    public Class<? extends T> getModelRoot()
     {
         return rootModel;
     }
@@ -163,11 +163,11 @@ public class SetBuilderDefaultImpl implements ISetBuilder
      * {@inheritDocs}
      */
     @Override
-    public ISet build()
+    public ISet<T> build()
     {
-        ISet s;
+        ISet<T> s;
         
-        s = new SetDefaultImpl(rootModel);
+        s = new SetDefaultImpl<T>(rootModel);
         s.addAll(properties);
         return s;
     }

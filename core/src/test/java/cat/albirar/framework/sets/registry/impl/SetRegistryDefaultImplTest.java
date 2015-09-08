@@ -303,22 +303,22 @@ public class SetRegistryDefaultImplTest
     @Test
     public void testIteratorAndIterable() throws Exception
     {
-        INamedSet[] set =
+        INamedSet<?>[] set =
         {
                 null, null, null
         };
-        Iterator<INamedSet> iterator;
+        Iterator<INamedSet<?>> iterator;
         int n;
-        INamedSet nset;
+        INamedSet<?> nset;
         String[] actual, expected;
 
-        set[0] = new NamedSetDefaultImpl(TestModelRoot.class, "set0");
+        set[0] = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set0");
         set[0].add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(set[0]);
-        set[1] = new NamedSetDefaultImpl(TestModelRoot.class, "set1");
+        set[1] = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set1");
         set[1].add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(set[1]);
-        set[2] = new NamedSetDefaultImpl(TestModelRoot.class, "set2");
+        set[2] = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set2");
         set[2].add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(set[2]);
 
@@ -336,7 +336,7 @@ public class SetRegistryDefaultImplTest
         }
         // Iterable
         n = 0;
-        for(INamedSet n1set : registry)
+        for(INamedSet<?> n1set : registry)
         {
             Assert.assertEquals(set[n].getName(), n1set.getName());
             Assert.assertEquals(set[n].size(), n1set.size());
@@ -353,14 +353,14 @@ public class SetRegistryDefaultImplTest
     @Test
     public void testDuplicates()
     {
-        INamedSet nset;
+        INamedSet<TestModelRoot> nset;
 
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set1");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set1");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset);
         Assert.assertFalse(registry.isEmpty());
         Assert.assertEquals(1, registry.size());
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set1");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set1");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset);
         Assert.assertFalse(registry.isEmpty());
@@ -382,9 +382,10 @@ public class SetRegistryDefaultImplTest
     @Test
     public void testPut()
     {
-        INamedSet nset, nsetr;
+        INamedSet<TestModelRoot> nset;
+        INamedSet<?> nsetr;
 
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set1");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set1");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset);
         Assert.assertFalse(registry.isEmpty());
@@ -400,9 +401,9 @@ public class SetRegistryDefaultImplTest
     @Test(expected = IllegalArgumentException.class)
     public void testGetNull()
     {
-        INamedSet nset;
+        INamedSet<TestModelRoot> nset;
 
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set1");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set1");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset);
         registry.getSet(null);
@@ -414,9 +415,9 @@ public class SetRegistryDefaultImplTest
     @Test(expected = IllegalArgumentException.class)
     public void testGetEmpty()
     {
-        INamedSet nset;
+        INamedSet<TestModelRoot> nset;
 
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set1");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set1");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset);
         registry.getSet("");
@@ -428,9 +429,9 @@ public class SetRegistryDefaultImplTest
     @Test(expected = IllegalArgumentException.class)
     public void testGetWhitespace()
     {
-        INamedSet nset;
+        INamedSet<TestModelRoot> nset;
 
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set1");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set1");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset);
         registry.getSet("   ");
@@ -442,9 +443,9 @@ public class SetRegistryDefaultImplTest
     @Test(expected = SetNotFoundException.class)
     public void testGetInexistentSet()
     {
-        INamedSet nset;
+        INamedSet<TestModelRoot> nset;
 
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set1");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set1");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset);
         registry.getSet("setXX");
@@ -455,20 +456,21 @@ public class SetRegistryDefaultImplTest
      */
     @Test public void testGetExistentSet()
     {
-        INamedSet nset, nsetr;
+        INamedSet<TestModelRoot> nset;
+        INamedSet<?> nsetr;
 
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set1");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set1");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset);
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set2");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set2");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset);
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set3");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set3");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset);
         nsetr = registry.getSet("set2");
         Assert.assertNotNull(nsetr);
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set2");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set2");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         Assert.assertEquals(nset, nsetr);
     }
@@ -479,12 +481,13 @@ public class SetRegistryDefaultImplTest
     @Test
     public void testRemove()
     {
-        INamedSet nset1, nset2, nsetr;
+        INamedSet<TestModelRoot> nset1, nset2;
+        INamedSet<?> nsetr;
 
-        nset1 = new NamedSetDefaultImpl(TestModelRoot.class, "set1");
+        nset1 = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set1");
         nset1.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset1);
-        nset2 = new NamedSetDefaultImpl(TestModelRoot.class, "set2");
+        nset2 = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set2");
         nset2.add(MODEL_ROOT_INT_PROPERTY);
         registry.putSet(nset2);
         Assert.assertFalse(registry.isEmpty());
@@ -520,9 +523,9 @@ public class SetRegistryDefaultImplTest
     @Test
     public void testAddCollectionWithEmptyCollection()
     {
-        Set<INamedSet> collection;
+        Set<INamedSet<?>> collection;
 
-        collection = new TreeSet<INamedSet>();
+        collection = new TreeSet<INamedSet<?>>();
         registry.addAll(collection);
         Assert.assertTrue(registry.isEmpty());
     }
@@ -533,18 +536,19 @@ public class SetRegistryDefaultImplTest
     @Test
     public void testAddCollectionWithItems()
     {
-        Set<INamedSet> collection;
-        INamedSet nset;
+        Set<INamedSet<?>> collection;
+        INamedSet<TestModelRoot> nset;
+        INamedSet<?> nsetr;
         int n;
 
-        collection = new TreeSet<INamedSet>();
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set1");
+        collection = new TreeSet<INamedSet<?>>();
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set1");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         collection.add(nset);
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set2");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set2");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         collection.add(nset);
-        nset = new NamedSetDefaultImpl(TestModelRoot.class, "set3");
+        nset = new NamedSetDefaultImpl<TestModelRoot>(TestModelRoot.class, "set3");
         nset.add(MODEL_ROOT_INT_PROPERTY);
         collection.add(nset);
 
@@ -552,12 +556,12 @@ public class SetRegistryDefaultImplTest
         Assert.assertFalse(registry.isEmpty());
         Assert.assertEquals(3, registry.size());
         n = 1;
-        for(INamedSet ns1 : collection)
+        for(INamedSet<?> ns1 : collection)
         {
-            nset = registry.getSet(ns1.getName());
-            Assert.assertEquals("set" + n, nset.getName());
+            nsetr = registry.getSet(ns1.getName());
+            Assert.assertEquals("set" + n, nsetr.getName());
             n++;
-            Assert.assertSame(ns1, nset);
+            Assert.assertSame(ns1, nsetr);
         }
     }
 }

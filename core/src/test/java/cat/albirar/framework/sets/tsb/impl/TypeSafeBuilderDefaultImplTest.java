@@ -74,7 +74,7 @@ public class TypeSafeBuilderDefaultImplTest
     @Test public void testCompositionNotProxiedModelEmptySet()
     {
         ITypeSafeBuilder<TestModelRoot> tsb;
-        ISet set;
+        ISet<TestModelRoot> set;
         TestModelRoot model;
         
         tsb = new TypeSafeBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class);
@@ -180,7 +180,7 @@ public class TypeSafeBuilderDefaultImplTest
     @Test public void testCompositionAllTypes()
     {
         ITypeSafeBuilder<ITestModelAllPrimitives> tsb;
-        ISet set;
+        ISet<ITestModelAllPrimitives> set;
         
         tsb = new TypeSafeBuilderDefaultImpl<ITestModelAllPrimitives>(ITestModelAllPrimitives.class);
         tsb.addProperty(tsb.getModel().getByte());
@@ -219,7 +219,7 @@ public class TypeSafeBuilderDefaultImplTest
     @Test public void testCompositionAllTypesArray()
     {
         ITypeSafeBuilder<ITestModelAllPrimitivesArray> tsb;
-        ISet set;
+        ISet<ITestModelAllPrimitivesArray> set;
         
         tsb = new TypeSafeBuilderDefaultImpl<ITestModelAllPrimitivesArray>(ITestModelAllPrimitivesArray.class);
         tsb.addProperty(tsb.getModel().getByte());
@@ -258,7 +258,7 @@ public class TypeSafeBuilderDefaultImplTest
     @Test public void testCompositionFirstLevelWithClass()
     {
         ITypeSafeBuilder<TestModelRoot> tsb;
-        ISet set;
+        ISet<TestModelRoot> set;
         
         tsb = new TypeSafeBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class);
         tsb.addProperty(tsb.getModel().getIntProperty());
@@ -279,7 +279,7 @@ public class TypeSafeBuilderDefaultImplTest
     @Test public void testCompositionFirstLevelWithInterface()
     {
         ITypeSafeBuilder<ITestModelRoot> tsb;
-        ISet set;
+        ISet<ITestModelRoot> set;
         
         tsb = new TypeSafeBuilderDefaultImpl<ITestModelRoot>(ITestModelRoot.class);
         tsb.addProperty(tsb.getModel().getIntProperty());
@@ -300,7 +300,7 @@ public class TypeSafeBuilderDefaultImplTest
     @Test public void testCompositionDeepWithClass()
     {
         ITypeSafeBuilder<TestModelRoot> tsb;
-        ISet set;
+        ISet<TestModelRoot> set;
         
         tsb = new TypeSafeBuilderDefaultImpl<TestModelRoot>(TestModelRoot.class);
         tsb.addProperty(tsb.getModel().getSecondLevelModelProperty().getThirdLevel2ModelProperty().getInt3Property());
@@ -321,7 +321,7 @@ public class TypeSafeBuilderDefaultImplTest
     @Test public void testCompositionDeepWithInterface()
     {
         ITypeSafeBuilder<ITestModelRoot> tsb;
-        ISet set;
+        ISet<ITestModelRoot> set;
         
         tsb = new TypeSafeBuilderDefaultImpl<ITestModelRoot>(ITestModelRoot.class);
         tsb.addProperty(tsb.getModel().getSecondLevelModelProperty().getThirdLevel2ModelProperty().getInt3Property());
@@ -343,32 +343,33 @@ public class TypeSafeBuilderDefaultImplTest
     {
         ITypeSafeBuilder<TestModelRootMixInterfaceClass> tsbRootClass;
         ITypeSafeBuilder<ITestModelRootMixInterfaceClass> tsbRootInterface;
-        ISet set;
+        ISet<TestModelRootMixInterfaceClass> cset;
+        ISet<ITestModelRootMixInterfaceClass> iset;
         
         tsbRootClass = new TypeSafeBuilderDefaultImpl<TestModelRootMixInterfaceClass>(TestModelRootMixInterfaceClass.class);
         tsbRootClass.addProperty(tsbRootClass.getModel().getSecondLevelModelProperty().getThirdLevel2ModelProperty().getTestModelSecondLevel3Property().getInt2Property());
         tsbRootClass.addProperty(tsbRootClass.getModel().getSecondLevelModelProperty().getString2Property());
         tsbRootClass.addProperty(tsbRootClass.getModel().getThirdLevelModelProperty());
         
-        set = tsbRootClass.build();
-        Assert.assertNotNull(set);
-        Assert.assertFalse(set.isEmpty());
-        Assert.assertEquals(3, set.size());
-        Assert.assertTrue(set.contains("secondLevelModelProperty.thirdLevel2ModelProperty.testModelSecondLevel3Property.int2Property"));
-        Assert.assertTrue(set.contains("secondLevelModelProperty.string2Property"));
-        Assert.assertTrue(set.contains("thirdLevelModelProperty"));
+        cset = tsbRootClass.build();
+        Assert.assertNotNull(cset);
+        Assert.assertFalse(cset.isEmpty());
+        Assert.assertEquals(3,cset.size());
+        Assert.assertTrue(cset.contains("secondLevelModelProperty.thirdLevel2ModelProperty.testModelSecondLevel3Property.int2Property"));
+        Assert.assertTrue(cset.contains("secondLevelModelProperty.string2Property"));
+        Assert.assertTrue(cset.contains("thirdLevelModelProperty"));
         
         tsbRootInterface = new TypeSafeBuilderDefaultImpl<ITestModelRootMixInterfaceClass>(ITestModelRootMixInterfaceClass.class);
         tsbRootInterface.addProperty(tsbRootInterface.getModel().getSecondLevelModelProperty().getThirdLevel2ModelProperty().getTestModelSecondLevel3Property().getInt2Property());
         tsbRootInterface.addProperty(tsbRootInterface.getModel().getSecondLevelModelProperty().getString2Property());
         tsbRootInterface.addProperty(tsbRootInterface.getModel().getThirdLevelModelProperty());
         
-        set = tsbRootInterface.build();
-        Assert.assertNotNull(set);
-        Assert.assertFalse(set.isEmpty());
-        Assert.assertEquals(3, set.size());
-        Assert.assertTrue(set.contains("secondLevelModelProperty.thirdLevel2ModelProperty.testModelSecondLevel3Property.int2Property"));
-        Assert.assertTrue(set.contains("secondLevelModelProperty.string2Property"));
-        Assert.assertTrue(set.contains("thirdLevelModelProperty"));
+        iset = tsbRootInterface.build();
+        Assert.assertNotNull(iset);
+        Assert.assertFalse(iset.isEmpty());
+        Assert.assertEquals(3, iset.size());
+        Assert.assertTrue(iset.contains("secondLevelModelProperty.thirdLevel2ModelProperty.testModelSecondLevel3Property.int2Property"));
+        Assert.assertTrue(iset.contains("secondLevelModelProperty.string2Property"));
+        Assert.assertTrue(iset.contains("thirdLevelModelProperty"));
     }
 }
